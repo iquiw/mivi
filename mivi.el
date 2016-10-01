@@ -1,4 +1,4 @@
-;;; mivi -- Minimal Vi mode -*- lexical-binding: t -*-
+;;; mivi.el --- Minimal Vi mode -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2014-2016 by Iku Iwasa
 
