@@ -22,3 +22,6 @@ Feature: Motion
     When I go to beginning of buffer
     And I type "j"
     Then the cursor should be at cell (2, 0)
+    When I go to end of line
+    And I type "j"
+    Then the cursor should be at cell (3, 0)
