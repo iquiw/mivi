@@ -47,6 +47,8 @@
     (define-key map "o" #'mivi-open)
     (define-key map "u" #'mivi-undo)
     (define-key map "." #'mivi-repeat)
+    (define-key map (kbd "C-e") #'scroll-up-line)
+    (define-key map (kbd "C-y") #'scroll-down-line)
     (define-key map (kbd "C-d") #'mivi-scroll-up)
     (define-key map (kbd "C-u") #'mivi-scroll-down)
     (define-key map (kbd "C-f") #'scroll-up)
