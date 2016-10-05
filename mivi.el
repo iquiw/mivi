@@ -21,8 +21,8 @@
 (defconst mivi-motion-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
-    (define-key map "^" #'beginning-of-line)
-    (define-key map "0" #'mivi-beginning-of-text)
+    (define-key map "^" #'mivi-beginning-of-text)
+    (define-key map "0" #'beginning-of-line)
     (define-key map "$" #'end-of-line)
     (define-key map "b" #'backward-word)
     (define-key map "e" #'mivi-end-of-word)
