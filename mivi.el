@@ -159,16 +159,16 @@
           (setq continue nil))))))
 
 (defun mivi-find (&optional arg)
-  (interactive "^p")
+  (interactive "p")
   (mivi--find #'search-forward arg))
 
 (defun mivi-end-of-word (&optional arg)
-  (interactive "^p")
+  (interactive "p")
   (forward-word arg)
   (backward-char))
 
 (defun mivi-forward-word (&optional arg)
-  (interactive "^p")
+  (interactive "p")
   (forward-word arg)
   (skip-syntax-forward " "))
 
