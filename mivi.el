@@ -47,6 +47,10 @@
     (define-key map "o" #'mivi-open)
     (define-key map "u" #'mivi-undo)
     (define-key map "." #'mivi-repeat)
+    (define-key map (kbd "C-d") #'mivi-scroll-up)
+    (define-key map (kbd "C-u") #'mivi-scroll-down)
+    (define-key map (kbd "C-f") #'scroll-up)
+    (define-key map (kbd "C-b") #'scroll-down)
     map))
 
 (defconst mivi-insert-map
@@ -101,6 +105,16 @@
   (end-of-line)
   (newline 1 nil)
   (mivi--insert-mode))
+
+(defun mivi-scroll-up (&optional arg)
+  (interactive "p")
+  (let ((n (if prefix-arg arg (/ (window-height) 2))))
+    (scroll-up n)))
+
+(defun mivi-scroll-down (&optional arg)
+  (interactive "p")
+  (let ((n (if prefix-arg arg (/ (window-height) 2))))
+    (scroll-down (/ (window-height) 2))))
 
 (defun mivi-number (&optional n)
   (interactive)
