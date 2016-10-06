@@ -22,7 +22,7 @@
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
     (define-key map "^" #'mivi-beginning-of-text)
-    (define-key map "0" #'beginning-of-line)
+    (define-key map "0" #'mivi-number-or-bol)
     (define-key map "$" #'end-of-line)
     (define-key map "b" #'backward-word)
     (define-key map "e" #'mivi-end-of-word)
@@ -32,7 +32,7 @@
     (define-key map "l" #'forward-char)
     (define-key map "w" #'mivi-forward-word)
     (dotimes (v 9)
-      (define-key map (number-to-string (+ v 1)) #'mivi-number))
+      (define-key map (number-to-string (1+ v)) #'mivi-number))
     map))
 
 (defconst mivi-command-map
@@ -121,13 +121,17 @@
 (defun mivi-number (&optional n)
   (interactive)
   (unless n
-    (setq n (this-command-keys)))
+    (setq n (string-to-number (this-command-keys))))
   (unless (eq last-command #'mivi-number)
     (setq mivi--number 0))
-  (setq mivi--number
-        (+ (* mivi--number 10)
-           (string-to-number n)))
+  (setq mivi--number (+ (* mivi--number 10) n))
   (setq prefix-arg mivi--number))
+
+(defun mivi-number-or-bol ()
+  (interactive)
+  (if (eq last-command #'mivi-number)
+      (mivi-number 0)
+    (forward-line 0)))
 
 (defun mivi--get-number ()
   (let ((n (or mivi--number 1)))
