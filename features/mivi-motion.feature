@@ -60,7 +60,7 @@ Feature: Motion
     abc def hij
 
     012 345 678
-    foo bar baz
+    foo!bar!baz
     """
     And I go to beginning of buffer
     And I type "fh"
@@ -71,3 +71,8 @@ Feature: Motion
     Then the cursor should be at cell (3, 7)
     When I type "fofo"
     Then the cursor should be at cell (4, 2)
+    When I type "f@"
+    Then the cursor should be at cell (4, 2)
+    When I go to end of buffer
+    And I type "f@"
+    Then the cursor should be at cell (4, 11)

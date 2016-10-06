@@ -152,15 +152,16 @@
   (setq mivi-insert-mode t)
   (setq mivi-command-mode nil))
 
-(defun mivi--find (search count)
-  (let ((ch (read-char "f-")))
-    (when (progn (and (not (eobp)) (forward-char))
-                 (funcall search (char-to-string ch) nil t count))
-      (backward-char))))
-
 (defun mivi-find (&optional arg)
   (interactive "p")
-  (mivi--find #'search-forward arg))
+  (let ((ch (read-char "f-"))
+        (sign (if (> arg 0) 1 -1))
+        (move? (not (if (> arg 0) (eobp) (bobp)))))
+    (when move?
+      (forward-char sign))
+    (search-forward (char-to-string ch) nil t arg)
+    (when move?
+      (forward-char (- sign)))))
 
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")
