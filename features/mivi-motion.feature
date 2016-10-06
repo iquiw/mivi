@@ -12,7 +12,7 @@ Feature: Motion
 
     foo bar baz
     """
-    When I go to point "3"
+    And I go to point "3"
     And I type "h"
     Then the cursor should be at cell (1, 1)
     When I type "h"
@@ -52,3 +52,22 @@ Feature: Motion
     Then the cursor should be at cell (2, 10)
     When I type "l"
     Then the cursor should be at cell (3, 0)
+
+  Scenario: find
+    Given the buffer is empty
+    When I insert:
+    """
+    abc def hij
+
+    012 345 678
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "fh"
+    Then the cursor should be at cell (1, 8)
+    When I type "f2"
+    Then the cursor should be at cell (3, 2)
+    When I type "2f "
+    Then the cursor should be at cell (3, 7)
+    When I type "fofo"
+    Then the cursor should be at cell (4, 2)

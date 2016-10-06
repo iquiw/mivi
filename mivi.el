@@ -149,16 +149,10 @@
   (setq mivi-command-mode nil))
 
 (defun mivi--find (search count)
-  (let ((continue t) (num 0))
-    (while continue
-      (let ((ch (read-char "f-")))
-        (if (mivi--number-char-p ch)
-            (setq num (+ (* num 10) (- ch ?0)))
-          (when (progn (and (not (eobp)) (forward-char))
-                       (funcall search (char-to-string ch) nil t
-                                (if (= num 0) count num)))
-            (backward-char))
-          (setq continue nil))))))
+  (let ((ch (read-char "f-")))
+    (when (progn (and (not (eobp)) (forward-char))
+                 (funcall search (char-to-string ch) nil t count))
+      (backward-char))))
 
 (defun mivi-find (&optional arg)
   (interactive "p")
