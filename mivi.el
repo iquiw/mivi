@@ -38,6 +38,7 @@
 (defconst mivi-command-map
   (let ((map (copy-keymap mivi-motion-map)))
     (define-key map "A" #'mivi-Append)
+    (define-key map "F" #'mivi-Find)
     (define-key map "G" #'mivi-goto-line)
     (define-key map "I" #'mivi-Insert)
     (define-key map "O" #'mivi-Open)
@@ -156,12 +157,16 @@
   (interactive "p")
   (let ((ch (read-char "f-"))
         (sign (if (> arg 0) 1 -1))
-        (move? (not (if (> arg 0) (eobp) (bobp)))))
+        (move? (and (> arg 0) (not (eobp)))))
     (when move?
       (forward-char sign))
     (search-forward (char-to-string ch) nil t arg)
     (when move?
       (forward-char (- sign)))))
+
+(defun mivi-Find (&optional arg)
+  (interactive "p")
+  (mivi-find (- arg)))
 
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")

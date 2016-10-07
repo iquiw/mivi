@@ -57,14 +57,14 @@ Feature: Motion
     Given the buffer is empty
     When I insert:
     """
-    abc def hij
+    abc def ghi
 
     012 345 678
     foo!bar!baz
     """
     And I go to beginning of buffer
     And I type "fh"
-    Then the cursor should be at cell (1, 8)
+    Then the cursor should be at cell (1, 9)
     When I type "f2"
     Then the cursor should be at cell (3, 2)
     When I type "2f "
@@ -76,3 +76,19 @@ Feature: Motion
     When I go to end of buffer
     And I type "f@"
     Then the cursor should be at cell (4, 11)
+
+  Scenario: Find
+    When I go to end of buffer
+    And I type "Fr"
+    Then the cursor should be at cell (4, 6)
+    When I type "Fi"
+    Then the cursor should be at cell (1, 10)
+    When I go to end of buffer
+    And I type "FaFa"
+    Then the cursor should be at cell (4, 5)
+    When I go to end of buffer
+    And I type "2Fa"
+    Then the cursor should be at cell (4, 5)
+    When I go to beginning of buffer
+    When I type "F@"
+    Then the cursor should be at cell (1, 0)
