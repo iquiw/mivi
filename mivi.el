@@ -21,7 +21,7 @@
 (defconst mivi-motion-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
-    (define-key map "^" #'mivi-beginning-of-text)
+    (define-key map "^" #'beginning-of-line-text)
     (define-key map "0" #'mivi-number-or-bol)
     (define-key map "$" #'end-of-line)
     (define-key map "b" #'backward-word)
@@ -83,9 +83,6 @@
     (goto-char (point-max))
     (forward-line (- mivi--number))))
 
-(defun mivi-beginning-of-text ()
-  (interactive)
-  (move-to-column (current-indentation)))
 
 (defun mivi-Insert ()
   (interactive)
