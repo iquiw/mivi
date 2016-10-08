@@ -14,6 +14,7 @@
 
 (defvar mivi--state 'command)
 (defvar mivi--last-command nil)
+(defvar mivi--last-find nil)
 (defvar mivi--number 1)
 (defvar-local mivi-insert-mode nil)
 (defvar-local mivi-command-mode nil)
@@ -48,6 +49,7 @@
     (define-key map "o" #'mivi-open)
     (define-key map "u" #'mivi-undo)
     (define-key map "." #'mivi-repeat)
+    (define-key map ";" #'mivi-repeat-find)
     (define-key map (kbd "C-e") #'scroll-up-line)
     (define-key map (kbd "C-y") #'scroll-down-line)
     (define-key map (kbd "C-d") #'mivi-scroll-up)
@@ -150,20 +152,26 @@
   (setq mivi-insert-mode t)
   (setq mivi-command-mode nil))
 
-(defun mivi-find (&optional arg)
+(defun mivi-find (&optional arg ch)
   (interactive "p")
-  (let ((ch (read-char "f-"))
+  (let ((ch (or ch (read-char "f-")))
         (sign (if (> arg 0) 1 -1))
         (move? (and (> arg 0) (not (eobp)))))
     (when move?
       (forward-char sign))
     (search-forward (char-to-string ch) nil t arg)
     (when move?
-      (forward-char (- sign)))))
+      (forward-char (- sign)))
+    (setq mivi--last-find (cons sign ch))))
 
 (defun mivi-Find (&optional arg)
   (interactive "p")
   (mivi-find (- arg)))
+
+(defun mivi-repeat-find (&optional arg)
+  (interactive "p")
+  (pcase mivi--last-find
+    (`(,sign . ,ch) (mivi-find (* sign arg) ch))))
 
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")
