@@ -109,14 +109,18 @@
   (mivi--insert-mode))
 
 (defun mivi-scroll-up (&optional arg)
-  (interactive "p")
-  (let ((n (if prefix-arg arg (/ (window-height) 2))))
-    (scroll-up n)))
+  (interactive "P")
+  (cond
+   ((not arg) (scroll-up (/ (window-height) 2)))
+   ((prefix-numeric-value arg)
+    (scroll-up (prefix-numeric-value arg)))))
 
 (defun mivi-scroll-down (&optional arg)
-  (interactive "p")
-  (let ((n (if prefix-arg arg (/ (window-height) 2))))
-    (scroll-down (/ (window-height) 2))))
+  (interactive "P")
+  (cond
+   ((not arg) (scroll-down (/ (window-height) 2)))
+   ((prefix-numeric-value arg)
+    (scroll-down (prefix-numeric-value arg)))))
 
 (defun mivi-number (&optional n)
   (interactive)
