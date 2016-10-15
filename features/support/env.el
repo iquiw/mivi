@@ -11,6 +11,9 @@
 
 (add-to-list 'load-path mivi-root-path)
 
+(require 'undercover)
+(undercover "mivi.el")
+
 (require 'mivi)
 (require 'espuds)
 (require 'ert)
