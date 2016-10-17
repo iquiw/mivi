@@ -104,3 +104,15 @@ Feature: Motion
     And I go to end of buffer
     And I type "2;"
     Then the cursor should be at cell (4, 3)
+
+  Scenario: repeat find opposite
+    When I go to beginning of buffer
+    And I type "3f "
+    And I type ","
+    Then the cursor should be at cell (1, 7)
+    #And I type "2;"
+    #Then the cursor should be at cell (3, 7)
+    #When I type "F!"
+    #And I go to end of buffer
+    #And I type "2;"
+    #Then the cursor should be at cell (4, 3)

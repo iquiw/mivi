@@ -48,6 +48,7 @@
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
     (define-key map "u" #'mivi-undo)
+    (define-key map "," #'mivi-repeat-find-opposite)
     (define-key map "." #'mivi-repeat)
     (define-key map ";" #'mivi-repeat-find)
     (define-key map (kbd "C-e") #'scroll-up-line)
@@ -176,6 +177,11 @@
   (interactive "p")
   (pcase mivi--last-find
     (`(,sign . ,ch) (mivi-find (* sign arg) ch))))
+
+(defun mivi-repeat-find-opposite (&optional arg)
+  (interactive "p")
+  (pcase mivi--last-find
+    (`(,sign . ,ch) (mivi-find (* (- sign) arg) ch))))
 
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")
