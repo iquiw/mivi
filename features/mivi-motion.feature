@@ -110,9 +110,9 @@ Feature: Motion
     And I type "3f "
     And I type ","
     Then the cursor should be at cell (1, 7)
-    #And I type "2;"
-    #Then the cursor should be at cell (3, 7)
-    #When I type "F!"
-    #And I go to end of buffer
-    #And I type "2;"
-    #Then the cursor should be at cell (4, 3)
+    And I type "2,"
+    Then the cursor should be at cell (3, 7)
+    When I go to end of buffer
+    When I type "3Fa"
+    And I type "2,"
+    Then the cursor should be at cell (4, 9)
