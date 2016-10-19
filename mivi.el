@@ -19,6 +19,9 @@
 (defvar-local mivi-insert-mode nil)
 (defvar-local mivi-command-mode nil)
 
+(defconst mivi--modes
+  '(mivi-insert-mode mivi-command-mode))
+
 (defconst mivi-motion-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
@@ -149,13 +152,11 @@
     (backward-char))
   (set-frame-parameter nil 'cursor-type 'box)
   (setq mivi--last-command nil)
-  (setq mivi-insert-mode nil)
-  (setq mivi-command-mode t))
+  (mivi--switch-mode 'mivi-command-mode))
 
 (defun mivi--insert-mode ()
   (set-frame-parameter nil 'cursor-type 'bar)
-  (setq mivi-insert-mode t)
-  (setq mivi-command-mode nil))
+  (mivi--switch-mode 'mivi-insert-mode))
 
 (defun mivi-find (&optional arg ch)
   (interactive "p")
@@ -227,6 +228,10 @@
 
 (defun mivi--number-char-p (ch)
   (and (>= ch ?0) (<= ch ?9)))
+
+(defun mivi--switch-mode (mode)
+  (dolist (m mivi--modes)
+    (set m (eq m mode))))
 
 (defvar mivi-mode-map-alist
   (list
