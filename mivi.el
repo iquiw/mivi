@@ -71,92 +71,11 @@
 (defun mivi-nil ()
   (interactive))
 
-(defun mivi-Append ()
-  (interactive)
-  (end-of-line)
-  (mivi--insert-mode))
-
-(defun mivi-append ()
-  (interactive)
-  (unless (eolp)
-    (forward-char))
-  (mivi--insert-mode))
-
-(defun mivi-goto-line ()
-  (interactive)
-  (if (> mivi--number 0)
-      (forward-line mivi--number)
-    (goto-char (point-max))
-    (forward-line (- mivi--number))))
-
-
-(defun mivi-Insert ()
-  (interactive)
-  (beginning-of-line)
-  (mivi--insert-mode))
-
-(defun mivi-insert ()
-  (interactive)
-  (mivi--insert-mode))
-
-(defun mivi-Open ()
-  (interactive)
-  (forward-line 0)
-  (newline 1 nil)
-  (forward-line -1)
-  (mivi--insert-mode))
-
-(defun mivi-open ()
-  (interactive)
-  (end-of-line)
-  (newline 1 nil)
-  (mivi--insert-mode))
-
-(defun mivi-scroll-up (&optional arg)
-  (interactive "P")
-  (cond
-   ((not arg) (scroll-up (/ (window-height) 2)))
-   ((prefix-numeric-value arg)
-    (scroll-up (prefix-numeric-value arg)))))
-
-(defun mivi-scroll-down (&optional arg)
-  (interactive "P")
-  (cond
-   ((not arg) (scroll-down (/ (window-height) 2)))
-   ((prefix-numeric-value arg)
-    (scroll-down (prefix-numeric-value arg)))))
-
-(defun mivi-number (&optional n)
-  (interactive)
-  (unless n
-    (setq n (string-to-number (this-command-keys))))
-  (unless (eq last-command #'mivi-number)
-    (setq mivi--number 0))
-  (setq mivi--number (+ (* mivi--number 10) n))
-  (setq prefix-arg mivi--number))
-
-(defun mivi-number-or-bol ()
-  (interactive)
-  (if (eq last-command #'mivi-number)
-      (mivi-number 0)
-    (forward-line 0)))
-
-(defun mivi--get-number ()
-  (let ((n (or mivi--number 1)))
-    (setq mivi--number 1)
-    n))
-
-(defun mivi-command ()
-  (interactive)
-  (unless (bolp)
-    (backward-char))
-  (set-frame-parameter nil 'cursor-type 'box)
-  (setq mivi--last-command nil)
-  (mivi--switch-mode 'mivi-command-mode))
-
-(defun mivi--insert-mode ()
-  (set-frame-parameter nil 'cursor-type 'bar)
-  (mivi--switch-mode 'mivi-insert-mode))
+;; Motion commands
+(defun mivi-end-of-word (&optional arg)
+  (interactive "p")
+  (forward-word arg)
+  (backward-char))
 
 (defun mivi-find (&optional arg ch)
   (interactive "p")
@@ -174,6 +93,17 @@
   (interactive "p")
   (mivi-find (- arg)))
 
+(defun mivi-forward-word (&optional arg)
+  (interactive "p")
+  (forward-word arg)
+  (skip-syntax-forward " "))
+
+(defun mivi-number-or-bol ()
+  (interactive)
+  (if (eq last-command #'mivi-number)
+      (mivi-number 0)
+    (forward-line 0)))
+
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
@@ -184,34 +114,80 @@
   (pcase mivi--last-find
     (`(,sign . ,ch) (mivi-find (* (- sign) arg) ch))))
 
-(defun mivi-end-of-word (&optional arg)
-  (interactive "p")
-  (forward-word arg)
-  (backward-char))
-
-(defun mivi-forward-word (&optional arg)
-  (interactive "p")
-  (forward-word arg)
-  (skip-syntax-forward " "))
-
-(defun mivi--move-syntax (direction)
+;; Insert commands
+(defun mivi-append ()
   (interactive)
-  (let ((skip-func (if (>= direction 0)
-                       #'skip-syntax-forward
-                     #'skip-syntax-backward)))
-    (funcall skip-func " ")
-    (let* ((c (char-after))
-           (syn (and c (char-syntax c))))
-      (funcall skip-func (string syn)))))
+  (unless (eolp)
+    (forward-char))
+  (mivi--insert-mode))
 
-(defun mivi-undo ()
+(defun mivi-Append ()
   (interactive)
-  (if (eq mivi--last-command 'mivi-undo)
-      (progn
-        (undo-tree-redo)
-        (setq mivi--last-command 'mivi-redo))
-    (undo-tree-undo)
-    (setq mivi--last-command 'mivi-undo)))
+  (end-of-line)
+  (mivi--insert-mode))
+
+(defun mivi-insert ()
+  (interactive)
+  (mivi--insert-mode))
+
+(defun mivi-Insert ()
+  (interactive)
+  (beginning-of-line)
+  (mivi--insert-mode))
+
+(defun mivi-open ()
+  (interactive)
+  (end-of-line)
+  (newline 1 nil)
+  (mivi--insert-mode))
+
+(defun mivi-Open ()
+  (interactive)
+  (forward-line 0)
+  (newline 1 nil)
+  (forward-line -1)
+  (mivi--insert-mode))
+
+;; Scroll commands
+(defun mivi-goto-line (&optional arg)
+  (interactive "p")
+  (if prefix-arg
+      (progn (goto-char (point-min))
+             (forward-line (1- arg)))
+    (goto-char (point-max))
+    (forward-line 0)))
+
+(defun mivi-scroll-up (&optional arg)
+  (interactive "P")
+  (cond
+   ((not arg) (scroll-up (/ (window-height) 2)))
+   ((prefix-numeric-value arg)
+    (scroll-up (prefix-numeric-value arg)))))
+
+(defun mivi-scroll-down (&optional arg)
+  (interactive "P")
+  (cond
+   ((not arg) (scroll-down (/ (window-height) 2)))
+   ((prefix-numeric-value arg)
+    (scroll-down (prefix-numeric-value arg)))))
+
+;; Other commands
+(defun mivi-command ()
+  (interactive)
+  (unless (bolp)
+    (backward-char))
+  (set-frame-parameter nil 'cursor-type 'box)
+  (setq mivi--last-command nil)
+  (mivi--switch-mode 'mivi-command-mode))
+
+(defun mivi-number (&optional n)
+  (interactive)
+  (unless n
+    (setq n (string-to-number (this-command-keys))))
+  (unless (eq last-command #'mivi-number)
+    (setq mivi--number 0))
+  (setq mivi--number (+ (* mivi--number 10) n))
+  (setq prefix-arg mivi--number))
 
 (defun mivi-repeat ()
   (interactive)
@@ -226,8 +202,19 @@
    (t
     (call-interactively mivi--last-command))))
 
-(defun mivi--number-char-p (ch)
-  (and (>= ch ?0) (<= ch ?9)))
+(defun mivi-undo ()
+  (interactive)
+  (if (eq mivi--last-command 'mivi-undo)
+      (progn
+        (undo-tree-redo)
+        (setq mivi--last-command 'mivi-redo))
+    (undo-tree-undo)
+    (setq mivi--last-command 'mivi-undo)))
+
+;; Internal functions
+(defun mivi--insert-mode ()
+  (set-frame-parameter nil 'cursor-type 'bar)
+  (mivi--switch-mode 'mivi-insert-mode))
 
 (defun mivi--switch-mode (mode)
   (dolist (m mivi--modes)
