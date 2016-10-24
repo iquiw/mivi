@@ -53,6 +53,59 @@ Feature: Motion
     When I type "l"
     Then the cursor should be at cell (3, 0)
 
+  Scenario backward word
+    Given the buffer is empty
+    When I insert:
+    """
+    abc def  ghi
+
+      012---345-678 (abc)
+
+    foo_bar<baz>
+    """
+    And I go to end of buffer
+    And I type "b"
+    Then the cursor should be at cell (5, 8)
+    When I type "b"
+    Then the cursor should be at cell (5, 4)
+    When I type "b"
+    Then the cursor should be at cell (5, 0)
+    When I type "b"
+    Then the cursor should be at cell (3, 17)
+    When I go to cell (1, 10)
+    And I type "b"
+    Then the cursor should be at cell (1, 9)
+    And I type "2b"
+    Then the cursor should be at cell (1, 0)
+
+  Scenario end of word
+    When I go to beginning of buffer
+    And I type "e"
+    Then the cursor should be at cell (1, 2)
+    When I type "e"
+    Then the cursor should be at cell (1, 6)
+    When I type "e"
+    Then the cursor should be at cell (1, 11)
+    When I type "e"
+    Then the cursor should be at cell (3, 4)
+    When I type "e"
+    Then the cursor should be at cell (3, 10)
+    When I type "3e"
+    Then the cursor should be at cell (5, 2)
+
+  Scenario foward word
+    When I go to beginning of buffer
+    And I type "w"
+    Then the cursor should be at cell (1, 4)
+    And I type "w"
+    Then the cursor should be at cell (1, 9)
+    And I type "w"
+    Then the cursor should be at cell (3, 2)
+    And I type "w"
+    Then the cursor should be at cell (3, 8)
+    And I type "2w"
+    Then the cursor should be at cell (3, 17)
+
   Scenario: find
     Given the buffer is empty
     When I insert:

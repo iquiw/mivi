@@ -74,8 +74,11 @@
 ;; Motion commands
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")
-  (forward-word arg)
-  (backward-char))
+  (forward-char)
+  (let ((p (point)))
+    (forward-word arg)
+    (unless (= p (point))
+      (backward-char))))
 
 (defun mivi-find (&optional arg ch)
   (interactive "p")
@@ -95,8 +98,9 @@
 
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
-  (forward-word arg)
-  (skip-syntax-forward " "))
+  (dotimes (_ arg)
+    (skip-syntax-forward "w")
+    (skip-syntax-forward "^w")))
 
 (defun mivi-number-or-bol ()
   (interactive)
