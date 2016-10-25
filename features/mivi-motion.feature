@@ -93,7 +93,7 @@ Feature: Motion
     When I type "3e"
     Then the cursor should be at cell (5, 2)
 
-  Scenario foward word
+  Scenario forward word
     When I go to beginning of buffer
     And I type "w"
     Then the cursor should be at cell (1, 4)
@@ -105,6 +105,15 @@ Feature: Motion
     Then the cursor should be at cell (3, 8)
     And I type "2w"
     Then the cursor should be at cell (3, 17)
+
+  Scenario Backward word
+    When I go to end of buffer
+    And I type "B"
+    Then the cursor should be at cell (5, 0)
+    And I type "B"
+    Then the cursor should be at cell (3, 16)
+    And I type "3B"
+    Then the cursor should be at cell (1, 4)
 
   Scenario: find
     Given the buffer is empty

@@ -29,6 +29,7 @@
     (define-key map "," #'mivi-repeat-find-opposite)
     (define-key map "0" #'mivi-number-or-bol)
     (define-key map ";" #'mivi-repeat-find)
+    (define-key map "B" #'mivi-Backward-word)
     (define-key map "F" #'mivi-Find)
     (define-key map "^" #'beginning-of-line-text)
     (define-key map "b" #'backward-word)
@@ -72,6 +73,12 @@
   (interactive))
 
 ;; Motion commands
+(defun mivi-Backward-word (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (skip-chars-backward "[:space:]\n")
+    (skip-chars-backward "^[:space:]\n")))
+
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")
   (forward-char)
