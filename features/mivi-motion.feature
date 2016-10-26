@@ -115,6 +115,15 @@ Feature: Motion
     And I type "3B"
     Then the cursor should be at cell (1, 4)
 
+  Scenario End of word
+    When I go to beginning of buffer
+    And I type "3E"
+    Then the cursor should be at cell (1, 11)
+    And I type "E"
+    Then the cursor should be at cell (3, 14)
+    And I type "E"
+    Then the cursor should be at cell (3, 20)
+
   Scenario: find
     Given the buffer is empty
     When I insert:
