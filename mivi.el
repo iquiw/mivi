@@ -32,6 +32,7 @@
     (define-key map "B" #'mivi-Backward-word)
     (define-key map "E" #'mivi-End-of-word)
     (define-key map "F" #'mivi-Find)
+    (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'beginning-of-line-text)
     (define-key map "b" #'backward-word)
     (define-key map "e" #'mivi-end-of-word)
@@ -119,6 +120,12 @@
   (dotimes (_ arg)
     (skip-syntax-forward "w")
     (skip-syntax-forward "^w")))
+
+(defun mivi-forward-Word (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (skip-chars-forward "^[:space:]\n")
+    (skip-chars-forward "[:space:]\n")))
 
 (defun mivi-number-or-bol ()
   (interactive)

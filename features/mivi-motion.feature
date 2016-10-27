@@ -124,6 +124,15 @@ Feature: Motion
     And I type "E"
     Then the cursor should be at cell (3, 20)
 
+  Scenario forward of Word
+    When I go to beginning of buffer
+    And I type "W"
+    Then the cursor should be at cell (1, 4)
+    And I type "3W"
+    Then the cursor should be at cell (3, 16)
+    And I type "W"
+    Then the cursor should be at cell (5, 0)
+
   Scenario: find
     Given the buffer is empty
     When I insert:
