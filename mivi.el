@@ -32,6 +32,8 @@
     (define-key map "B" #'mivi-Backward-word)
     (define-key map "E" #'mivi-End-of-word)
     (define-key map "F" #'mivi-Find)
+    (define-key map "H" #'mivi-window-top)
+    (define-key map "L" #'mivi-window-bottom)
     (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'beginning-of-line-text)
     (define-key map "b" #'backward-word)
@@ -143,6 +145,14 @@
   (pcase mivi--last-find
     (`(,sign . ,ch) (mivi-find (* (- sign) arg) ch))))
 
+(defun mivi-window-bottom (&optional arg)
+  (interactive "P")
+  (move-to-window-line (- (window-height) (mivi--numeric-or-default arg) 2)))
+
+(defun mivi-window-top (&optional arg)
+  (interactive "P")
+  (move-to-window-line (mivi--numeric-or-default arg)))
+
 ;; Insert commands
 (defun mivi-append ()
   (interactive)
@@ -188,17 +198,11 @@
 
 (defun mivi-scroll-up (&optional arg)
   (interactive "P")
-  (cond
-   ((not arg) (scroll-up (/ (window-height) 2)))
-   ((prefix-numeric-value arg)
-    (scroll-up (prefix-numeric-value arg)))))
+  (scroll-up (mivi--numeric-or-default arg (/ (window-height) 2))))
 
 (defun mivi-scroll-down (&optional arg)
   (interactive "P")
-  (cond
-   ((not arg) (scroll-down (/ (window-height) 2)))
-   ((prefix-numeric-value arg)
-    (scroll-down (prefix-numeric-value arg)))))
+  (scroll-down (mivi--numeric-or-default arg (/ (window-height) 2))))
 
 ;; Other commands
 (defun mivi-command ()
@@ -244,6 +248,11 @@
 (defun mivi--insert-mode ()
   (set-frame-parameter nil 'cursor-type 'bar)
   (mivi--switch-mode 'mivi-insert-mode))
+
+(defun mivi--numeric-or-default (arg &optional default)
+  (if (not arg)
+      (or default 0)
+    (prefix-numeric-value arg)))
 
 (defun mivi--switch-mode (mode)
   (dolist (m mivi--modes)

@@ -12,7 +12,7 @@
 (When "^I insert \"\\(.+\\)\" pages$"
   "Insert the specified PAGES."
   (lambda (pages)
-    (dotimes (i (* (window-height) (string-to-number pages)))
+    (dotimes (i (* (1- (window-height)) (string-to-number pages)))
       (insert (format "%s\n" i)))))
 
 (When "^I recenter on line \"\\(.+\\)\"$"

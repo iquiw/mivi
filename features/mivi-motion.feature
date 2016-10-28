@@ -196,3 +196,12 @@ Feature: Motion
     When I type "3Fa"
     And I type "2,"
     Then the cursor should be at cell (4, 9)
+
+  Scenario window top bottom
+    Given the buffer is empty
+    When I insert "1" pages
+    And I go to beginning of buffer
+    And I type "L"
+    Then the current line should be "1" up from end
+    When I type "H"
+    Then the cursor should be at cell (1, 0)
