@@ -202,6 +202,6 @@ Feature: Motion
     When I insert "1" pages
     And I go to beginning of buffer
     And I type "L"
-    Then the current line should be "1" up from end
+    Then the current bottom line should be "1" up from end
     When I type "H"
     Then the cursor should be at cell (1, 0)

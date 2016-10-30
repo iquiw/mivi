@@ -26,13 +26,13 @@
     (should (equal (cons (string-to-number line) (string-to-number column))
                    (cons (line-number-at-pos) (current-column))))))
 
-(Then "^the current line should be half page down from beginning$"
+(Then "^the current top line should be half page down from beginning$"
   "Checks that the current line is half page scrolled down from beginning of buffer."
   (lambda ()
     (move-to-window-line 0)
     (should (= (+ (/ (window-height) 2) 1) (line-number-at-pos)))))
 
-(Then "^the current line should be half page up from end$"
+(Then "^the current bottom line should be half page up from end$"
   "Checks that the current line is half page scrolled down from end of buffer."
   (lambda ()
     (let ((last-line (save-excursion
@@ -41,13 +41,13 @@
       (move-to-window-line -1)
       (should (= (- last-line (/ (window-height) 2)) (line-number-at-pos))))))
 
-(Then "^the current line should be \"\\(.+\\)\" down from beginning$"
+(Then "^the current top line should be \"\\(.+\\)\" down from beginning$"
   "Checks that the current line is scrolled down LINE from beginning of buffer."
   (lambda (line)
     (move-to-window-line 0)
-    (should (= (string-to-number line) (line-number-at-pos)))))
+    (should (= (string-to-number line) (1+ (line-number-at-pos))))))
 
-(Then "^the current line should be \"\\(.+\\)\" up from end$"
+(Then "^the current bottom line should be \"\\(.+\\)\" up from end$"
   "Checks that the current line is scrolled up LINE from end of buffer."
   (lambda (line)
     (let ((last-line (save-excursion
