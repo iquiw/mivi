@@ -34,6 +34,7 @@
     (define-key map "F" #'mivi-Find)
     (define-key map "H" #'mivi-window-top)
     (define-key map "L" #'mivi-window-bottom)
+    (define-key map "M" #'mivi-window-middle)
     (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'beginning-of-line-text)
     (define-key map "b" #'backward-word)
@@ -147,7 +148,11 @@
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "P")
-  (move-to-window-line (- (window-height) (mivi--numeric-or-default arg) 2)))
+  (move-to-window-line (- (mivi--numeric-or-default arg 1))))
+
+(defun mivi-window-middle (&optional arg)
+  (interactive "P")
+  (move-to-window-line nil))
 
 (defun mivi-window-top (&optional arg)
   (interactive "P")

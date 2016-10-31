@@ -55,3 +55,24 @@
                        (line-number-at-pos))))
       (move-to-window-line -1)
       (should (= (- last-line (string-to-number line)) (line-number-at-pos))))))
+
+(Then "^the current line should be \"\\(.+\\)\"$"
+  "Checks that the current line number is LINE."
+  (lambda (line)
+    (should (= (string-to-number line) (line-number-at-pos)))))
+
+(Then "^the current line should be in the middle of window$"
+  "Checks that the current line is in the middle of window."
+  (lambda ()
+    (let ((first-line (save-excursion
+                        (move-to-window-line 0)
+                        (line-number-at-pos))))
+      (should (= (+ first-line (/ (window-height) 2)) (line-number-at-pos))))))
+
+(Then "^the current line should be the last line$"
+  "Checks that the current line is the last line."
+  (lambda ()
+    (let ((last-line (save-excursion
+                       (goto-char (point-max))
+                       (1- (line-number-at-pos)))))
+      (should (= last-line (line-number-at-pos))))))

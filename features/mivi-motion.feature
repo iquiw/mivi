@@ -197,11 +197,14 @@ Feature: Motion
     And I type "2,"
     Then the cursor should be at cell (4, 9)
 
-  Scenario window top bottom
+  Scenario window top bottom middle
     Given the buffer is empty
     When I insert "1" pages
     And I go to beginning of buffer
     And I type "L"
-    Then the current bottom line should be "1" up from end
+    Then the current line should be the last line
     When I type "H"
-    Then the cursor should be at cell (1, 0)
+    Then the current line should be "1"
+    When I type "M"
+    Then the current line should be in the middle of window
+
