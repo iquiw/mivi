@@ -66,8 +66,8 @@
   (lambda ()
     (let ((first-line (save-excursion
                         (move-to-window-line 0)
-                        (line-number-at-pos))))
-      (should (= (+ first-line (/ (window-height) 2)) (line-number-at-pos))))))
+                        (1- (line-number-at-pos)))))
+      (should (= (+ first-line (ceiling (/ (window-height) 2.0))) (line-number-at-pos))))))
 
 (Then "^the current line should be the last line$"
   "Checks that the current line is the last line."
