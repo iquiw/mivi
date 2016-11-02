@@ -12,7 +12,7 @@
 (When "^I insert \"\\(.+\\)\" pages$"
   "Insert the specified PAGES."
   (lambda (pages)
-    (dotimes (i (* (1- (window-height)) (string-to-number pages)))
+    (dotimes (i (* (window-body-height) (string-to-number pages)))
       (insert (format "%s\n" i)))))
 
 (When "^I recenter on line \"\\(.+\\)\"$"
@@ -30,7 +30,7 @@
   "Checks that the current line is half page scrolled down from beginning of buffer."
   (lambda ()
     (move-to-window-line 0)
-    (should (= (+ (/ (window-height) 2) 1) (line-number-at-pos)))))
+    (should (= (+ (/ (window-body-height) 2) 1) (line-number-at-pos)))))
 
 (Then "^the current bottom line should be half page up from end$"
   "Checks that the current line is half page scrolled down from end of buffer."
@@ -39,7 +39,7 @@
                        (goto-char (point-max))
                        (line-number-at-pos))))
       (move-to-window-line -1)
-      (should (= (- last-line (/ (window-height) 2)) (line-number-at-pos))))))
+      (should (= (- last-line (/ (window-body-height) 2)) (line-number-at-pos))))))
 
 (Then "^the current top line should be \"\\(.+\\)\" down from beginning$"
   "Checks that the current line is scrolled down LINE from beginning of buffer."
@@ -66,8 +66,8 @@
   (lambda ()
     (let ((first-line (save-excursion
                         (move-to-window-line 0)
-                        (1- (line-number-at-pos)))))
-      (should (= (+ first-line (ceiling (/ (window-height) 2.0))) (line-number-at-pos))))))
+                        (line-number-at-pos))))
+      (should (= (+ first-line (/ (window-body-height) 2)) (line-number-at-pos))))))
 
 (Then "^the current line should be the last line$"
   "Checks that the current line is the last line."

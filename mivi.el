@@ -203,11 +203,11 @@
 
 (defun mivi-scroll-up (&optional arg)
   (interactive "P")
-  (scroll-up (mivi--numeric-or-default arg (/ (window-height) 2))))
+  (scroll-up (mivi--numeric-or-default arg (/ (window-body-height) 2))))
 
 (defun mivi-scroll-down (&optional arg)
   (interactive "P")
-  (scroll-down (mivi--numeric-or-default arg (/ (window-height) 2))))
+  (scroll-down (mivi--numeric-or-default arg (/ (window-body-height) 2))))
 
 ;; Other commands
 (defun mivi-command ()
