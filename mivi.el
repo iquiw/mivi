@@ -148,15 +148,24 @@
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "P")
-  (move-to-window-line (- (mivi--numeric-or-default arg 1))))
+  (move-to-window-line -1)
+  (forward-line (- 1 (mivi--numeric-or-default arg 1)))
+  (back-to-indentation))
 
 (defun mivi-window-middle (&optional arg)
   (interactive "P")
-  (move-to-window-line nil))
+  (move-to-window-line nil)
+  (when (eobp)
+    (let* ((last-line (line-number-at-pos))
+           (first-line (progn (move-to-window-line 0)
+                              (line-number-at-pos))))
+      (forward-line (/ (- last-line first-line) 2))))
+  (back-to-indentation))
 
 (defun mivi-window-top (&optional arg)
   (interactive "P")
-  (move-to-window-line (mivi--numeric-or-default arg)))
+  (move-to-window-line (1- (mivi--numeric-or-default arg 1)))
+  (back-to-indentation))
 
 ;; Insert commands
 (defun mivi-append ()

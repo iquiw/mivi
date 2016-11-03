@@ -208,3 +208,25 @@ Feature: Motion
     When I type "M"
     Then the current line should be in the middle of window
 
+  Scenario window top bottom with prefix
+    Given the buffer is empty
+    When I insert:
+    """
+     1
+      2
+       3
+        4
+       5
+      6
+     7
+    """
+    And I type "H"
+    Then the cursor should be at cell (1, 1)
+    When I type "3H"
+    Then the cursor should be at cell (3, 3)
+    When I type "L"
+    Then the cursor should be at cell (7, 1)
+    When I type "2L"
+    Then the cursor should be at cell (6, 2)
+    When I type "M"
+    Then the cursor should be at cell (4, 4)
