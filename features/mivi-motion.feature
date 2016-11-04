@@ -245,3 +245,31 @@ Feature: Motion
     And I press "G"
     And I execute the action chain
     Then the cursor should be at cell (4, 4)
+
+  Scenario ^ 0 $
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foobar (arg)
+      (if arg
+        (message "Foo")
+      (message "Bar")))
+    """
+    When I go to word "foobar"
+    And I type "^"
+    Then the cursor should be at cell (1, 0)
+    When I go to word "Foo"
+    And I type "^"
+    Then the cursor should be at cell (3, 4)
+    When I go to word "foobar"
+    And I type "0"
+    Then the cursor should be at cell (1, 0)
+    When I go to word "Foo"
+    And I type "0"
+    Then the cursor should be at cell (3, 0)
+    When I go to word "if"
+    And I type "$"
+    Then the cursor should be at cell (2, 9)
+    When I go to word "Bar"
+    And I type "$"
+    Then the cursor should be at cell (4, 19)
