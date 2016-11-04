@@ -230,3 +230,18 @@ Feature: Motion
     Then the cursor should be at cell (6, 2)
     When I type "M"
     Then the cursor should be at cell (4, 4)
+
+  Scenario go to line
+    When I type "G"
+    Then the current line should be "7"
+    When I type "1G"
+    Then the cursor should be at cell (1, 1)
+    When I type "5G"
+    Then the cursor should be at cell (5, 3)
+    When I start an action chain
+    And I call "universal-argument"
+    And I press "-"
+    And I press "3"
+    And I press "G"
+    And I execute the action chain
+    Then the cursor should be at cell (4, 4)

@@ -130,6 +130,17 @@
     (skip-chars-forward "^[:space:]\n")
     (skip-chars-forward "[:space:]\n")))
 
+(defun mivi-goto-line (&optional arg)
+  (interactive "P")
+  (let ((n (mivi--numeric-or-default arg 0)))
+    (if (> n 0)
+        (progn
+          (goto-char (point-min))
+          (forward-line (1- n)))
+      (goto-char (point-max))
+      (forward-line n)))
+  (back-to-indentation))
+
 (defun mivi-number-or-bol ()
   (interactive)
   (if (eq last-command #'mivi-number)
@@ -202,13 +213,6 @@
   (mivi--insert-mode))
 
 ;; Scroll commands
-(defun mivi-goto-line (&optional arg)
-  (interactive "p")
-  (if prefix-arg
-      (progn (goto-char (point-min))
-             (forward-line (1- arg)))
-    (goto-char (point-max))
-    (forward-line 0)))
 
 (defun mivi-scroll-up (&optional arg)
   (interactive "P")
