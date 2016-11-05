@@ -35,6 +35,7 @@
     (define-key map "H" #'mivi-window-top)
     (define-key map "L" #'mivi-window-bottom)
     (define-key map "M" #'mivi-window-middle)
+    (define-key map "T" #'mivi-goto-char-backward)
     (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'beginning-of-line-text)
     (define-key map "b" #'backward-word)
@@ -44,6 +45,7 @@
     (define-key map "j" #'next-line)
     (define-key map "k" #'previous-line)
     (define-key map "l" #'forward-char)
+    (define-key map "t" #'mivi-goto-char)
     (define-key map "w" #'mivi-forward-word)
     map))
 
@@ -102,21 +104,13 @@
     (unless (= p (point))
       (backward-char))))
 
-(defun mivi-find (&optional arg ch)
+(defun mivi-find (&optional arg)
   (interactive "p")
-  (let ((ch (or ch (read-char "f-")))
-        (sign (if (> arg 0) 1 -1))
-        (move? (and (> arg 0) (not (eobp)))))
-    (when move?
-      (forward-char sign))
-    (search-forward (char-to-string ch) nil t arg)
-    (when move?
-      (forward-char (- sign)))
-    (setq mivi--last-find (cons sign ch))))
+  (mivi--find-internal nil arg))
 
 (defun mivi-Find (&optional arg)
   (interactive "p")
-  (mivi-find (- arg)))
+  (mivi--find-internal nil (- arg)))
 
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
@@ -129,6 +123,14 @@
   (dotimes (_ arg)
     (skip-chars-forward "^[:space:]\n")
     (skip-chars-forward "[:space:]\n")))
+
+(defun mivi-goto-char (&optional arg)
+  (interactive "p")
+  (mivi--find-internal t arg))
+
+(defun mivi-goto-char-backward (&optional arg)
+  (interactive "p")
+  (mivi--find-internal t (- arg)))
 
 (defun mivi-goto-line (&optional arg)
   (interactive "P")
@@ -150,12 +152,12 @@
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
-    (`(,sign . ,ch) (mivi-find (* sign arg) ch))))
+    (`(,sign . ,ch) (mivi--find-internal nil (* sign arg) ch))))
 
 (defun mivi-repeat-find-opposite (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
-    (`(,sign . ,ch) (mivi-find (* (- sign) arg) ch))))
+    (`(,sign . ,ch) (mivi--find-internal nil (* (- sign) arg) ch))))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "P")
@@ -263,6 +265,20 @@
     (setq mivi--last-command 'mivi-undo)))
 
 ;; Internal functions
+(defun mivi--find-internal (till? &optional arg ch)
+  (interactive "p")
+  (let ((ch (or ch (read-char (if till? "t-" "f-"))))
+        (sign (if (> arg 0) 1 -1))
+        (move? (and (> arg 0) (not (eobp)))))
+    (when move?
+      (forward-char sign))
+    (when (search-forward (char-to-string ch) nil t arg)
+      (when till?
+        (forward-char (- sign))))
+    (when move?
+      (forward-char (- sign)))
+    (setq mivi--last-find (cons sign ch))))
+
 (defun mivi--insert-mode ()
   (set-frame-parameter nil 'cursor-type 'bar)
   (mivi--switch-mode 'mivi-insert-mode))

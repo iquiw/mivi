@@ -197,6 +197,39 @@ Feature: Motion
     And I type "2,"
     Then the cursor should be at cell (4, 9)
 
+  Scenario goto char
+    And I go to beginning of buffer
+    And I type "th"
+    Then the cursor should be at cell (1, 8)
+    When I type "t2"
+    Then the cursor should be at cell (3, 1)
+    When I type "2t "
+    Then the cursor should be at cell (3, 6)
+    When I type "toto"
+    Then the cursor should be at cell (4, 0)
+    When I type "t@"
+    Then the cursor should be at cell (4, 0)
+    When I go to end of buffer
+    And I type "t@"
+    Then the cursor should be at cell (4, 11)
+
+  Scenario: goto char backward
+    When I go to end of buffer
+    And I type "Tr"
+    Then the cursor should be at cell (4, 7)
+    When I type "Ti"
+    Then the cursor should be at cell (1, 11)
+    When I go to end of buffer
+    And I type "TaTa"
+    Then the cursor should be at cell (4, 10)
+    When I go to end of buffer
+    And I type "2Ta"
+    Then the cursor should be at cell (4, 6)
+    When I go to beginning of buffer
+    When I type "T@"
+    Then the cursor should be at cell (1, 0)
+
+
   Scenario window top bottom middle
     Given the buffer is empty
     When I insert "1" pages
