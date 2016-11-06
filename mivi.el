@@ -64,8 +64,8 @@
     (define-key map (kbd "C-y") #'scroll-down-line)
     (define-key map (kbd "C-d") #'mivi-scroll-up)
     (define-key map (kbd "C-u") #'mivi-scroll-down)
-    (define-key map (kbd "C-f") #'scroll-up)
-    (define-key map (kbd "C-b") #'scroll-down)
+    (define-key map (kbd "C-f") #'mivi-scroll-screen-up)
+    (define-key map (kbd "C-b") #'mivi-scroll-screen-down)
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'mivi-number))
     map))
@@ -215,14 +215,21 @@
   (mivi--insert-mode))
 
 ;; Scroll commands
+(defun mivi-scroll-down (&optional arg)
+  (interactive "P")
+  (scroll-down (mivi--numeric-or-default arg (/ (window-body-height) 2))))
+
+(defun mivi-scroll-screen-down (&optional arg)
+  (interactive "p")
+  (scroll-down (* (window-body-height) (prefix-numeric-value arg))))
+
+(defun mivi-scroll-screen-up (&optional arg)
+  (interactive "p")
+  (scroll-up (* (window-body-height) (prefix-numeric-value arg))))
 
 (defun mivi-scroll-up (&optional arg)
   (interactive "P")
   (scroll-up (mivi--numeric-or-default arg (/ (window-body-height) 2))))
-
-(defun mivi-scroll-down (&optional arg)
-  (interactive "P")
-  (scroll-down (mivi--numeric-or-default arg (/ (window-body-height) 2))))
 
 ;; Other commands
 (defun mivi-command ()

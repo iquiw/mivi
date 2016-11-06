@@ -41,11 +41,26 @@
       (move-to-window-line -1)
       (should (= (- last-line (/ (window-body-height) 2)) (line-number-at-pos))))))
 
+(Then "^the current top line should be \"\\(.+\\)\" pages? down from beginning$"
+  "Checks that the current line is N pages scrolled down from beginning of buffer."
+  (lambda (n)
+    (move-to-window-line 0)
+    (should (= (1+ (* (window-body-height) (string-to-number n))) (line-number-at-pos)))))
+
+(Then "^the current bottom line should be \"\\(.+\\)\" pages? up from end$"
+  "Checks that the current line is N pages scrolled up from end of buffer."
+  (lambda (n)
+    (let ((last-line (save-excursion
+                       (goto-char (point-max))
+                       (line-number-at-pos))))
+      (move-to-window-line -1)
+      (should (= (- last-line (* (window-body-height) (string-to-number n))) (line-number-at-pos))))))
+
 (Then "^the current top line should be \"\\(.+\\)\" down from beginning$"
   "Checks that the current line is scrolled down LINE from beginning of buffer."
   (lambda (line)
     (move-to-window-line 0)
-    (should (= (string-to-number line) (1+ (line-number-at-pos))))))
+    (should (= (1+ (string-to-number line)) (line-number-at-pos)))))
 
 (Then "^the current bottom line should be \"\\(.+\\)\" up from end$"
   "Checks that the current line is scrolled up LINE from end of buffer."
