@@ -187,11 +187,11 @@ Feature: Motion
 
   Scenario: repeat find opposite
     When I go to beginning of buffer
-    And I type "3f "
+    And I type "4f "
     And I type ","
-    Then the cursor should be at cell (1, 7)
+    Then the cursor should be at cell (3, 3)
     And I type "2,"
-    Then the cursor should be at cell (3, 7)
+    Then the cursor should be at cell (1, 3)
     When I go to end of buffer
     When I type "3Fa"
     And I type "2,"
@@ -229,6 +229,30 @@ Feature: Motion
     When I type "T@"
     Then the cursor should be at cell (1, 0)
 
+  Scenario: repeat goto char
+    When I go to beginning of buffer
+    And I type "t "
+    And I go to beginning of buffer
+    And I type ";"
+    Then the cursor should be at cell (1, 2)
+    And I type "2;"
+    Then the cursor should be at cell (1, 6)
+    When I type "T!"
+    And I go to end of buffer
+    And I type "2;"
+    Then the cursor should be at cell (4, 4)
+
+  Scenario: repeat goto char opposite
+    When I go to beginning of buffer
+    And I type "4t "
+    And I type ","
+    Then the cursor should be at cell (3, 4)
+    And I type "2,"
+    Then the cursor should be at cell (1, 8)
+    When I go to end of buffer
+    When I type "3Ta"
+    And I type "2,"
+    Then the cursor should be at cell (4, 8)
 
   Scenario window top bottom middle
     Given the buffer is empty

@@ -152,12 +152,12 @@
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
-    (`(,sign . ,ch) (mivi--find-internal nil (* sign arg) ch))))
+    (`(,till? ,sign ,ch) (mivi--find-internal till? (* sign arg) ch))))
 
 (defun mivi-repeat-find-opposite (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
-    (`(,sign . ,ch) (mivi--find-internal nil (* (- sign) arg) ch))))
+    (`(,till? ,sign ,ch) (mivi--find-internal till? (* (- sign) arg) ch))))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "P")
@@ -284,7 +284,8 @@
         (forward-char (- sign))))
     (when move?
       (forward-char (- sign)))
-    (setq mivi--last-find (cons sign ch))))
+    (unless (memq this-command '(mivi-repeat-find mivi-repeat-find-opposite))
+      (setq mivi--last-find (list till? sign ch)))))
 
 (defun mivi--insert-mode ()
   (set-frame-parameter nil 'cursor-type 'bar)
