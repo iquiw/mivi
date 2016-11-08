@@ -13,11 +13,12 @@
 (require 'undo-tree)
 
 (defvar mivi--state 'command)
-(defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
 (defvar mivi--number 1)
 (defvar-local mivi-insert-mode nil)
 (defvar-local mivi-command-mode nil)
+(defvar-local mivi--last-command nil)
+(defvar-local mivi--undo-direction 'undo)
 
 (defconst mivi--modes
   '(mivi-insert-mode mivi-command-mode))
@@ -251,25 +252,24 @@
 
 (defun mivi-repeat ()
   (interactive)
-  (cond
-   ((null mivi--last-command)
-    (call-interactively last-command)
-    (setq mivi--last-command last-command))
-   ((eq mivi--last-command 'mivi-undo)
-    (undo-tree-undo))
-   ((eq mivi--last-command 'mivi-redo)
-    (undo-tree-redo))
-   (t
-    (call-interactively mivi--last-command))))
+  (if (member last-command '(mivi-undo mivi-repeat))
+      (if (eq mivi--undo-direction 'undo)
+          (undo-tree-undo)
+        (undo-tree-redo))
+    (call-interactively last-command)))
 
 (defun mivi-undo ()
   (interactive)
-  (if (eq mivi--last-command 'mivi-undo)
-      (progn
-        (undo-tree-redo)
-        (setq mivi--last-command 'mivi-redo))
+  (if (memq mivi--last-command '(mivi-undo mivi-repeat))
+      (if (eq mivi--undo-direction 'undo)
+          (progn
+            (undo-tree-redo)
+            (setq mivi--undo-direction 'redo))
+        (undo-tree-undo)
+        (setq mivi--undo-direction 'undo))
     (undo-tree-undo)
-    (setq mivi--last-command 'mivi-undo)))
+    (setq mivi--undo-direction 'undo))
+  (setq mivi--last-command 'mivi-undo))
 
 ;; Internal functions
 (defun mivi--find-internal (till? &optional arg ch)
