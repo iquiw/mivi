@@ -53,7 +53,7 @@ Feature: Motion
     When I type "l"
     Then the cursor should be at cell (3, 0)
 
-  Scenario backward word
+  Scenario: backward word
     Given the buffer is empty
     When I insert:
     """
@@ -78,7 +78,7 @@ Feature: Motion
     And I type "2b"
     Then the cursor should be at cell (1, 0)
 
-  Scenario end of word
+  Scenario: end of word
     When I go to beginning of buffer
     And I type "e"
     Then the cursor should be at cell (1, 2)
@@ -93,7 +93,7 @@ Feature: Motion
     When I type "3e"
     Then the cursor should be at cell (5, 2)
 
-  Scenario forward word
+  Scenario: forward word
     When I go to beginning of buffer
     And I type "w"
     Then the cursor should be at cell (1, 4)
@@ -106,7 +106,7 @@ Feature: Motion
     And I type "2w"
     Then the cursor should be at cell (3, 17)
 
-  Scenario Backward word
+  Scenario: Backward word
     When I go to end of buffer
     And I type "B"
     Then the cursor should be at cell (5, 0)
@@ -115,7 +115,7 @@ Feature: Motion
     And I type "3B"
     Then the cursor should be at cell (1, 4)
 
-  Scenario End of word
+  Scenario: End of word
     When I go to beginning of buffer
     And I type "3E"
     Then the cursor should be at cell (1, 11)
@@ -124,7 +124,7 @@ Feature: Motion
     And I type "E"
     Then the cursor should be at cell (3, 20)
 
-  Scenario forward of Word
+  Scenario: forward of Word
     When I go to beginning of buffer
     And I type "W"
     Then the cursor should be at cell (1, 4)
@@ -197,7 +197,7 @@ Feature: Motion
     And I type "2,"
     Then the cursor should be at cell (4, 9)
 
-  Scenario goto char
+  Scenario: goto char
     And I go to beginning of buffer
     And I type "th"
     Then the cursor should be at cell (1, 8)
@@ -254,7 +254,7 @@ Feature: Motion
     And I type "2,"
     Then the cursor should be at cell (4, 8)
 
-  Scenario window top bottom middle
+  Scenario: window top bottom middle
     Given the buffer is empty
     When I insert "1" pages
     And I go to beginning of buffer
@@ -265,7 +265,7 @@ Feature: Motion
     When I type "M"
     Then the current line should be in the middle of window
 
-  Scenario window top bottom with prefix
+  Scenario: window top bottom with prefix
     Given the buffer is empty
     When I insert:
     """
@@ -288,7 +288,7 @@ Feature: Motion
     When I type "M"
     Then the cursor should be at cell (4, 4)
 
-  Scenario go to line
+  Scenario: go to line
     When I type "G"
     Then the current line should be "7"
     When I type "1G"
@@ -303,7 +303,7 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (4, 4)
 
-  Scenario ^ 0 $
+  Scenario: ^ 0 $
     Given the buffer is empty
     When I insert:
     """
