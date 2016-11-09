@@ -56,6 +56,7 @@
     (define-key map "G" #'mivi-goto-line)
     (define-key map "I" #'mivi-Insert)
     (define-key map "O" #'mivi-Open)
+    (define-key map "X" #'mivi-delete-backward-char)
     (define-key map "a" #'mivi-append)
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
@@ -245,6 +246,10 @@
 (defun mivi-delete-char (&optional arg)
   (interactive "p")
   (delete-char (mivi--numeric-or-default arg 1)))
+
+(defun mivi-delete-backward-char (&optional arg)
+  (interactive "p")
+  (delete-char (- (mivi--numeric-or-default arg 1))))
 
 (defun mivi-number (&optional n)
   (interactive)

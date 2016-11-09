@@ -24,3 +24,16 @@ Feature Kill and Yank
     When I go to beginning of buffer
     And I type "10x"
     Then I should see pattern "^ qux$"
+
+  Scenario: X
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz qux
+    """
+    And I go to end of line
+    And I type "X"
+    Then I should see pattern " qu$"
+
+    When I type "3X"
+    Then I should see pattern "baz$"
