@@ -60,6 +60,7 @@
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
     (define-key map "u" #'mivi-undo)
+    (define-key map "x" #'mivi-delete-char)
     (define-key map "." #'mivi-repeat)
     (define-key map (kbd "C-e") #'scroll-up-line)
     (define-key map (kbd "C-y") #'scroll-down-line)
@@ -240,6 +241,10 @@
   (set-frame-parameter nil 'cursor-type 'box)
   (setq mivi--last-command nil)
   (mivi--switch-mode 'mivi-command-mode))
+
+(defun mivi-delete-char (&optional arg)
+  (interactive "p")
+  (delete-char (mivi--numeric-or-default arg 1)))
 
 (defun mivi-number (&optional n)
   (interactive)
