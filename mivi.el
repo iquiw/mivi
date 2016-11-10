@@ -245,11 +245,11 @@
 
 (defun mivi-delete-char (&optional arg)
   (interactive "p")
-  (delete-char (mivi--numeric-or-default arg 1)))
+  (kill-forward-chars (mivi--numeric-or-default arg 1)))
 
 (defun mivi-delete-backward-char (&optional arg)
   (interactive "p")
-  (delete-char (- (mivi--numeric-or-default arg 1))))
+  (kill-backward-chars (mivi--numeric-or-default arg 1)))
 
 (defun mivi-number (&optional n)
   (interactive)
