@@ -14,7 +14,6 @@
 
 (defvar mivi--state 'command)
 (defvar mivi--last-find nil)
-(defvar mivi--number 1)
 (defvar-local mivi-insert-mode nil)
 (defvar-local mivi-command-mode nil)
 (defvar-local mivi--last-command nil)
@@ -28,7 +27,7 @@
     (suppress-keymap map)
     (define-key map "$" #'end-of-line)
     (define-key map "," #'mivi-repeat-find-opposite)
-    (define-key map "0" #'mivi-number-or-bol)
+    (define-key map "0" #'beginning-of-line)
     (define-key map ";" #'mivi-repeat-find)
     (define-key map "B" #'mivi-Backward-word)
     (define-key map "E" #'mivi-End-of-word)
@@ -70,7 +69,7 @@
     (define-key map (kbd "C-f") #'mivi-scroll-screen-up)
     (define-key map (kbd "C-b") #'mivi-scroll-screen-down)
     (dotimes (v 9)
-      (define-key map (number-to-string (1+ v)) #'mivi-number))
+      (define-key map (number-to-string (1+ v)) #'digit-argument))
     map))
 
 (defconst mivi-insert-map
@@ -145,12 +144,6 @@
       (goto-char (point-max))
       (forward-line n)))
   (back-to-indentation))
-
-(defun mivi-number-or-bol ()
-  (interactive)
-  (if (eq last-command #'mivi-number)
-      (mivi-number 0)
-    (forward-line 0)))
 
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
@@ -250,15 +243,6 @@
 (defun mivi-delete-backward-char (&optional arg)
   (interactive "p")
   (kill-backward-chars (mivi--numeric-or-default arg 1)))
-
-(defun mivi-number (&optional n)
-  (interactive)
-  (unless n
-    (setq n (string-to-number (this-command-keys))))
-  (unless (eq last-command #'mivi-number)
-    (setq mivi--number 0))
-  (setq mivi--number (+ (* mivi--number 10) n))
-  (setq prefix-arg mivi--number))
 
 (defun mivi-repeat ()
   (interactive)
