@@ -50,7 +50,8 @@
     map))
 
 (defconst mivi-command-map
-  (let ((map (copy-keymap mivi-motion-map)))
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map mivi-motion-map)
     (define-key map "A" #'mivi-Append)
     (define-key map "G" #'mivi-goto-line)
     (define-key map "I" #'mivi-Insert)
