@@ -151,7 +151,7 @@ Feature: Motion
     Then the cursor should be at cell (3, 7)
     When I type "fofo"
     Then the cursor should be at cell (4, 2)
-    When I type "f@"
+    When I type "fA"
     Then the cursor should be at cell (4, 2)
     When I go to end of buffer
     And I type "f@"

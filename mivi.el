@@ -269,7 +269,8 @@
 ;; Internal functions
 (defun mivi--find-internal (till? &optional arg ch)
   (interactive "p")
-  (let ((ch (or ch (read-char (if till? "t-" "f-"))))
+  (let ((case-fold-search nil)
+        (ch (or ch (read-char (if till? "t-" "f-"))))
         (sign (if (> arg 0) 1 -1))
         (move? (and (> arg 0) (not (eobp)))))
     (when move?
