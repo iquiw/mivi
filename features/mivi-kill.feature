@@ -37,3 +37,26 @@ Feature Kill and Yank
 
     When I type "3X"
     Then I should see pattern "baz$"
+
+  Scenario: p
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    
+    qux
+    """
+    When I go to beginning of buffer
+    And I type "5x"
+    And I go to line "2"
+    And I type "p"
+    Then I should see pattern "^foo b$"
+    And the cursor should be at cell (2, 0)
+    When I go to beginning of buffer
+    And I type "2p"
+    Then I should see pattern "^afoo bfoo br"
+    And the cursor should be at cell (1, 1)
+    When I type "3x"
+    And I go to end of buffer
+    And I type "p"
+    Then I should see pattern "quxfoo$"

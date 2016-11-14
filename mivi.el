@@ -60,6 +60,7 @@
     (define-key map "a" #'mivi-append)
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
+    (define-key map "p" #'mivi-paste)
     (define-key map "u" #'mivi-undo)
     (define-key map "x" #'mivi-delete-char)
     (define-key map "." #'mivi-repeat)
@@ -265,6 +266,14 @@
     (undo-tree-undo)
     (setq mivi--undo-direction 'undo))
   (setq mivi--last-command 'mivi-undo))
+
+(defun mivi-paste (&optional arg)
+  (interactive "p")
+  (unless (eolp)
+    (forward-char))
+  (save-excursion
+    (dotimes (_ arg)
+      (yank))))
 
 ;; Internal functions
 (defun mivi--find-internal (till? &optional arg ch)
