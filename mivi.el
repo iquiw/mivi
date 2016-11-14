@@ -157,9 +157,9 @@
     (`(,till? ,sign ,ch) (mivi--find-internal till? (* (- sign) arg) ch))))
 
 (defun mivi-window-bottom (&optional arg)
-  (interactive "P")
+  (interactive "p")
   (move-to-window-line -1)
-  (forward-line (- 1 (mivi--numeric-or-default arg 1)))
+  (forward-line (- 1 arg))
   (back-to-indentation))
 
 (defun mivi-window-middle (&optional arg)
@@ -173,8 +173,8 @@
   (back-to-indentation))
 
 (defun mivi-window-top (&optional arg)
-  (interactive "P")
-  (move-to-window-line (1- (mivi--numeric-or-default arg 1)))
+  (interactive "p")
+  (move-to-window-line (1- arg))
   (back-to-indentation))
 
 ;; Insert commands
