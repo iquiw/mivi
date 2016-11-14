@@ -56,6 +56,7 @@
     (define-key map "G" #'mivi-goto-line)
     (define-key map "I" #'mivi-Insert)
     (define-key map "O" #'mivi-Open)
+    (define-key map "P" #'mivi-Paste)
     (define-key map "X" #'mivi-delete-backward-char)
     (define-key map "a" #'mivi-append)
     (define-key map "i" #'mivi-insert)
@@ -271,6 +272,12 @@
   (interactive "p")
   (unless (eolp)
     (forward-char))
+  (save-excursion
+    (dotimes (_ arg)
+      (yank))))
+
+(defun mivi-Paste (&optional arg)
+  (interactive "p")
   (save-excursion
     (dotimes (_ arg)
       (yank))))
