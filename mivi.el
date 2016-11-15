@@ -16,11 +16,13 @@
 (defvar mivi--last-find nil)
 (defvar-local mivi-insert-mode nil)
 (defvar-local mivi-command-mode nil)
+(defvar-local mivi-delete-mode nil)
+
 (defvar-local mivi--last-command nil)
 (defvar-local mivi--undo-direction 'undo)
 
 (defconst mivi--modes
-  '(mivi-insert-mode mivi-command-mode))
+  '(mivi-delete-mode mivi-insert-mode mivi-command-mode))
 
 (defconst mivi-motion-map
   (let ((map (make-sparse-keymap)))
@@ -59,6 +61,7 @@
     (define-key map "P" #'mivi-Paste)
     (define-key map "X" #'mivi-delete-backward-char)
     (define-key map "a" #'mivi-append)
+    (define-key map "d" #'mivi-delete)
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
     (define-key map "p" #'mivi-paste)
@@ -79,6 +82,34 @@
   (let ((map (make-sparse-keymap)))
     (define-key map [escape] #'mivi-command)
     (define-key map (kbd "C-[") #'mivi-command)
+    map))
+
+(defmacro mivi--derive-function (prefix new-mode-state orig-fn &rest edit-body)
+  `(let* ((orig-name (symbol-name ,orig-fn))
+          (new-fn (intern (concat ,prefix
+                                  (if (string-match-p "^mivi-" orig-name)
+                                      (substring orig-name 5)
+                                    orig-name)))))
+     (defalias new-fn
+       (lambda (&optional arg)
+         (interactive "p")
+         (let ((p (point)))
+           (funcall ,orig-fn arg)
+           ,@edit-body
+           (mivi--switch-mode ,new-mode-state))))))
+
+(defconst mivi-delete-map
+  (let ((map (make-sparse-keymap)))
+    (dolist (key '("b"))
+      (define-key map key
+        (mivi--derive-function "mivi-delete-"
+                               'mivi-command-mode
+                               (lookup-key mivi-motion-map key)
+                               (kill-region p (point)))))
+
+    (dotimes (v 9)
+      (define-key map (number-to-string (1+ v)) #'digit-argument))
+    (define-key map [t] #'mivi-command)
     map))
 
 (defun mivi-nil ()
@@ -213,6 +244,12 @@
   (forward-line -1)
   (mivi--insert-mode))
 
+;; Delete commands
+(defun mivi-delete (&optional arg)
+  (interactive "P")
+  (mivi--switch-mode 'mivi-delete-mode)
+  (setq prefix-arg arg))
+
 ;; Scroll commands
 (defun mivi-scroll-down (&optional arg)
   (interactive "P")
@@ -314,6 +351,7 @@
 
 (defvar mivi-mode-map-alist
   (list
+   (cons 'mivi-delete-mode mivi-delete-map)
    (cons 'mivi-insert-mode mivi-insert-map)
    (cons 'mivi-command-mode mivi-command-map)))
 
