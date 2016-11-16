@@ -6,16 +6,16 @@ Feature: Undo
   Scenario: undo and redo
     Given the buffer is empty
     When I type "ifoo"
-    And I press "C-["
+    And I press "<escape>"
     And I type "u"
     Then the buffer should be empty
     When I type "u"
     Then I should see "foo"
 
     When I type "ifoo"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a bar"
-    And I press "C-["
+    And I press "<escape>"
     And I type "u"
     Then I should see "foo"
     And I should not see "bar"
@@ -25,31 +25,31 @@ Feature: Undo
   Scenario: repeat undo and redo
     Given the buffer is empty
     When I type "ifoo"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a bar"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a baz"
-    And I press "C-["
+    And I press "<escape>"
     And I type "u."
     Then I should see "foo"
     And I should not see "bar"
 
     Given the buffer is empty
     When I type "ifoo"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a bar"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a baz"
-    And I press "C-["
+    And I press "<escape>"
     And I type "u.."
     Then the buffer should be empty
 
     Given the buffer is empty
     When I type "ifoo"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a bar"
-    And I press "C-["
+    And I press "<escape>"
     And I type "a baz"
-    And I press "C-["
+    And I press "<escape>"
     And I type "u..u.."
     Then I should see "foo bar baz"

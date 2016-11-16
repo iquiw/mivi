@@ -81,7 +81,6 @@
 (defconst mivi-insert-map
   (let ((map (make-sparse-keymap)))
     (define-key map [escape] #'mivi-command)
-    (define-key map (kbd "C-[") #'mivi-command)
     map))
 
 (defmacro mivi--derive-function (prefix new-mode-state orig-fn &rest edit-body)
