@@ -95,8 +95,8 @@
      (defalias new-fn
        (lambda (&optional arg)
          (interactive "p")
-         (let* ((_before (point))
-                (_after (progn
+         (let* ((-before (point))
+                (-after (progn
                           (funcall ,orig-fn arg)
                           (point))))
            ,@edit-body)
@@ -109,8 +109,8 @@
         (mivi--derive-function "mivi-delete-"
                                'mivi-command-mode
                                (lookup-key mivi-motion-map key)
-          (when (/= _before _after)
-            (kill-region _before _after)))))
+          (when (/= -before -after)
+            (kill-region -before -after)))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
