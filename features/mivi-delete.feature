@@ -16,3 +16,17 @@ Feature: Delete
     Then I should see pattern "bar-$"
     When I type "d2b"
     Then the buffer should be empty
+
+  Scenario: dB
+    When the buffer is empty
+    And I insert:
+    """
+    foo bar-baz qux-quux
+    """
+    And I type "dB"
+    Then I should not see pattern "baz$"
+    When I type "2dB"
+    Then the buffer should be empty
+    When I type "dB"
+    And I type "p"
+    Then I should see pattern "^foo bar-baz $"
