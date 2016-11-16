@@ -85,6 +85,8 @@
     map))
 
 (defmacro mivi--derive-function (prefix new-mode-state orig-fn &rest edit-body)
+  (declare (debug (form form form body))
+           (indent 3))
   `(let* ((orig-name (symbol-name ,orig-fn))
           (new-fn (intern (concat ,prefix
                                   (if (string-match-p "^mivi-" orig-name)
@@ -93,10 +95,12 @@
      (defalias new-fn
        (lambda (&optional arg)
          (interactive "p")
-         (let ((p (point)))
-           (funcall ,orig-fn arg)
-           ,@edit-body
-           (mivi--switch-mode ,new-mode-state))))))
+         (let* ((_before (point))
+                (_after (progn
+                          (funcall ,orig-fn arg)
+                          (point))))
+           ,@edit-body)
+         (mivi--switch-mode ,new-mode-state)))))
 
 (defconst mivi-delete-map
   (let ((map (make-sparse-keymap)))
@@ -105,7 +109,8 @@
         (mivi--derive-function "mivi-delete-"
                                'mivi-command-mode
                                (lookup-key mivi-motion-map key)
-                               (kill-region p (point)))))
+          (when (/= _before _after)
+            (kill-region _before _after)))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
