@@ -368,16 +368,21 @@
 (define-minor-mode mivi-local-mode "MiVi command"
   :init-value nil
   (if mivi-local-mode
-    (progn
-      (setq mivi-command-mode t)
-      (setq-local emulation-mode-map-alists
-                  (cons mivi-mode-map-alist
-                        emulation-mode-map-alists)))))
+      (progn
+        (setq mivi-command-mode t)
+        (setq-local emulation-mode-map-alists
+                    (cons 'mivi-mode-map-alist
+                          emulation-mode-map-alists)))
+    (setq emulation-mode-map-alists
+          (delete 'mivi-mode-map-alist emulation-mode-map-alists))))
 
 (defun mivi-local-mode-on ()
   (when (or (derived-mode-p 'prog-mode)
             (derived-mode-p 'text-mode))
     (mivi-local-mode 1)))
+
+(defun mivi-local-mode-off ()
+  (mivi-local-mode -1))
 
 (define-globalized-minor-mode mivi-mode mivi-local-mode mivi-local-mode-on)
 
