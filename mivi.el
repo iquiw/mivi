@@ -105,11 +105,17 @@
   (let ((map (make-sparse-keymap)))
     (dolist (key '("b" "B"))
       (define-key map key
-        (mivi--derive-function "mivi-delete-"
-                               'mivi-command-mode
+        (mivi--derive-function "mivi-delete-" 'mivi-command-mode
                                (lookup-key mivi-motion-map key)
           (when (/= -before -after)
             (kill-region -before -after)))))
+
+    (dolist (key '("e"))
+      (define-key map key
+        (mivi--derive-function "mivi-delete-" 'mivi-command-mode
+                               (lookup-key mivi-motion-map key)
+          (when (/= -before -after)
+            (kill-region -before (1+ -after))))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))

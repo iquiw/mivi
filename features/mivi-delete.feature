@@ -3,9 +3,9 @@ Feature: Delete
   As a user
   I want to delete text
 
-  Scenario: db
-    When the buffer is empty
-    And I insert:
+  Scenario: delete backward word
+    Given the buffer is empty
+    When I insert:
     """
     foo bar-baz qux
     quux
@@ -17,9 +17,9 @@ Feature: Delete
     When I type "d2b"
     Then the buffer should be empty
 
-  Scenario: dB
-    When the buffer is empty
-    And I insert:
+  Scenario: delete Backward word
+    Given the buffer is empty
+    When I insert:
     """
     foo bar-baz qux-quux
     """
@@ -30,3 +30,18 @@ Feature: Delete
     When I type "dB"
     And I type "p"
     Then I should see pattern "^foo bar-baz $"
+
+  Scenario: delete end of word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       12345 6789
+    """
+    And I go to beginning of buffer
+    And I type "de"
+    Then I should see pattern "^ bar-baz"
+    When I type "3de"
+    Then I should see pattern "^-quux$"
+    When I type "d2e"
+    Then I should see pattern "^ 6789$"
