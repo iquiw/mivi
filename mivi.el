@@ -110,7 +110,7 @@
           (when (/= -before -after)
             (kill-region -before -after)))))
 
-    (dolist (key '("e"))
+    (dolist (key '("e" "E"))
       (define-key map key
         (mivi--derive-function "mivi-delete-" 'mivi-command-mode
                                (lookup-key mivi-motion-map key)

@@ -45,3 +45,18 @@ Feature: Delete
     Then I should see pattern "^-quux$"
     When I type "d2e"
     Then I should see pattern "^ 6789$"
+
+  Scenario: delete End of word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       12345 6789
+    """
+    And I go to beginning of buffer
+    And I type "d2E"
+    Then I should see pattern "^ qux-quux"
+    When I type "2dE"
+    Then I should see pattern "^ 6789$"
+    When I type "dE"
+    Then the buffer should be empty
