@@ -38,7 +38,7 @@
     (define-key map "M" #'mivi-window-middle)
     (define-key map "T" #'mivi-goto-char-backward)
     (define-key map "W" #'mivi-forward-Word)
-    (define-key map "^" #'beginning-of-line-text)
+    (define-key map "^" #'back-to-indentation)
     (define-key map "b" #'backward-word)
     (define-key map "e" #'mivi-end-of-word)
     (define-key map "f" #'mivi-find)
@@ -237,7 +237,7 @@
 
 (defun mivi-Insert ()
   (interactive)
-  (beginning-of-line)
+  (back-to-indentation)
   (mivi--insert-state))
 
 (defun mivi-open ()

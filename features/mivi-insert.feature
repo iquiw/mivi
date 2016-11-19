@@ -18,3 +18,20 @@ Feature Insert
     And I type "i"
     Then the mivi state should be "insert"
     And the cursor should be at cell (1, 5)
+
+  Scenario: Insert
+    Given the buffer is empty
+    When I type "I"
+    Then the mivi state should be "insert"
+
+    When I type "foo"
+    And I press "<return>"
+    And I type "   bar baz"
+    And I press "<escape>"
+    Then the mivi state should be "command"
+    And I should see pattern "^   bar baz$"
+    And the cursor should be at cell (2, 9)
+
+    When I type "I"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (2, 3)
