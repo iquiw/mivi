@@ -27,6 +27,7 @@
 
 (After
  ;; After each scenario is run
+ (mivi-command)
  )
 
 (Teardown

@@ -12,17 +12,16 @@
 
 (require 'undo-tree)
 
-(defvar mivi--state 'command)
 (defvar mivi--last-find nil)
-(defvar-local mivi-insert-mode nil)
-(defvar-local mivi-command-mode nil)
-(defvar-local mivi-delete-mode nil)
+(defvar-local mivi-insert-state nil)
+(defvar-local mivi-command-state nil)
+(defvar-local mivi-delete-state nil)
 
 (defvar-local mivi--last-command nil)
 (defvar-local mivi--undo-direction 'undo)
 
-(defconst mivi--modes
-  '(mivi-delete-mode mivi-insert-mode mivi-command-mode))
+(defconst mivi--states
+  '(mivi-delete-state mivi-insert-state mivi-command-state))
 
 (defconst mivi-motion-map
   (let ((map (make-sparse-keymap)))
@@ -83,7 +82,7 @@
     (define-key map [escape] #'mivi-command)
     map))
 
-(defmacro mivi--derive-function (prefix new-mode-state orig-fn &rest edit-body)
+(defmacro mivi--derive-function (prefix new-state orig-fn &rest edit-body)
   (declare (debug (form form form body))
            (indent 3))
   `(let* ((orig-name (symbol-name ,orig-fn))
@@ -99,20 +98,20 @@
                           (funcall ,orig-fn arg)
                           (point))))
            ,@edit-body)
-         (mivi--switch-mode ,new-mode-state)))))
+         (mivi--switch-state ,new-state)))))
 
 (defconst mivi-delete-map
   (let ((map (make-sparse-keymap)))
     (dolist (key '("b" "B"))
       (define-key map key
-        (mivi--derive-function "mivi-delete-" 'mivi-command-mode
+        (mivi--derive-function "mivi-delete-" 'mivi-command-state
                                (lookup-key mivi-motion-map key)
           (when (/= -before -after)
             (kill-region -before -after)))))
 
     (dolist (key '("e" "E"))
       (define-key map key
-        (mivi--derive-function "mivi-delete-" 'mivi-command-mode
+        (mivi--derive-function "mivi-delete-" 'mivi-command-state
                                (lookup-key mivi-motion-map key)
           (when (/= -before -after)
             (kill-region -before (1+ -after))))))
@@ -225,39 +224,39 @@
   (interactive)
   (unless (eolp)
     (forward-char))
-  (mivi--insert-mode))
+  (mivi--insert-state))
 
 (defun mivi-Append ()
   (interactive)
   (end-of-line)
-  (mivi--insert-mode))
+  (mivi--insert-state))
 
 (defun mivi-insert ()
   (interactive)
-  (mivi--insert-mode))
+  (mivi--insert-state))
 
 (defun mivi-Insert ()
   (interactive)
   (beginning-of-line)
-  (mivi--insert-mode))
+  (mivi--insert-state))
 
 (defun mivi-open ()
   (interactive)
   (end-of-line)
   (newline 1 nil)
-  (mivi--insert-mode))
+  (mivi--insert-state))
 
 (defun mivi-Open ()
   (interactive)
   (forward-line 0)
   (newline 1 nil)
   (forward-line -1)
-  (mivi--insert-mode))
+  (mivi--insert-state))
 
 ;; Delete commands
 (defun mivi-delete (&optional arg)
   (interactive "P")
-  (mivi--switch-mode 'mivi-delete-mode)
+  (mivi--switch-state 'mivi-delete-state)
   (setq prefix-arg arg))
 
 ;; Scroll commands
@@ -284,7 +283,7 @@
     (backward-char))
   (set-frame-parameter nil 'cursor-type 'box)
   (setq mivi--last-command nil)
-  (mivi--switch-mode 'mivi-command-mode))
+  (mivi--switch-state 'mivi-command-state))
 
 (defun mivi-delete-char (&optional arg)
   (interactive "p")
@@ -346,30 +345,30 @@
     (unless (memq this-command '(mivi-repeat-find mivi-repeat-find-opposite))
       (setq mivi--last-find (list till? sign ch)))))
 
-(defun mivi--insert-mode ()
+(defun mivi--insert-state ()
   (set-frame-parameter nil 'cursor-type 'bar)
-  (mivi--switch-mode 'mivi-insert-mode))
+  (mivi--switch-state 'mivi-insert-state))
 
 (defun mivi--numeric-or-default (arg &optional default)
   (if (not arg)
       (or default 0)
     (prefix-numeric-value arg)))
 
-(defun mivi--switch-mode (mode)
-  (dolist (m mivi--modes)
-    (set m (eq m mode))))
+(defun mivi--switch-state (state)
+  (dolist (s mivi--states)
+    (set s (eq s state))))
 
 (defvar mivi-mode-map-alist
   (list
-   (cons 'mivi-delete-mode mivi-delete-map)
-   (cons 'mivi-insert-mode mivi-insert-map)
-   (cons 'mivi-command-mode mivi-command-map)))
+   (cons 'mivi-delete-state mivi-delete-map)
+   (cons 'mivi-insert-state mivi-insert-map)
+   (cons 'mivi-command-state mivi-command-map)))
 
 (define-minor-mode mivi-local-mode "MiVi command"
   :init-value nil
   (if mivi-local-mode
       (progn
-        (setq mivi-command-mode t)
+        (setq mivi-command-state t)
         (setq-local emulation-mode-map-alists
                     (cons 'mivi-mode-map-alist
                           emulation-mode-map-alists)))

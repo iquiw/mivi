@@ -91,3 +91,8 @@
                        (goto-char (point-max))
                        (1- (line-number-at-pos)))))
       (should (= last-line (line-number-at-pos))))))
+
+(Then "^the mivi state should be \"\\(.+\\)\"$"
+  "Checks that the mivi state is STATE."
+  (lambda (state)
+    (should (eq (symbol-value (intern (concat "mivi-" state "-state"))) t))))
