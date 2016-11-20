@@ -35,3 +35,28 @@ Feature Insert
     When I type "I"
     Then the mivi state should be "insert"
     And the cursor should be at cell (2, 3)
+
+  Scenario: open
+    Given the buffer is empty
+    When I type "o"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (2, 0)
+
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+    """
+    And I press "<escape>"
+    And I type "o"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (2, 2)
+
+    When I insert "(when t"
+    And I press "<escape>"
+    And I start an action chain
+    And I type "o"
+    And I press "<escape>"
+    And I execute the action chain
+    Then the mivi state should be "command"
+    And the cursor should be at cell (3, 0)

@@ -243,7 +243,7 @@
 (defun mivi-open ()
   (interactive)
   (end-of-line)
-  (newline 1 nil)
+  (newline-and-indent)
   (mivi--insert-state))
 
 (defun mivi-Open ()
@@ -279,8 +279,11 @@
 ;; Other commands
 (defun mivi-command ()
   (interactive)
-  (unless (bolp)
-    (backward-char))
+  (cond
+   ((memq last-command '(mivi-open))
+    (indent-to-left-margin))
+   ((not (bolp))
+    (backward-char)))
   (set-frame-parameter nil 'cursor-type 'box)
   (setq mivi--last-command nil)
   (mivi--switch-state 'mivi-command-state))
