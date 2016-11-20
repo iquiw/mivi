@@ -251,6 +251,7 @@
   (forward-line 0)
   (newline 1 nil)
   (forward-line -1)
+  (indent-according-to-mode)
   (mivi--insert-state))
 
 ;; Delete commands
@@ -280,7 +281,7 @@
 (defun mivi-command ()
   (interactive)
   (cond
-   ((memq last-command '(mivi-open))
+   ((memq last-command '(mivi-open mivi-Open))
     (indent-to-left-margin))
    ((not (bolp))
     (backward-char)))
