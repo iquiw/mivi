@@ -7,6 +7,7 @@ Feature Insert
     Given the buffer is empty
     When I type "i"
     Then the mivi state should be "insert"
+    And the cursor should be at cell (1, 0)
 
     When I type "foo bar baz"
     And I press "<escape>"
@@ -86,3 +87,35 @@ Feature Insert
     And I execute the action chain
     Then the mivi state should be "command"
     And the cursor should be at cell (3, 0)
+
+  Scenario: append
+    Given the buffer is empty
+    When I type "a"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (1, 0)
+
+    When I type "foo bar baz"
+    And I press "<escape>"
+    Then the mivi state should be "command"
+    And I should see pattern "^foo bar baz$"
+    And the cursor should be at cell (1, 10)
+
+    When I type "a"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (1, 11)
+
+  Scenario: Append
+    Given the buffer is empty
+    When I type "A"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (1, 0)
+
+    When I type "foo bar baz"
+    And I press "<escape>"
+    Then the mivi state should be "command"
+    And I should see pattern "^foo bar baz$"
+
+    When I go to beginning of buffer
+    And I type "A"
+    Then the mivi state should be "insert"
+    And the cursor should be at cell (1, 11)
