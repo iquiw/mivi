@@ -12,6 +12,12 @@
 
 (require 'undo-tree)
 
+(defgroup mivi nil "Minimal Vi mode."
+  :group 'emulations)
+
+(defcustom mivi-override-universal-argument-map t
+  "Whether to disable \\C-u binding in `universal-argument-map'.")
+
 (defvar mivi--last-find nil)
 (defvar-local mivi-insert-state nil)
 (defvar-local mivi-command-state nil)
@@ -388,6 +394,9 @@
   (mivi-local-mode -1))
 
 (define-globalized-minor-mode mivi-mode mivi-local-mode mivi-local-mode-on)
+
+(when mivi-override-universal-argument-map
+  (define-key universal-argument-map (kbd "C-u") nil))
 
 (provide 'mivi)
 ;;; mivi.el ends here

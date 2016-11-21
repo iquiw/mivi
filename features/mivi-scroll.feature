@@ -25,7 +25,6 @@ Feature: Scroll
     And I press "C-u"
     Then the current bottom line should be half page up from end
 
-  @fail
   Scenario: C-u with prefix
     When I go to end of buffer
     And I recenter on line "-1"
