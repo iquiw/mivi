@@ -204,8 +204,8 @@
   (forward-line (- 1 arg))
   (back-to-indentation))
 
-(defun mivi-window-middle (&optional arg)
-  (interactive "P")
+(defun mivi-window-middle ()
+  (interactive)
   (move-to-window-line nil)
   (when (eobp)
     (let* ((last-line (line-number-at-pos))
