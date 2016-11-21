@@ -108,14 +108,14 @@
 
 (defconst mivi-delete-map
   (let ((map (make-sparse-keymap)))
-    (dolist (key '("b" "B"))
+    (dolist (key '("b" "B" "F"))
       (define-key map key
         (mivi--derive-function "mivi-delete-" 'mivi-command-state
                                (lookup-key mivi-motion-map key)
           (when (/= -before -after)
             (kill-region -before -after)))))
 
-    (dolist (key '("e" "E"))
+    (dolist (key '("e" "E" "f"))
       (define-key map key
         (mivi--derive-function "mivi-delete-" 'mivi-command-state
                                (lookup-key mivi-motion-map key)

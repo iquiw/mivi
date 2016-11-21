@@ -60,3 +60,32 @@ Feature: Delete
     Then I should see pattern "^ 6789$"
     When I type "dE"
     Then the buffer should be empty
+
+  Scenario: delete find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       123454321
+    """
+    And I go to beginning of buffer
+    And I type "df-"
+    Then I should see pattern "^baz "
+    When I type "3dfu"
+    Then I should see pattern "^x$"
+    When I type "d2f1"
+    Then the buffer should be empty
+
+  Scenario: delete Find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       123454321
+    """
+    And I type "d2F3"
+    Then I should see pattern "^   12$"
+    When I type "2dF-3"
+    Then I should see pattern " bar$"
+    When I type "dFr"
+    Then I should see pattern " ba$"
