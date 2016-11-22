@@ -85,7 +85,36 @@ Feature: Delete
     """
     And I type "d2F3"
     Then I should see pattern "^   12$"
-    When I type "2dF-3"
+    When I type "2dF-"
     Then I should see pattern " bar$"
     When I type "dFr"
     Then I should see pattern " ba$"
+
+  Scenario: delete goto char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       123454321
+    """
+    And I go to beginning of buffer
+    And I type "dt-"
+    Then I should see pattern "^-baz "
+    When I type "3dtu"
+    Then I should see pattern "^ux$"
+    When I type "d2t1"
+    Then I should see pattern "^1$"
+
+  Scenario: delete goto char backward
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       123454321
+    """
+    And I type "d2T3"
+    Then I should see pattern "^   123$"
+    When I type "2dT-"
+    Then I should see pattern " bar-$"
+    When I type "dTr"
+    Then I should see pattern " bar$"
