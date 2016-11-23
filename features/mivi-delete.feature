@@ -118,3 +118,30 @@ Feature: Delete
     Then I should see pattern " bar-$"
     When I type "dTr"
     Then I should see pattern " bar$"
+
+  Scenario: delete goto line
+    Given the buffer is empty
+    When I insert:
+    """
+    123
+     456
+      789
+       0
+      abc
+     def
+    ghi
+    """
+    And I go to beginning of buffer
+    And I type "d2G"
+    Then I should not see pattern "123"
+    And I should not see pattern "456"
+    And the cursor should be at cell (1, 2)
+    When I go to end of buffer
+    And I type "3dG"
+    Then I should not see pattern "abc"
+    And I should not see pattern "def"
+    And I should not see pattern "ghi"
+    And the cursor should be at cell (2, 3)
+    When I go to beginning of buffer
+    And I type "dG"
+    Then the buffer should be empty
