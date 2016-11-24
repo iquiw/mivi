@@ -64,14 +64,14 @@
     (define-key map "I" #'mivi-Insert)
     (define-key map "O" #'mivi-Open)
     (define-key map "P" #'mivi-Paste)
-    (define-key map "X" #'mivi-delete-backward-char)
+    (define-key map "X" #'mivi-kill-backward-char)
     (define-key map "a" #'mivi-append)
     (define-key map "d" #'mivi-delete)
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
     (define-key map "p" #'mivi-paste)
     (define-key map "u" #'mivi-undo)
-    (define-key map "x" #'mivi-delete-char)
+    (define-key map "x" #'mivi-kill-char)
     (define-key map "." #'mivi-repeat)
     (define-key map (kbd "C-e") #'scroll-up-line)
     (define-key map (kbd "C-y") #'scroll-down-line)
@@ -99,14 +99,15 @@
      (defalias new-fn
        (lambda ()
          (interactive)
-         (let ((-context ,pre-form))
-           (call-interactively ,orig-fn)
-           ,@edit-body)
-         (mivi--switch-state ,new-state)))))
+         (unwind-protect
+             (let ((-context ,pre-form))
+               (call-interactively ,orig-fn)
+               ,@edit-body)
+           (mivi--switch-state ,new-state))))))
 
 (defconst mivi-delete-map
   (let ((map (make-sparse-keymap)))
-    (dolist (key '("b" "B" "F" "T"))
+    (dolist (key '("b" "B" "F" "h" "T"))
       (define-key map key
         (mivi--derive-function "mivi-delete-" 'mivi-command-state
                                (lookup-key mivi-motion-map key)
@@ -313,11 +314,11 @@
   (setq mivi--last-command nil)
   (mivi--switch-state 'mivi-command-state))
 
-(defun mivi-delete-char (&optional arg)
+(defun mivi-kill-char (&optional arg)
   (interactive "p")
   (kill-forward-chars (mivi--numeric-or-default arg 1)))
 
-(defun mivi-delete-backward-char (&optional arg)
+(defun mivi-kill-backward-char (&optional arg)
   (interactive "p")
   (kill-backward-chars (mivi--numeric-or-default arg 1)))
 

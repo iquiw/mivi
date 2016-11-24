@@ -145,3 +145,17 @@ Feature: Delete
     When I go to beginning of buffer
     And I type "dG"
     Then the buffer should be empty
+
+  Scenario: delete backward char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz
+    qux
+    """
+    And I type "dh"
+    Then I should see pattern "^qu$"
+    When I type "d3h"
+    Then I should see pattern "-baz$"
+    When I type "10dh"
+    Then I should see pattern "^f$"
