@@ -125,7 +125,7 @@
             (when (/= -context p)
               (kill-region -context (1+ p)))))))
 
-    (dolist (key '("G" "j"))
+    (dolist (key '("G" "j" "k"))
       (define-key map key
         (mivi--derive-function "mivi-delete-" 'mivi-command-state
                                (lookup-key mivi-motion-map key)

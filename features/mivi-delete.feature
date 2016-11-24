@@ -198,3 +198,29 @@ Feature: Delete
     And I type "3dj"
     Then I should not see pattern "[1-4]"
     And the cursor should be at cell (1, 4)
+
+  Scenario: delete previous line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+     bar
+      baz
+       qux
+        quux
+        5
+       4
+      3
+     2
+    1
+    """
+    And I type "dk"
+    Then I should not see pattern "[12]"
+    And the cursor should be at cell (8, 2)
+    When I type "d3k"
+    Then I should not see pattern "\([345]\|quux\)"
+    And the cursor should be at cell (4, 3)
+    When I go to line "3"
+    When I type "2dk"
+    Then I should not see pattern "\(foo\|bar\|baz\)"
+    And the cursor should be at cell (1, 3)
