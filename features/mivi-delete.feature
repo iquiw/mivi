@@ -224,3 +224,20 @@ Feature: Delete
     When I type "2dk"
     Then I should not see pattern "\(foo\|bar\|baz\)"
     And the cursor should be at cell (1, 3)
+
+  Scenario: delete forward word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo   bar-baz
+      qux quux
+     123.456
+    """
+    And I go to beginning of buffer
+    And I type "dw"
+    Then I should not see pattern "^foo "
+    And I should see pattern "^bar-"
+    When I type "d2w"
+    Then I should not see pattern "^bar-baz$"
+    When I type "3dw"
+    Then I should see pattern "^456$"
