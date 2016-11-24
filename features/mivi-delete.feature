@@ -133,14 +133,11 @@ Feature: Delete
     """
     And I go to beginning of buffer
     And I type "d2G"
-    Then I should not see pattern "123"
-    And I should not see pattern "456"
+    Then I should not see pattern "\(123\|456\)"
     And the cursor should be at cell (1, 2)
     When I go to end of buffer
     And I type "3dG"
-    Then I should not see pattern "abc"
-    And I should not see pattern "def"
-    And I should not see pattern "ghi"
+    Then I should not see pattern "\(abc\|def\|ghi\)"
     And the cursor should be at cell (2, 3)
     When I go to beginning of buffer
     And I type "dG"
@@ -174,3 +171,30 @@ Feature: Delete
     Then I should see pattern "r-baz$"
     When I type "7dl"
     Then I should see pattern "^ux$"
+
+  Scenario: delete next line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+     bar
+      baz
+       qux
+        quux
+        5
+       4
+      3
+     2
+    1
+    """
+    And I go to beginning of buffer
+    And I type "dj"
+    Then I should not see pattern "\(foo\|bar\)"
+    And the cursor should be at cell (1, 2)
+    When I type "d2j"
+    Then I should not see pattern "\(baz\|qux\|quux\)"
+    And the cursor should be at cell (1, 4)
+    When I go to line "2"
+    And I type "3dj"
+    Then I should not see pattern "[1-4]"
+    And the cursor should be at cell (1, 4)
