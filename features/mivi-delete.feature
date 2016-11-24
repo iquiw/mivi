@@ -159,3 +159,18 @@ Feature: Delete
     Then I should see pattern "-baz$"
     When I type "10dh"
     Then I should see pattern "^f$"
+
+  Scenario: delete forward char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz
+    qux
+    """
+    And I go to beginning of buffer
+    And I type "dl"
+    Then I should see pattern "^oo "
+    When I type "d5l"
+    Then I should see pattern "r-baz$"
+    When I type "7dl"
+    Then I should see pattern "^ux$"
