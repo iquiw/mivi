@@ -241,3 +241,20 @@ Feature: Delete
     Then I should not see pattern "^bar-baz$"
     When I type "3dw"
     Then I should see pattern "^456$"
+
+  Scenario: delete forward Word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo   bar-baz
+      qux quux
+     123.456
+    """
+    And I go to beginning of buffer
+    And I type "dW"
+    Then I should not see pattern "^foo "
+    And I should see pattern "^bar-"
+    When I type "d2W"
+    Then I should not see pattern "qux"
+    When I type "2dW"
+    Then the buffer should be empty
