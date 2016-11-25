@@ -258,3 +258,22 @@ Feature: Delete
     Then I should not see pattern "qux"
     When I type "2dW"
     Then the buffer should be empty
+
+  Scenario: delete end of line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123
+        456
+             789
+    0
+    """
+    And I place the cursor after "foo"
+    And I type "d$"
+    Then I should see pattern "^foo$"
+    When I go to beginning of buffer
+    And I type "d2$"
+    Then I should not see pattern "\(foo\|123\)"
+    When I type "4d$"
+    Then the buffer should be empty
