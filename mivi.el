@@ -61,6 +61,7 @@
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map mivi-motion-map)
     (define-key map "A" #'mivi-Append)
+    (define-key map "D" 'mivi-delete-end-of-line)
     (define-key map "I" #'mivi-Insert)
     (define-key map "O" #'mivi-Open)
     (define-key map "P" #'mivi-Paste)

@@ -277,3 +277,22 @@ Feature: Delete
     Then I should not see pattern "\(foo\|123\)"
     When I type "4d$"
     Then the buffer should be empty
+
+  Scenario: delete end of line by D
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123
+        456
+             789
+    0
+    """
+    And I place the cursor after "foo"
+    And I type "D"
+    Then I should see pattern "^foo$"
+    When I go to beginning of buffer
+    And I type "2D"
+    Then I should not see pattern "\(foo\|123\)"
+    When I type "4D"
+    Then the buffer should be empty
