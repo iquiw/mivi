@@ -42,8 +42,8 @@ Feature: Delete
     And I type "de"
     Then I should see pattern "^ bar-baz"
     When I type "3de"
-    Then I should see pattern "^-quux$"
-    When I type "d2e"
+    Then I should see pattern "^ qux"
+    When I type "d4e"
     Then I should see pattern "^ 6789$"
 
   Scenario: delete End of word

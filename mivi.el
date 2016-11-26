@@ -169,7 +169,11 @@
   (interactive "p")
   (forward-char)
   (let ((p (point)))
-    (forward-word arg)
+    (dotimes (_ arg)
+      (skip-chars-forward "[:space:]\n")
+      (if (looking-at-p "[[:word:]_]")
+          (skip-chars-forward "[:word:]_")
+        (skip-chars-forward "^[:word:]_")))
     (unless (= p (point))
       (backward-char))))
 

@@ -82,16 +82,12 @@ Feature: Motion
     When I go to beginning of buffer
     And I type "e"
     Then the cursor should be at cell (1, 2)
-    When I type "e"
-    Then the cursor should be at cell (1, 6)
-    When I type "e"
+    When I type "2e"
     Then the cursor should be at cell (1, 11)
     When I type "e"
     Then the cursor should be at cell (3, 4)
-    When I type "e"
-    Then the cursor should be at cell (3, 10)
-    When I type "3e"
-    Then the cursor should be at cell (5, 2)
+    When I type "10e"
+    Then the cursor should be at cell (5, 10)
 
   Scenario: forward word
     When I go to beginning of buffer
