@@ -101,10 +101,10 @@ Feature: Motion
     Then the cursor should be at cell (1, 9)
     And I type "w"
     Then the cursor should be at cell (3, 2)
-    And I type "w"
-    Then the cursor should be at cell (3, 8)
-    And I type "2w"
-    Then the cursor should be at cell (3, 17)
+    And I type "3w"
+    Then the cursor should be at cell (3, 11)
+    And I type "6w"
+    Then the cursor should be at cell (5, 7)
 
   Scenario: Backward word
     When I go to end of buffer

@@ -186,8 +186,10 @@
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
   (dotimes (_ arg)
-    (skip-syntax-forward "w")
-    (skip-syntax-forward "^w")))
+    (if (looking-at-p "[[:word:]_]")
+        (skip-chars-forward "[:word:]_")
+      (skip-chars-forward "^[:word:]_"))
+    (skip-chars-forward "[:space:]\n")))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")

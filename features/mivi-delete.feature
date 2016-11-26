@@ -235,12 +235,11 @@ Feature: Delete
     """
     And I go to beginning of buffer
     And I type "dw"
-    Then I should not see pattern "^foo "
-    And I should see pattern "^bar-"
+    Then I should see pattern "^bar-"
     When I type "d2w"
-    Then I should not see pattern "^bar-baz$"
-    When I type "3dw"
-    Then I should see pattern "^456$"
+    Then I should see pattern "^baz$"
+    When I type "4dw"
+    Then I should see pattern "^\.456$"
 
   Scenario: delete forward Word
     Given the buffer is empty
