@@ -65,12 +65,12 @@ Feature: Motion
     """
     And I go to end of buffer
     And I type "b"
+    Then the cursor should be at cell (5, 11)
+    When I type "b"
     Then the cursor should be at cell (5, 8)
     When I type "b"
-    Then the cursor should be at cell (5, 4)
-    When I type "b"
-    Then the cursor should be at cell (5, 0)
-    When I type "b"
+    Then the cursor should be at cell (5, 7)
+    When I type "3b"
     Then the cursor should be at cell (3, 17)
     When I go to cell (1, 10)
     And I type "b"

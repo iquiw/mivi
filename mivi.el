@@ -46,7 +46,7 @@
     (define-key map "T" #'mivi-goto-char-backward)
     (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'back-to-indentation)
-    (define-key map "b" #'backward-word)
+    (define-key map "b" #'mivi-backward-word)
     (define-key map "e" #'mivi-end-of-word)
     (define-key map "f" #'mivi-find)
     (define-key map "h" #'backward-char)
@@ -151,6 +151,14 @@
   (interactive))
 
 ;; Motion commands
+(defun mivi-backward-word (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (skip-chars-backward "[:space:]\n")
+    (if (looking-back "[[:word:]_]")
+        (skip-chars-backward "[:word:]_")
+      (skip-chars-backward "^[:word:]_"))))
+
 (defun mivi-Backward-word (&optional arg)
   (interactive "p")
   (dotimes (_ arg)

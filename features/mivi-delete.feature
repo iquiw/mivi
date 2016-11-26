@@ -8,13 +8,13 @@ Feature: Delete
     When I insert:
     """
     foo bar-baz qux
-    quux
+    qu_ux
     """
     And I type "db"
     Then I should not see pattern "quux"
     When I type "2db"
     Then I should see pattern "bar-$"
-    When I type "d2b"
+    When I type "d3b"
     Then the buffer should be empty
 
   Scenario: delete Backward word
