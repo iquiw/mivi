@@ -101,6 +101,9 @@ Feature: Motion
     Then the cursor should be at cell (3, 11)
     When I type "6w"
     Then the cursor should be at cell (5, 7)
+    When I place the cursor after "678"
+    And I type "w"
+    Then the cursor should be at cell (3, 16)
 
   Scenario: Backward word
     When I go to end of buffer

@@ -198,10 +198,14 @@
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
   (dotimes (_ arg)
-    (if (looking-at-p "[[:word:]_]")
-        (skip-chars-forward "[:word:]_")
-      (skip-chars-forward "^[:word:]_"))
-    (skip-chars-forward "[:space:]\n")))
+    (cond
+     ((looking-at-p "[[:space:]\n]")
+      (skip-chars-forward "[:space:]\n"))
+     (t
+      (if (looking-at-p "[[:word:]_]")
+          (skip-chars-forward "[:word:]_")
+        (skip-chars-forward "^[:word:]_"))
+      (skip-chars-forward "[:space:]\n")))))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
