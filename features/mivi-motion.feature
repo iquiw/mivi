@@ -75,7 +75,7 @@ Feature: Motion
     When I go to cell (1, 10)
     And I type "b"
     Then the cursor should be at cell (1, 9)
-    And I type "2b"
+    When I type "2b"
     Then the cursor should be at cell (1, 0)
 
   Scenario: end of word
@@ -93,40 +93,40 @@ Feature: Motion
     When I go to beginning of buffer
     And I type "w"
     Then the cursor should be at cell (1, 4)
-    And I type "w"
+    When I type "w"
     Then the cursor should be at cell (1, 9)
-    And I type "w"
+    When I type "w"
     Then the cursor should be at cell (3, 2)
-    And I type "3w"
+    When I type "3w"
     Then the cursor should be at cell (3, 11)
-    And I type "6w"
+    When I type "6w"
     Then the cursor should be at cell (5, 7)
 
   Scenario: Backward word
     When I go to end of buffer
     And I type "B"
     Then the cursor should be at cell (5, 0)
-    And I type "B"
+    When I type "B"
     Then the cursor should be at cell (3, 16)
-    And I type "3B"
+    When I type "3B"
     Then the cursor should be at cell (1, 4)
 
   Scenario: End of word
     When I go to beginning of buffer
     And I type "3E"
     Then the cursor should be at cell (1, 11)
-    And I type "E"
+    When I type "E"
     Then the cursor should be at cell (3, 14)
-    And I type "E"
+    When I type "E"
     Then the cursor should be at cell (3, 20)
 
-  Scenario: forward of Word
+  Scenario: forward Word
     When I go to beginning of buffer
     And I type "W"
     Then the cursor should be at cell (1, 4)
-    And I type "3W"
+    When I type "3W"
     Then the cursor should be at cell (3, 16)
-    And I type "W"
+    When I type "W"
     Then the cursor should be at cell (5, 0)
 
   Scenario: find
