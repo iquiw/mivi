@@ -295,3 +295,20 @@ Feature: Delete
     Then I should not see pattern "\(foo\|123\)"
     When I type "4D"
     Then the buffer should be empty
+
+  Scenario: delete beginning of line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+      baz
+    1
+      2
+        3
+    """
+    And I place the cursor after "foo"
+    And I type "d0"
+    Then I should see pattern "^ bar$"
+    When I type "2d0"
+    Then I should not see pattern "^ bar$"
+    And I should see pattern "^  baz$"
