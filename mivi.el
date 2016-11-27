@@ -142,6 +142,7 @@
               (goto-char (1- pmin)))
             (back-to-indentation)))))
 
+    (define-key map "d" #'mivi-delete-line)
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     (define-key map [t] #'mivi-command)
@@ -301,6 +302,14 @@
   (interactive "P")
   (mivi--switch-state 'mivi-delete-state)
   (setq prefix-arg arg))
+
+(defun mivi-delete-line (&optional arg)
+  (interactive "p")
+  (let ((beg (progn (forward-line 0) (point)))
+        (end (progn (forward-line arg) (point))))
+    (unless (= beg end)
+      (kill-region beg end)))
+  (mivi--switch-state 'mivi-command-state))
 
 ;; Scroll commands
 (defun mivi-scroll-down (&optional arg)

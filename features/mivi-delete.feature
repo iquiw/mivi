@@ -312,3 +312,22 @@ Feature: Delete
     When I type "2d0"
     Then I should not see pattern "^ bar$"
     And I should see pattern "^  baz$"
+
+  Scenario: delete line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+     baz
+    qux
+        quux
+    """
+    And I go to beginning of buffer
+    And I type "dd"
+    Then I should not see pattern "^foo"
+    And the mivi state should be "command"
+    When I type "2dd"
+    Then I should not see pattern "\(bar\|baz\)"
+    When I type "d3d"
+    Then the buffer should be empty
