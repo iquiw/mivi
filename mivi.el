@@ -199,13 +199,11 @@
   (interactive "p")
   (dotimes (_ arg)
     (cond
-     ((looking-at-p "[[:space:]\n]")
-      (skip-chars-forward "[:space:]\n"))
-     (t
-      (if (looking-at-p "[[:word:]_]")
-          (skip-chars-forward "[:word:]_")
-        (skip-chars-forward "^[:word:]_"))
-      (skip-chars-forward "[:space:]\n")))))
+     ((looking-at-p "[[:word:]_]")
+      (skip-chars-forward "[:word:]_"))
+     ((not (looking-at-p "[[:space:]\n]"))
+      (skip-chars-forward "^[:word:]_")))
+    (skip-chars-forward "[:space:]\n")))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
