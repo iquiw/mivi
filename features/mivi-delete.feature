@@ -331,3 +331,23 @@ Feature: Delete
     Then I should not see pattern "\(bar\|baz\)"
     When I type "d3d"
     Then the buffer should be empty
+
+  Scenario: delete find repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    baz
+      baz bar
+      foo
+    """
+    And I go to beginning of buffer
+    And I type "fb"
+    And I type "d;"
+    Then I should see pattern "^foo az$"
+    When I type "d2;"
+    Then I should see pattern "^foo ar$"
+    When I go to end of buffer
+    And I type "Fo"
+    And I type "3d;"
+    Then I should see pattern "^fo$"
