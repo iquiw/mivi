@@ -351,3 +351,25 @@ Feature: Delete
     And I type "Fo"
     And I type "3d;"
     Then I should see pattern "^fo$"
+
+  Scenario: delete find repeat opposite
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    baz
+      baz bar
+      foo
+    """
+    And I go to beginning of buffer
+    And I type "3tb"
+    And I type "d,"
+    Then I should see pattern "^b baz bar$"
+    When I type "Ta"
+    And I type "d2,"
+    Then I should see pattern "^foo baar$"
+    When I go to beginning of buffer
+    And I type "T "
+    And I type "3d,"
+    Then I should see pattern "^ foo$"
+
