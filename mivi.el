@@ -324,6 +324,8 @@
         (end (progn (forward-line arg) (point))))
     (unless (= beg end)
       (kill-region beg end)))
+  (when (eobp)
+    (forward-line -1))
   (mivi--switch-state 'mivi-command-state))
 
 ;; Scroll commands

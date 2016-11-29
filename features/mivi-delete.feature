@@ -340,6 +340,9 @@ Feature: Delete
      baz
     qux
         quux
+    1
+    2
+    end
     """
     And I go to beginning of buffer
     And I type "dd"
@@ -347,7 +350,16 @@ Feature: Delete
     And the mivi state should be "command"
     When I type "2dd"
     Then I should not see pattern "\(bar\|baz\)"
-    When I type "d3d"
+    When I type "d2d"
+    Then I should not see pattern "\(qux\|quux\)"
+    When I go to word "2"
+    And I type "dd"
+    Then I should not see pattern "^2$"
+    And the current line should be "2"
+    When I type "dd"
+    Then I should not see pattern "^end$"
+    And the current line should be "1"
+    When I type "dd"
     Then the buffer should be empty
 
   Scenario: delete find repeat
