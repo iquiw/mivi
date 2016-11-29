@@ -313,6 +313,24 @@ Feature: Delete
     Then I should not see pattern "^ bar$"
     And I should see pattern "^  baz$"
 
+  Scenario: delete beginning of text
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+      baz
+    1
+      2
+        3
+    """
+    And I place the cursor after "foo"
+    And I type "d^"
+    Then I should see pattern "^ bar$"
+    When I place the cursor after "baz"
+    And I type "d^"
+    Then I should not see pattern "^  baz$"
+    Then I should see pattern "^  $"
+
   Scenario: delete line
     Given the buffer is empty
     When I insert:
