@@ -11,7 +11,7 @@ Feature: Delete
     qu_ux
     """
     And I type "db"
-    Then I should not see pattern "quux"
+    Then I should not see pattern "qu_ux"
     When I type "2db"
     Then I should see pattern "bar-$"
     When I type "d3b"
