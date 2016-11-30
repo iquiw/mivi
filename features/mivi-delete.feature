@@ -403,3 +403,42 @@ Feature: Delete
     And I type "3d,"
     Then I should see pattern "^ foo$"
 
+  Scenario: delete window top
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "dH"
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see pattern "^baz$"
+
+  Scenario: delete window middle
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "dM"
+    Then I should not see pattern "^bar$"
+    And I should see pattern "^foo$"
+    And I should see pattern "^baz$"
+
+  Scenario: delete window bottom
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "dL"
+    Then I should not see pattern "\(bar\|baz\)"
+    And I should see pattern "^foo$"
