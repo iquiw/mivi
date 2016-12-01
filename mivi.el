@@ -461,26 +461,26 @@
 
 (with-eval-after-load 'eldoc
   (eldoc-add-command
-   'mivi-Backward-word
-   'mivi-End-of-word
-   'mivi-Find
-   'mivi-backward-word
-   'mivi-end-of-word
-   'mivi-find
-   'mivi-forward-Word
-   'mivi-forward-word
-   'mivi-goto-char
-   'mivi-goto-char-backward
-   'mivi-goto-line
-   'mivi-repeat-find
-   'mivi-repeat-find-opposite
-   'mivi-scroll-down
-   'mivi-scroll-screen-down
-   'mivi-scroll-screen-up
-   'mivi-scroll-up
-   'mivi-window-bottom
-   'mivi-window-middle
-   'mivi-window-top))
+   "mivi-Backward-word"
+   "mivi-End-of-word"
+   "mivi-Find"
+   "mivi-backward-word"
+   "mivi-end-of-word"
+   "mivi-find"
+   "mivi-forward-Word"
+   "mivi-forward-word"
+   "mivi-goto-char"
+   "mivi-goto-char-backward"
+   "mivi-goto-line"
+   "mivi-repeat-find"
+   "mivi-repeat-find-opposite"
+   "mivi-scroll-down"
+   "mivi-scroll-screen-down"
+   "mivi-scroll-screen-up"
+   "mivi-scroll-up"
+   "mivi-window-bottom"
+   "mivi-window-middle"
+   "mivi-window-top"))
 
 (provide 'mivi)
 ;;; mivi.el ends here
