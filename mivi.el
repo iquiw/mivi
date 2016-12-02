@@ -159,7 +159,7 @@
   (interactive "p")
   (dotimes (_ arg)
     (skip-chars-backward "[:space:]\n")
-    (if (looking-back "[[:word:]_]")
+    (if (looking-back "[[:word:]_]" nil)
         (skip-chars-backward "[:word:]_")
       (skip-chars-backward "^[:word:]_"))))
 
