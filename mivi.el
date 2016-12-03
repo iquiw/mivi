@@ -388,11 +388,15 @@
 
 (defun mivi-paste (&optional arg)
   (interactive "p")
-  (unless (eolp)
-    (forward-char))
-  (save-excursion
-    (dotimes (_ arg)
-      (yank))))
+  (cond
+   ((string-match-p "\n$" (current-kill 0))
+    (forward-line 1)
+    (unless (bolp)
+      (newline)))
+   ((not (eolp))
+    (forward-char)))
+  (dotimes (_ arg)
+    (save-excursion (yank))))
 
 (defun mivi-Paste (&optional arg)
   (interactive "p")

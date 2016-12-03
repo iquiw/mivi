@@ -83,3 +83,31 @@ Feature Kill and Yank
     And I go to word "bar"
     And I type "P"
     Then I should see pattern "bazfobar$"
+
+  Scenario: Paste lines
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    baz
+    qux
+    """
+    When I go to beginning of buffer
+    And I type "dd"
+    Then I should not see pattern "^foo bar$"
+    When I type "p"
+    Then I should see pattern "^foo bar$"
+    And the current line should be "2"
+    When I type "dd"
+    And I type "p"
+    Then I should see pattern "^foo bar$"
+    And the current line should be "3"
+    When I type "dd"
+    And I type "dd"
+    And I type "2p"
+    Then I should see:
+    """
+    baz
+    qux
+    qux
+    """
