@@ -73,7 +73,7 @@ Feature Insert
     """
     (defun foo ()
       (if t
-    
+
     """
     And I press "<escape>"
     And I type "O"

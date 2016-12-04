@@ -43,7 +43,7 @@ Feature Kill and Yank
     When I insert:
     """
     foo bar baz
-    
+
     qux
     """
     When I go to beginning of buffer
@@ -84,7 +84,7 @@ Feature Kill and Yank
     And I type "P"
     Then I should see pattern "bazfobar$"
 
-  Scenario: Paste lines
+  Scenario: paste lines
     Given the buffer is empty
     When I insert:
     """
@@ -110,4 +110,35 @@ Feature Kill and Yank
     baz
     qux
     qux
+    """
+
+  Scenario: Paste lines
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    baz
+    qux
+
+    """
+    When I go to beginning of buffer
+    And I type "dd"
+    Then I should not see pattern "^foo bar$"
+    When I type "P"
+    Then I should see pattern "^foo bar$"
+    And the current line should be "1"
+    When I type "dd"
+    And I place the cursor after "qux"
+    And I type "P"
+    Then I should see pattern "^foo bar$"
+    And the current line should be "2"
+    When I type "2dd"
+    And I type "2P"
+    Then I should see:
+    """
+    foo bar
+    qux
+    foo bar
+    qux
+    baz
     """

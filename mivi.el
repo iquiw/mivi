@@ -400,6 +400,8 @@
 
 (defun mivi-Paste (&optional arg)
   (interactive "p")
+  (when (string-match-p "\n$" (current-kill 0))
+   (forward-line 0))
   (save-excursion
     (dotimes (_ arg)
       (yank))))
