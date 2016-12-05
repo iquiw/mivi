@@ -36,3 +36,172 @@ Feature: Change
     Then I should see pattern "^ $"
     And the mivi state should be "insert"
 
+  Scenario: change end of word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       12345 6789
+    """
+    And I go to beginning of buffer
+    And I type "ce"
+    Then I should see pattern "^ bar-baz"
+    And the mivi state should be "insert"
+
+  Scenario: change End of word
+    When I type "cE"
+    Then I should see pattern "^ qux-quux"
+    And the mivi state should be "insert"
+
+  Scenario: change find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       123454321
+    """
+    And I go to beginning of buffer
+    And I type "cf-"
+    Then I should see pattern "^baz "
+    And the mivi state should be "insert"
+
+  Scenario: change Find
+    When I go to end of buffer
+    And I type "c2F3"
+    Then I should see pattern "^   12$"
+    And the mivi state should be "insert"
+
+  Scenario: change goto char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       123454321
+    """
+    And I go to beginning of buffer
+    And I type "ct-"
+    Then I should see pattern "^-baz "
+    And the mivi state should be "insert"
+
+  Scenario: change goto char backward
+    When I go to end of buffer
+    And I type "c2T3"
+    Then I should see pattern "^   123$"
+    And the mivi state should be "insert"
+
+  Scenario: change backward char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz
+    qux
+    """
+    And I type "ch"
+    Then I should see pattern "^qu$"
+    And the mivi state should be "insert"
+
+  Scenario: change forward char
+    When I go to beginning of buffer
+    And I type "cl"
+    Then I should see pattern "^oo "
+    And the mivi state should be "insert"
+
+  Scenario: change end of line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123
+    """
+    And I place the cursor after "foo"
+    And I type "c$"
+    Then I should see pattern "^foo$"
+    And the mivi state should be "insert"
+
+  Scenario: change end of line by C
+    When I place the cursor after "2"
+    And I type "C"
+    Then I should see pattern "^12$"
+    And the mivi state should be "insert"
+
+  Scenario: change beginning of line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+      baz
+    """
+    And I place the cursor after "foo"
+    And I type "c0"
+    Then I should see pattern "^ bar$"
+    And the mivi state should be "insert"
+
+  Scenario: change beginning of text
+    When I place the cursor after "baz"
+    And I type "c^"
+    Then I should see pattern "^  $"
+    And the mivi state should be "insert"
+
+  Scenario: change find repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    baz
+      baz bar
+      foo
+    """
+    And I go to beginning of buffer
+    And I type "fb"
+    And I type "c;"
+    Then I should see pattern "^foo az$"
+    And the mivi state should be "insert"
+
+  Scenario: change find repeat opposite
+    When I go to end of buffer
+    And I type "2c,"
+    Then I should see pattern "^  $"
+    And the mivi state should be "insert"
+
+  Scenario: change window top
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "cH"
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see pattern "^baz$"
+    And the mivi state should be "insert"
+
+  Scenario: change window middle
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "cM"
+    Then I should not see pattern "^bar$"
+    And I should see pattern "^foo$"
+    And I should see pattern "^baz$"
+    And the mivi state should be "insert"
+
+  Scenario: change window bottom
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "cL"
+    Then I should not see pattern "\(bar\|baz\)"
+    And I should see pattern "^foo$"
+    And the mivi state should be "insert"
