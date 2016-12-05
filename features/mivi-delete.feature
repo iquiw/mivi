@@ -24,7 +24,7 @@ Feature: Delete
     foo bar-baz qux-quux
     """
     And I type "dB"
-    Then I should not see pattern "baz$"
+    Then I should see pattern "baz $"
     When I type "2dB"
     Then the buffer should be empty
     When I type "dB"

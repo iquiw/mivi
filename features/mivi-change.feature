@@ -21,3 +21,18 @@ Feature: Change
     And I type "c3b"
     Then I should see pattern "^-$"
     And the mivi state should be "insert"
+
+  Scenario: change Backward word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+    """
+    And I type "cB"
+    Then I should see pattern "baz $"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "2cB"
+    Then I should see pattern "^ $"
+    And the mivi state should be "insert"
+
