@@ -355,8 +355,12 @@
 
 (defun mivi-delete-line (&optional arg)
   (interactive "p")
-  (let ((beg (progn (forward-line 0) (point)))
-        (end (progn (forward-line arg) (point))))
+  (let ((beg (save-excursion
+               (forward-line (if (< arg 0) arg 0))
+               (point)))
+        (end (save-excursion
+               (forward-line (if (< arg 0) 1 arg))
+               (point))))
     (unless (= beg end)
       (kill-region beg end)))
   (when (eobp)
