@@ -142,6 +142,45 @@ Feature: Change
     Then I should see pattern "^  $"
     And the mivi state should be "insert"
 
+  Scenario: change line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+     baz
+    qux
+        quux
+    1
+    2
+    end
+    """
+    And I go to beginning of buffer
+    And I type "cc"
+    Then I should not see pattern "^foo"
+    Then I should see pattern "^$"
+    And the current line should be "1"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "3cc"
+    Then I should not see pattern "\(bar\|baz\)"
+    And the current line should be "1"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I go to line "2"
+    And I type "c2c"
+    Then I should not see pattern "\(qux\|quux\)"
+    And the current line should be "2"
+    And the mivi state should be "insert"
+    When I go to end of buffer
+    And I press "<escape>"
+    And I call "universal-argument"
+    And I type "-1cc"
+    Then I should not see pattern "\(end\|2\)"
+    And I should see pattern "^1$"
+    And the current line should be "4"
+    And the mivi state should be "insert"
+
   Scenario: change find repeat
     Given the buffer is empty
     When I insert:

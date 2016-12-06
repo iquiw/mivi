@@ -158,6 +158,7 @@
 
 (defconst mivi-change-map
   (let ((map (mivi--define-keymap "mivi-change-" 'mivi-insert-state)))
+    (define-key map "c" #'mivi-change-line)
     map))
 
 (defconst mivi-delete-map
@@ -331,6 +332,20 @@
   (interactive "P")
   (mivi--switch-state 'mivi-change-state)
   (setq prefix-arg arg))
+
+(defun mivi-change-line (&optional arg)
+  (interactive "p")
+  (let* ((beg (save-excursion
+                (forward-line (if (< arg 0) arg 0))
+                (point)))
+         (end (save-excursion
+                (forward-line (if (< arg 0) 1 arg))
+                (if (eobp)
+                    (point)
+                  (1- (point))))))
+    (unless (= beg end)
+      (kill-region beg end)))
+  (mivi--switch-state 'mivi-insert-state))
 
 ;; Delete commands
 (defun mivi-delete (&optional arg)
