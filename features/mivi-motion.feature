@@ -109,6 +109,9 @@ Feature: Motion
     When I place the cursor after "678"
     And I type "w"
     Then the cursor should be at cell (3, 16)
+    When I place the cursor after "<baz"
+    And I type "w"
+    Then the cursor should be at cell (6, 2)
 
   Scenario: Backward word
     When I go to end of buffer

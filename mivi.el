@@ -227,7 +227,7 @@
      ((looking-at-p "[[:word:]_]")
       (skip-chars-forward "[:word:]_"))
      ((not (looking-at-p "[[:space:]\n]"))
-      (skip-chars-forward "^[:word:]_")))
+      (skip-chars-forward "^[:word:][:space:]\n_")))
     (skip-chars-forward "[:space:]\n")))
 
 (defun mivi-forward-Word (&optional arg)
