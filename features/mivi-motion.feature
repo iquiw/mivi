@@ -91,6 +91,8 @@ Feature: Motion
     Then the cursor should be at cell (3, 4)
     When I type "10e"
     Then the cursor should be at cell (5, 10)
+    When I type "e"
+    Then the cursor should be at cell (5, 11)
 
   Scenario: forward word
     When I go to beginning of buffer
