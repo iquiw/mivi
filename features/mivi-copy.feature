@@ -1,0 +1,31 @@
+Feature: Copy
+  In order to edit text in command mode
+  As a user
+  I want to copy text
+
+  Scenario: copy backward word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux
+    qu_ux
+    """
+    And I type "yb"
+    Then the current kill-ring should be "qu_ux"
+    And the cursor should be at cell (2, 5)
+    And I should see pattern "^qu_ux$"
+    And the mivi state should be "command"
+    When I type "2yb"
+    Then the current kill-ring should be:
+    """
+    qux
+    qu_ux
+    """
+    And the mivi state should be "command"
+    When I type "y3b"
+    Then the current kill-ring should be:
+    """
+    baz qux
+    qu_ux
+    """
+    And the mivi state should be "command"

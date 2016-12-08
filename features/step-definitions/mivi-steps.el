@@ -96,3 +96,8 @@
   "Checks that the mivi state is STATE."
   (lambda (state)
     (should (eq (symbol-value (intern (concat "mivi-" state "-state"))) t))))
+
+(Then "^the current kill-ring should be\\(?: \"\\(.*\\)\"\\|:\\)$"
+  "Checks that the current kill-ring is STRING."
+  (lambda (string)
+    (should (string= (current-kill 0) string))))
