@@ -182,7 +182,7 @@
     (skip-chars-backward "[:space:]\n")
     (if (looking-back "[[:word:]_]" nil)
         (skip-chars-backward "[:word:]_")
-      (skip-chars-backward "^[:word:]_"))))
+      (skip-chars-backward "^[:word:][:space:]_"))))
 
 (defun mivi-Backward-word (&optional arg)
   (interactive "p")

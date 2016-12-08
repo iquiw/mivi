@@ -62,9 +62,12 @@ Feature: Motion
       012---345-678 (abc)
 
     foo_bar<baz>
+      ()
     """
     And I go to end of buffer
     And I type "b"
+    Then the cursor should be at cell (6, 2)
+    When I type "b"
     Then the cursor should be at cell (5, 11)
     When I type "b"
     Then the cursor should be at cell (5, 8)
@@ -108,6 +111,8 @@ Feature: Motion
   Scenario: Backward word
     When I go to end of buffer
     And I type "B"
+    Then the cursor should be at cell (6, 2)
+    When I type "B"
     Then the cursor should be at cell (5, 0)
     When I type "B"
     Then the cursor should be at cell (3, 16)
