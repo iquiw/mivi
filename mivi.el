@@ -96,10 +96,11 @@
     (define-key map [escape] #'mivi-command)
     map))
 
-(defmacro mivi--derive-function (prefix new-state orig-fn pre-form &rest edit-body)
+(defmacro mivi--derive-function (prefix new-state key pre-form &rest edit-body)
   (declare (debug (form form form form body))
            (indent 4))
-  `(let* ((orig-name (symbol-name ,orig-fn))
+  `(let* ((orig-fn (lookup-key mivi-motion-map ,key))
+          (orig-name (symbol-name orig-fn))
           (new-fn (intern (concat ,prefix
                                   (if (string-match-p "^mivi-" orig-name)
                                       (substring orig-name 5)
@@ -109,26 +110,26 @@
          (interactive)
          (unwind-protect
              (let ((-context ,pre-form))
-               (call-interactively ,orig-fn)
+               (call-interactively orig-fn)
                ,@edit-body)
            (mivi--switch-state ,new-state))))))
 
+(defconst mivi--motion-0-keys '("$" "0" "B" "F" "T" "W" "^" "b" "h" "l" "w"))
+(defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
+(defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))
+
 (defun mivi--define-keymap (prefix state)
   (let ((map (make-sparse-keymap)))
-    (dolist (key '("$" "0" "B" "F" "T" "W" "^" "b" "h" "l" "w"))
+    (dolist (key mivi--motion-0-keys)
       (define-key map key
-        (mivi--derive-function prefix state
-                               (lookup-key mivi-motion-map key)
-                               (point)
+        (mivi--derive-function prefix state key (point)
           (let ((p (point)))
             (when (/= -context p)
               (kill-region -context p))))))
 
-    (dolist (key '("," ";" "E" "e" "f" "t"))
+    (dolist (key mivi--motion-1-keys)
       (define-key map key
-        (mivi--derive-function prefix state
-                               (lookup-key mivi-motion-map key)
-                               (point)
+        (mivi--derive-function prefix state key (point)
           (let ((p (point)))
             (cond
              ((< -context p)
@@ -136,11 +137,9 @@
              ((> -context p)
               (kill-region -context p)))))))
 
-    (dolist (key '("G" "H" "L" "M" "j" "k"))
+    (dolist (key mivi--motion-line-keys)
       (define-key map key
-        (mivi--derive-function prefix state
-                               (lookup-key mivi-motion-map key)
-                               (progn (forward-line 0) (point))
+        (mivi--derive-function prefix state key (progn (forward-line 0) (point))
           (forward-line 0)
           (let* ((p (point))
                  (pmin (min -context p))
