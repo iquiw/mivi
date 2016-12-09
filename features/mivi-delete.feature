@@ -238,6 +238,8 @@ Feature: Delete
     Then I should see pattern "^bar-"
     When I type "d2w"
     Then I should see pattern "^baz$"
+    When I type "dw"
+    Then I should see pattern "^$"
     When I type "4dw"
     Then I should see pattern "^\.456$"
 

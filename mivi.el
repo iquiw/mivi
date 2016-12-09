@@ -19,6 +19,8 @@
   "Whether to disable \\C-u binding in `universal-argument-map'.")
 
 (defvar mivi--last-find nil)
+(defvar mivi--stop-at-eol nil)
+
 (defvar-local mivi-change-state nil)
 (defvar-local mivi-command-state nil)
 (defvar-local mivi-copy-state nil)
@@ -112,7 +114,8 @@
        (lambda ()
          (interactive)
          (unwind-protect
-             (let ((-context ,pre-form))
+             (let ((-context ,pre-form)
+                   (mivi--stop-at-eol t))
                (call-interactively orig-fn)
                ,@edit-body)
            (mivi--switch-state ,new-state))))))
@@ -222,13 +225,16 @@
 
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
-  (dotimes (_ arg)
+  (dotimes (i arg)
     (cond
      ((looking-at-p "[[:word:]_]")
       (skip-chars-forward "[:word:]_"))
      ((not (looking-at-p "[[:space:]\n]"))
       (skip-chars-forward "^[:word:][:space:]\n_")))
-    (skip-chars-forward "[:space:]\n")))
+    (if (and mivi--stop-at-eol
+             (= i (1- arg)))
+        (skip-chars-forward "[:space:]")
+      (skip-chars-forward "[:space:]\n"))))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
