@@ -238,9 +238,12 @@
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
-  (dotimes (_ arg)
+  (dotimes (i arg)
     (skip-chars-forward "^[:space:]\n")
-    (skip-chars-forward "[:space:]\n")))
+    (if (and mivi--stop-at-eol
+             (= i (1- arg)))
+        (skip-chars-forward "[:space:]")
+      (skip-chars-forward "[:space:]\n"))))
 
 (defun mivi-goto-char (&optional arg)
   (interactive "p")

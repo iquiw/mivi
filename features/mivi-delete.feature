@@ -247,7 +247,7 @@ Feature: Delete
     Given the buffer is empty
     When I insert:
     """
-    foo   bar-baz
+    foo   bar-baz baz
       qux quux
      123.456
     """
@@ -256,8 +256,9 @@ Feature: Delete
     Then I should not see pattern "^foo "
     And I should see pattern "^bar-"
     When I type "d2W"
-    Then I should not see pattern "qux"
-    When I type "2dW"
+    Then I should not see pattern "bar-baz baz"
+    And I should see pattern "^$"
+    When I type "4dW"
     Then the buffer should be empty
 
   Scenario: delete end of line
