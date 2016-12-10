@@ -119,3 +119,18 @@ Feature Insert
     And I type "A"
     Then the mivi state should be "insert"
     And the cursor should be at cell (1, 11)
+
+  Scenario: Replace
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    """
+    And I go to beginning of buffer
+    And I type "Rbaz "
+    Then the mivi state should be "insert"
+    And I should see pattern "^baz bar$"
+    When I press "<escape>"
+    And I type "R qux quux"
+    Then the mivi state should be "insert"
+    And I should see pattern "^baz qux quux$"

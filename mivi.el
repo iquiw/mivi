@@ -75,6 +75,7 @@
     (define-key map "J" #'mivi-join)
     (define-key map "O" #'mivi-Open)
     (define-key map "P" #'mivi-Paste)
+    (define-key map "R" #'mivi-Replace)
     (define-key map "X" #'mivi-kill-backward-char)
     (define-key map "a" #'mivi-append)
     (define-key map "c" #'mivi-change)
@@ -343,6 +344,11 @@
   (indent-according-to-mode)
   (mivi--switch-state 'mivi-insert-state))
 
+(defun mivi-Replace ()
+  (interactive)
+  (overwrite-mode 1)
+  (mivi--switch-state 'mivi-replace-state))
+
 ;; Change commands
 (defun mivi-change (&optional arg)
   (interactive "P")
@@ -414,6 +420,7 @@
     (indent-to-left-margin))
    ((not (bolp))
     (backward-char)))
+  (overwrite-mode -1)
   (set-frame-parameter nil 'cursor-type 'box)
   (setq mivi--last-command nil)
   (mivi--switch-state 'mivi-command-state))
@@ -510,10 +517,13 @@
     (prefix-numeric-value arg)))
 
 (defun mivi--switch-state (state)
-  (dolist (s mivi--states)
-    (set s (eq s state)))
-  (when (eq state 'mivi-insert-state)
+  (cond
+   ((eq state 'mivi-replace-state)
+    (setq state 'mivi-insert-state))
+   ((eq state 'mivi-insert-state)
     (set-frame-parameter nil 'cursor-type 'bar)))
+  (dolist (s mivi--states)
+    (set s (eq s state))))
 
 (defvar mivi-mode-map-alist
   (list
