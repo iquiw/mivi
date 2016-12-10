@@ -23,3 +23,18 @@ Feature: Motion
     When I type "3J"
     Then I should see pattern "^foo bar baz qux quux$"
     And the cursor should be at cell (1, 15)
+
+  Scenario: replace char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    """
+    And I go to beginning of buffer
+    And I type "rg"
+    Then I should see pattern "^goo$"
+    And the cursor should be at cell (1, 0)
+    When I go to cell (1, 1)
+    And I type "2rP"
+    Then I should see pattern "^gPP$"
+    And the cursor should be at cell (1, 1)

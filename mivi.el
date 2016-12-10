@@ -82,6 +82,7 @@
     (define-key map "i" #'mivi-insert)
     (define-key map "o" #'mivi-open)
     (define-key map "p" #'mivi-paste)
+    (define-key map "r" #'mivi-replace-char)
     (define-key map "u" #'mivi-undo)
     (define-key map "x" #'mivi-kill-char)
     (define-key map "y" #'mivi-copy)
@@ -475,6 +476,13 @@
   (save-excursion
     (dotimes (_ arg)
       (yank))))
+
+(defun mivi-replace-char (&optional arg)
+  (interactive "p")
+  (let ((c (read-quoted-char "r-")))
+    (delete-char arg)
+    (save-excursion
+      (insert-char c arg))))
 
 ;; Internal functions
 (defun mivi--copy-region (beg end)
