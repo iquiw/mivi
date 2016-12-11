@@ -84,6 +84,7 @@
     (define-key map "o" #'mivi-open)
     (define-key map "p" #'mivi-paste)
     (define-key map "r" #'mivi-replace-char)
+    (define-key map "s" #'mivi-substitute)
     (define-key map "u" #'mivi-undo)
     (define-key map "x" #'mivi-kill-char)
     (define-key map "y" #'mivi-copy)
@@ -348,6 +349,11 @@
   (interactive)
   (overwrite-mode 1)
   (mivi--switch-state 'mivi-replace-state))
+
+(defun mivi-substitute (&optional arg)
+  (interactive "p")
+  (delete-char arg)
+  (mivi--switch-state 'mivi-insert-state))
 
 ;; Change commands
 (defun mivi-change (&optional arg)

@@ -134,3 +134,19 @@ Feature Insert
     And I type "R qux quux"
     Then the mivi state should be "insert"
     And I should see pattern "^baz qux quux$"
+
+  Scenario: substitute
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    """
+    And I go to beginning of buffer
+    And I type "squx"
+    Then the mivi state should be "insert"
+    And I should see pattern "^quxoo bar$"
+    When I press "<escape>"
+    And I place the cursor after "oo "
+    And I type "3squux"
+    Then the mivi state should be "insert"
+    And I should see pattern "^quxoo quux$"
