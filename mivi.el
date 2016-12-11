@@ -349,6 +349,7 @@
 (defun mivi-Replace ()
   (interactive)
   (overwrite-mode 1)
+  (set-frame-parameter nil 'cursor-type '(hbar . 7))
   (mivi--switch-state 'mivi-replace-state))
 
 (defun mivi-substitute (&optional arg)
