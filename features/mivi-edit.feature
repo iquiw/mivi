@@ -34,7 +34,9 @@ Feature: Motion
     And I type "rg"
     Then I should see pattern "^goo$"
     And the cursor should be at cell (1, 0)
+    When I type "r7"
+    Then I should see pattern "^7oo$"
     When I go to cell (1, 1)
     And I type "2rP"
-    Then I should see pattern "^gPP$"
+    Then I should see pattern "^7PP$"
     And the cursor should be at cell (1, 1)

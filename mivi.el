@@ -493,10 +493,11 @@
 
 (defun mivi-replace-char (&optional arg)
   (interactive "p")
-  (let ((c (read-quoted-char "r-")))
-    (delete-char arg)
-    (save-excursion
-      (insert-char c arg))))
+  (let ((c (read-key "r-")))
+    (when (characterp c)
+      (delete-char arg)
+      (save-excursion
+        (insert-char c arg)))))
 
 ;; Internal functions
 (defun mivi--copy-region (beg end)
