@@ -1,6 +1,6 @@
 ;;; mivi.el --- Minimal Vi mode -*- lexical-binding: t -*-
 
-;; Copyright (C) 2014-2016 by Iku Iwasa
+;; Copyright (C) 2016 by Iku Iwasa
 
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
