@@ -76,6 +76,7 @@
     (define-key map "O" #'mivi-Open)
     (define-key map "P" #'mivi-Paste)
     (define-key map "R" #'mivi-Replace)
+    (define-key map "S" #'mivi-change-line)
     (define-key map "X" #'mivi-kill-backward-char)
     (define-key map "a" #'mivi-append)
     (define-key map "c" #'mivi-change)
