@@ -131,6 +131,26 @@ Feature: Change
     Then I should see pattern "^\.456$"
     And the mivi state should be "insert"
 
+  Scenario: change forward Word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo   bar-baz baz
+      qux quux
+     123.456
+    """
+    And I go to beginning of buffer
+    And I type "cW"
+    Then I should see pattern "^   bar-"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "c2W"
+    Then I should see pattern "^ baz$"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "5cW"
+    Then the buffer should be empty
+
   Scenario: change end of line
     Given the buffer is empty
     When I insert:

@@ -312,10 +312,13 @@
   (interactive "p")
   (dotimes (i arg)
     (skip-chars-forward "^[:space:]\n")
-    (if (and mivi--stop-at-eol
-             (= i (1- arg)))
-        (skip-chars-forward "[:space:]")
-      (skip-chars-forward "[:space:]\n"))))
+    (cond
+     ((and mivi--stop-at-eol
+           (= i (1- arg)))
+      (skip-chars-forward "[:space:]"))
+     ((not (and mivi--stop-at-space
+                (= i (1- arg))))
+      (skip-chars-forward "[:space:]\n")))))
 
 (defun mivi-goto-char (&optional arg)
   (interactive "p")
