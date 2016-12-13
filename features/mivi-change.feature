@@ -106,6 +106,31 @@ Feature: Change
     Then I should see pattern "^oo "
     And the mivi state should be "insert"
 
+  Scenario: change forward word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo   bar-baz
+      qux quux
+     123.456
+    """
+    And I go to beginning of buffer
+    And I type "cw"
+    Then I should see pattern "^   bar-"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "c3w"
+    Then I should see pattern "^baz$"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "cw"
+    Then I should see pattern "^$"
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "4cw"
+    Then I should see pattern "^\.456$"
+    And the mivi state should be "insert"
+
   Scenario: change end of line
     Given the buffer is empty
     When I insert:

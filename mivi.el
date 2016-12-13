@@ -20,6 +20,7 @@
 
 (defvar mivi--last-find nil)
 (defvar mivi--stop-at-eol nil)
+(defvar mivi--stop-at-space nil)
 
 (defvar-local mivi-change-state nil)
 (defvar-local mivi-command-state nil)
@@ -105,79 +106,143 @@
     (define-key map [escape] #'mivi-command)
     map))
 
-(defmacro mivi--derive-function (prefix new-state key pre-form &rest edit-body)
-  (declare (debug (form form form form body))
-           (indent 4))
-  `(let* ((orig-fn (lookup-key mivi-motion-map ,key))
-          (orig-name (symbol-name orig-fn))
-          (new-fn (intern (concat ,prefix
-                                  (if (string-match-p "^mivi-" orig-name)
-                                      (substring orig-name 5)
-                                    orig-name)))))
-     (defalias new-fn
-       (lambda ()
-         (interactive)
-         (unwind-protect
-             (let ((-context ,pre-form)
-                   (mivi--stop-at-eol t))
-               (call-interactively orig-fn)
-               ,@edit-body)
-           (mivi--switch-state ,new-state))))))
+(defmacro mivi--derive-key (name map new-state key pre-bindings &rest edit-body)
+  (declare (debug (form form form form form form body))
+           (indent 5))
+  (let ((prefix (concat "mivi-" (symbol-name name) "-")))
+    `(let* ((orig-fn (lookup-key mivi-motion-map ,key))
+            (orig-name (symbol-name orig-fn))
+            (new-fn (intern (concat ,prefix
+                                    (if (string-match-p "^mivi-" orig-name)
+                                        (substring orig-name 5)
+                                      orig-name)))))
+       (define-key ,map ,key
+         (defalias new-fn
+           (lambda ()
+             (interactive)
+             (unwind-protect
+                 (let (,@pre-bindings)
+                   (call-interactively orig-fn)
+                   ,@edit-body)
+               (mivi--switch-state ,new-state))))))))
 
 (defconst mivi--motion-0-keys '("$" "0" "B" "F" "T" "W" "^" "b" "h" "l" "w"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))
 
-(defmacro mivi--define-keymap (name state edit-fn &rest body)
-  (declare (indent 2))
-  (let ((prefix (concat "mivi-" (symbol-name name) "-"))
-        (keymap-name (intern (concat "mivi-" (symbol-name name) "-map"))))
-    `(defconst ,keymap-name
-       (let ((map (make-sparse-keymap)))
-         (dolist (key mivi--motion-0-keys)
-           (define-key map key
-             (mivi--derive-function ,prefix ,state key (point)
-               (let ((p (point)))
-                 (when (/= -context p)
-                   (,edit-fn -context p))))))
+(defconst mivi-change-map
+  (let ((map (make-sparse-keymap)))
+    (dolist (key mivi--motion-0-keys)
+      (mivi--derive-key change map 'mivi-insert-state key
+                        ((-context (point)) (mivi--stop-at-space t))
+        (let ((p (point)))
+          (when (/= -context p)
+            (kill-region -context p)))))
 
-         (dolist (key mivi--motion-1-keys)
-           (define-key map key
-             (mivi--derive-function ,prefix ,state key (point)
-               (let ((p (point)))
-                 (cond
-                  ((< -context p)
-                   (,edit-fn -context (1+ p)))
-                  ((> -context p)
-                   (,edit-fn -context p)))))))
+    (dolist (key mivi--motion-1-keys)
+      (mivi--derive-key change map 'mivi-insert-state key
+                        ((-context (point)))
+        (let ((p (point)))
+          (cond
+           ((< -context p)
+            (kill-region -context (1+ p)))
+           ((> -context p)
+            (kill-region -context p))))))
 
-         (dolist (key mivi--motion-line-keys)
-           (define-key map key
-             (mivi--derive-function ,prefix ,state key (progn (forward-line 0) (point))
-               (forward-line 0)
-               (let* ((p (point))
-                      (pmin (min -context p))
-                      (pmax (max -context p)))
-                 (goto-char pmax)
-                 (forward-line)
-                 (,edit-fn pmin (point))
-                 (unless (= pmin (point-min))
-                   (goto-char (1- pmin)))
-                 (back-to-indentation)))))
+    (dolist (key mivi--motion-line-keys)
+      (mivi--derive-key change map 'mivi-insert-state key
+                        ((-context (progn (forward-line 0) (point))))
+        (forward-line 0)
+        (let* ((p (point))
+               (pmin (min -context p))
+               (pmax (max -context p)))
+          (goto-char pmax)
+          (forward-line)
+          (kill-region pmin (point))
+          (unless (= pmin (point-min))
+            (goto-char (1- pmin)))
+          (back-to-indentation))))
 
-         (dotimes (v 9)
-           (define-key map (number-to-string (1+ v)) #'digit-argument))
-         (define-key map [t] #'mivi-command)
-         ,@body
-         map))))
+    (dotimes (v 9)
+      (define-key map (number-to-string (1+ v)) #'digit-argument))
+    (define-key map [t] #'mivi-command)
+    (define-key map "c" #'mivi-change-line)
+    map))
 
-(mivi--define-keymap change 'mivi-insert-state kill-region
-  (define-key map "c" #'mivi-change-line))
+(defconst mivi-copy-map
+  (let ((map (make-sparse-keymap)))
+    (dolist (key mivi--motion-0-keys)
+      (mivi--derive-key copy map 'mivi-command-state key
+                        ((-context (point)) (mivi--stop-at-space t))
+        (let ((p (point)))
+          (when (/= -context p)
+            (kill-new (buffer-substring -context p))
+            (goto-char -context)))))
 
-(mivi--define-keymap delete 'mivi-command-state kill-region
-  (define-key map "d" #'mivi-delete-line))
+    (dolist (key mivi--motion-1-keys)
+      (mivi--derive-key copy map 'mivi-command-state key
+                        ((-context (point)))
+        (let ((p (point)))
+          (cond
+           ((< -context p)
+            (kill-new (buffer-substring -context (1+ p))))
+           ((> -context p)
+            (kill-new (buffer-substring -context p)))))))
 
-(mivi--define-keymap copy 'mivi-command-state mivi--copy-region)
+    (dolist (key mivi--motion-line-keys)
+      (mivi--derive-key copy map 'mivi-command-state key
+                        ((-context (progn (forward-line 0) (point))))
+        (forward-line 0)
+        (let* ((p (point))
+               (pmin (min -context p))
+               (pmax (max -context p)))
+          (goto-char pmax)
+          (forward-line)
+          (kill-new (buffer-substring pmin (point))))))
+
+    (dotimes (v 9)
+      (define-key map (number-to-string (1+ v)) #'digit-argument))
+    (define-key map [t] #'mivi-command)
+    map))
+
+(defconst mivi-delete-map
+  (let ((map (make-sparse-keymap)))
+    (dolist (key mivi--motion-0-keys)
+      (mivi--derive-key delete map 'mivi-command-state key
+                        ((-context (point)) (mivi--stop-at-eol t))
+        (let ((p (point)))
+          (when (/= -context p)
+            (kill-region -context p)))))
+
+    (dolist (key mivi--motion-1-keys)
+      (mivi--derive-key delete map 'mivi-command-state key
+                        ((-context (point)))
+        (let ((p (point)))
+          (cond
+           ((< -context p)
+            (kill-region -context (1+ p)))
+           ((> -context p)
+            (kill-region -context p))))))
+
+    (dolist (key mivi--motion-line-keys)
+      (mivi--derive-key delete map 'mivi-command-state key
+                        ((-context (progn (forward-line 0) (point))))
+        (forward-line 0)
+        (let* ((p (point))
+               (pmin (min -context p))
+               (pmax (max -context p)))
+          (goto-char pmax)
+          (forward-line)
+          (kill-region pmin (point))
+          (unless (= pmin (point-min))
+            (goto-char (1- pmin)))
+          (back-to-indentation))))
+
+    (dotimes (v 9)
+      (define-key map (number-to-string (1+ v)) #'digit-argument))
+    (define-key map [t] #'mivi-command)
+    (define-key map "d" #'mivi-delete-line)
+    map))
 
 (defun mivi-nil ()
   (interactive))
@@ -235,10 +300,13 @@
       (skip-chars-forward "[:word:]_"))
      ((not (looking-at-p "[[:space:]\n]"))
       (skip-chars-forward "^[:word:][:space:]\n_")))
-    (if (and mivi--stop-at-eol
-             (= i (1- arg)))
-        (skip-chars-forward "[:space:]")
-      (skip-chars-forward "[:space:]\n"))))
+    (cond
+     ((and mivi--stop-at-eol
+           (= i (1- arg)))
+      (skip-chars-forward "[:space:]"))
+     ((not (and mivi--stop-at-space
+                (= i (1- arg))))
+      (skip-chars-forward "[:space:]\n")))))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
