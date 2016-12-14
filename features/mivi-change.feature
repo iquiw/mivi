@@ -89,6 +89,36 @@ Feature: Change
     Then I should see pattern "^   123$"
     And the mivi state should be "insert"
 
+  Scenario: change goto line
+    Given the buffer is empty
+    When I insert:
+    """
+    123
+     456
+      789
+       0
+      abc
+     def
+    ghi
+    """
+    And I go to beginning of buffer
+    And I type "c2G"
+    Then I should not see pattern "\(123\|456\)"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+    When I go to end of buffer
+    And I press "<escape>"
+    And I type "3cG"
+    Then I should not see pattern "\(abc\|def\|ghi\)"
+    And the cursor should be at cell (3, 0)
+    And the mivi state should be "insert"
+    When I go to beginning of buffer
+    And I press "<escape>"
+    And I type "cG"
+    Then the buffer should be empty
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+
   Scenario: change backward char
     Given the buffer is empty
     When I insert:
