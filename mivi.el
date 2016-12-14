@@ -629,10 +629,11 @@
           (delete 'mivi-mode-map-alist emulation-mode-map-alists))))
 
 (defun mivi-local-mode-on ()
-  (when (catch 'break
-          (dolist (mode mivi-enabled-derived-modes)
-            (when (derived-mode-p mode)
-              (throw 'break t))))
+  (when (and (not (minibufferp))
+             (catch 'break
+               (dolist (mode mivi-enabled-derived-modes)
+                 (when (derived-mode-p mode)
+                   (throw 'break t)))))
     (mivi-local-mode 1)))
 
 (defun mivi-local-mode-off ()
