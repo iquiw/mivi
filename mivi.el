@@ -16,7 +16,7 @@
   :group 'emulations
   :prefix "mivi-")
 
-(defcustom mivi-enabled-derived-modes '(prog-mode text-mode)
+(defcustom mivi-enabled-derived-modes '(conf-mode prog-mode text-mode)
   "Enable mivi in major modes that derive the specified modes.")
 
 (defcustom mivi-override-universal-argument-map t
