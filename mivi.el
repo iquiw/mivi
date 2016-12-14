@@ -13,7 +13,11 @@
 (require 'undo-tree)
 
 (defgroup mivi nil "Minimal Vi mode."
-  :group 'emulations)
+  :group 'emulations
+  :prefix "mivi-")
+
+(defcustom mivi-enabled-derived-modes '(prog-mode text-mode)
+  "Enable mivi in major modes that derive the specified modes.")
 
 (defcustom mivi-override-universal-argument-map t
   "Whether to disable \\C-u binding in `universal-argument-map'.")
@@ -625,8 +629,10 @@
           (delete 'mivi-mode-map-alist emulation-mode-map-alists))))
 
 (defun mivi-local-mode-on ()
-  (when (or (derived-mode-p 'prog-mode)
-            (derived-mode-p 'text-mode))
+  (when (catch 'break
+          (dolist (mode mivi-enabled-derived-modes)
+            (when (derived-mode-p mode)
+              (throw 'break t))))
     (mivi-local-mode 1)))
 
 (defun mivi-local-mode-off ()
