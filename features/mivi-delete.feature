@@ -221,7 +221,7 @@ Feature: Delete
     Then I should not see pattern "\([345]\|quux\)"
     And the cursor should be at cell (4, 3)
     When I go to line "3"
-    When I type "2dk"
+    And I type "2dk"
     Then I should not see pattern "\(foo\|bar\|baz\)"
     And the cursor should be at cell (1, 3)
 

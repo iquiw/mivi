@@ -168,6 +168,37 @@ Feature: Change
     And the cursor should be at cell (3, 0)
     And the mivi state should be "insert"
 
+  Scenario: change previous line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+     bar
+      baz
+       qux
+        quux
+        5
+       4
+      3
+     2
+    1
+    """
+    And I type "ck"
+    Then I should not see pattern "[12]"
+    And the cursor should be at cell (9, 0)
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "c4k"
+    Then I should not see pattern "\([345]\|quux\)"
+    And the cursor should be at cell (5, 0)
+    And the mivi state should be "insert"
+    When I go to line "3"
+    And I press "<escape>"
+    And I type "2ck"
+    Then I should not see pattern "\(foo\|bar\|baz\)"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+
   Scenario: change forward word
     Given the buffer is empty
     When I insert:

@@ -163,7 +163,7 @@
           (goto-char pmax)
           (forward-line)
           (kill-region pmin (if (eobp) (point) (1- (point))))
-          (goto-char beg))))
+          (goto-char pmin))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
