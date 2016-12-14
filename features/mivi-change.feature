@@ -136,6 +136,38 @@ Feature: Change
     Then I should see pattern "^oo "
     And the mivi state should be "insert"
 
+  Scenario: change next line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+     bar
+      baz
+       qux
+        quux
+        5
+       4
+      3
+     2
+    1
+    """
+    And I go to beginning of buffer
+    And I type "cj"
+    Then I should not see pattern "\(foo\|bar\)"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+    When I press "<escape>"
+    And I type "c3j"
+    Then I should not see pattern "\(baz\|qux\|quux\)"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+    When I go to line "3"
+    And I press "<escape>"
+    And I type "3cj"
+    Then I should not see pattern "[1-4]"
+    And the cursor should be at cell (3, 0)
+    And the mivi state should be "insert"
+
   Scenario: change forward word
     Given the buffer is empty
     When I insert:
