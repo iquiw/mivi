@@ -179,7 +179,7 @@
         (let ((p (point)))
           (when (/= beg p)
             (kill-new (buffer-substring beg p)))
-          (goto-char beg))))
+          (goto-char (min beg p)))))
 
     (dolist (key mivi--motion-1-keys)
       (mivi--derive-key copy map 'mivi-command-state key

@@ -12,38 +12,40 @@ Feature: Copy
     """
     And I type "yb"
     Then the current kill-ring should be "qu_ux"
-    And the cursor should be at cell (2, 5)
+    And the cursor should be at cell (2, 0)
     And I should see pattern "^qu_ux$"
     And the mivi state should be "command"
     When I type "2yb"
     Then the current kill-ring should be:
     """
-    qux
-    qu_ux
+    baz qux
+
     """
+    And the cursor should be at cell (1, 8)
     And the mivi state should be "command"
     When I type "y3b"
-    Then the current kill-ring should be:
-    """
-    baz qux
-    qu_ux
-    """
+    Then the current kill-ring should be "foo bar-"
+    And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
 
   Scenario: copy Backward word
     Given the buffer is empty
     When I insert:
     """
-    foo bar-baz qux-quux
+    foo bar-baz qux-quux 123;456
     """
     And I type "yB"
-    Then the current kill-ring should be "qux-quux"
+    Then the current kill-ring should be "123;456"
+    And the cursor should be at cell (1, 21)
     And the mivi state should be "command"
     When I type "2yB"
-    Then the current kill-ring should be "bar-baz qux-quux"
+    Then the current kill-ring should be "bar-baz qux-quux "
+    And the cursor should be at cell (1, 4)
     And the mivi state should be "command"
-    When I type "y3B"
-    Then the current kill-ring should be "foo bar-baz qux-quux"
+    When I go to end of buffer
+    When I type "y4B"
+    Then the current kill-ring should be "foo bar-baz qux-quux 123;456"
+    And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
 
   Scenario: copy end of word
@@ -82,7 +84,7 @@ Feature: Copy
     When I go to end of buffer
     And I type "y2F3"
     Then the current kill-ring should be "3454321"
-    And the cursor should be at cell (2, 12)
+    And the cursor should be at cell (2, 5)
     And the mivi state should be "command"
 
   Scenario: copy goto char
@@ -96,7 +98,7 @@ Feature: Copy
     When I go to end of buffer
     And I type "y2T3"
     Then the current kill-ring should be "454321"
-    And the cursor should be at cell (2, 12)
+    And the cursor should be at cell (2, 6)
     And the mivi state should be "command"
 
   Scenario: copy goto line
