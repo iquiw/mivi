@@ -45,3 +45,22 @@ Feature: Copy
     When I type "y3B"
     Then the current kill-ring should be "foo bar-baz qux-quux"
     And the mivi state should be "command"
+
+  Scenario: copy end of word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+       12345 6789
+    """
+    And I go to beginning of buffer
+    And I type "ye"
+    Then the current kill-ring should be "foo"
+    And the mivi state should be "command"
+    And the cursor should be at cell (1, 0)
+
+  Scenario: copy End of word
+    When I type "2yE"
+    Then the current kill-ring should be "foo bar-baz"
+    And the mivi state should be "command"
+    And the cursor should be at cell (1, 0)

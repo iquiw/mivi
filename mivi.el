@@ -178,8 +178,8 @@
                         ((beg (point)) (mivi--stop-at-space t))
         (let ((p (point)))
           (when (/= beg p)
-            (kill-new (buffer-substring beg p))
-            (goto-char beg)))))
+            (kill-new (buffer-substring beg p)))
+          (goto-char beg))))
 
     (dolist (key mivi--motion-1-keys)
       (mivi--derive-key copy map 'mivi-command-state key
@@ -189,7 +189,8 @@
            ((< beg p)
             (kill-new (buffer-substring beg (1+ p))))
            ((> beg p)
-            (kill-new (buffer-substring beg p)))))))
+            (kill-new (buffer-substring beg p)))))
+        (goto-char beg)))
 
     (dolist (key mivi--motion-line-keys)
       (mivi--derive-key copy map 'mivi-command-state key
