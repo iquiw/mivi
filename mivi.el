@@ -201,7 +201,8 @@
                (pmax (max beg p)))
           (goto-char pmax)
           (forward-line)
-          (kill-new (buffer-substring pmin (point))))))
+          (kill-new (buffer-substring pmin (point)))
+          (goto-char pmin))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))

@@ -98,3 +98,52 @@ Feature: Copy
     Then the current kill-ring should be "454321"
     And the cursor should be at cell (2, 12)
     And the mivi state should be "command"
+
+  Scenario: copy goto line
+    Given the buffer is empty
+    When I insert:
+    """
+    123
+     456
+      789
+       0
+      abc
+     def
+    ghi
+    """
+    And I go to beginning of buffer
+    And I type "y2G"
+    Then the current kill-ring should be:
+    """
+    123
+     456
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I go to end of buffer
+    And I type "3yG"
+    Then the current kill-ring should be:
+    """
+      789
+       0
+      abc
+     def
+    ghi
+    """
+    And the cursor should be at cell (3, 0)
+    And the mivi state should be "command"
+    When I go to beginning of buffer
+    And I type "yG"
+    Then the current kill-ring should be:
+    """
+    123
+     456
+      789
+       0
+      abc
+     def
+    ghi
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
