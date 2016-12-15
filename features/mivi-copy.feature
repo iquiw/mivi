@@ -84,3 +84,17 @@ Feature: Copy
     Then the current kill-ring should be "3454321"
     And the cursor should be at cell (2, 12)
     And the mivi state should be "command"
+
+  Scenario: copy goto char
+    When I go to beginning of buffer
+    And I type "yt-"
+    Then the current kill-ring should be "foo bar"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+
+  Scenario: change goto char backward
+    When I go to end of buffer
+    And I type "y2T3"
+    Then the current kill-ring should be "454321"
+    And the cursor should be at cell (2, 12)
+    And the mivi state should be "command"
