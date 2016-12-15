@@ -29,3 +29,19 @@ Feature: Copy
     qu_ux
     """
     And the mivi state should be "command"
+
+  Scenario: copy Backward word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz qux-quux
+    """
+    And I type "yB"
+    Then the current kill-ring should be "qux-quux"
+    And the mivi state should be "command"
+    When I type "2yB"
+    Then the current kill-ring should be "bar-baz qux-quux"
+    And the mivi state should be "command"
+    When I type "y3B"
+    Then the current kill-ring should be "foo bar-baz qux-quux"
+    And the mivi state should be "command"
