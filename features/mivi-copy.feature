@@ -94,7 +94,7 @@ Feature: Copy
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
 
-  Scenario: change goto char backward
+  Scenario: copy goto char backward
     When I go to end of buffer
     And I type "y2T3"
     Then the current kill-ring should be "454321"
@@ -147,5 +147,23 @@ Feature: Copy
      def
     ghi
     """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+
+  Scenario: copy backward char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz
+    """
+    And I type "yh"
+    Then the current kill-ring should be "z"
+    And the cursor should be at cell (1, 10)
+    And the mivi state should be "command"
+
+  Scenario: copy forward char
+    When I go to beginning of buffer
+    And I type "yl"
+    Then the current kill-ring should be "f"
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
