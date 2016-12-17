@@ -194,15 +194,19 @@
 
     (dolist (key mivi--motion-line-keys)
       (mivi--derive-key copy map 'mivi-command-state key
-                        ((beg (progn (forward-line 0) (point))))
-        (forward-line 0)
-        (let* ((p (point))
-               (pmin (min beg p))
-               (pmax (max beg p)))
-          (goto-char pmax)
-          (forward-line)
-          (kill-new (buffer-substring pmin (point)))
-          (goto-char pmin))))
+                        ((beg (point)))
+        (let ((end (point)))
+          (let* ((p0 (progn (forward-line 0) (point)))
+                 (p1 (save-excursion
+                       (goto-char beg)
+                       (forward-line 0)
+                       (point)))
+                 (pmin (min p0 p1))
+                 (pmax (max p0 p1)))
+            (goto-char pmax)
+            (forward-line)
+            (kill-new (buffer-substring pmin (point)))
+            (goto-char (min beg end))))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))

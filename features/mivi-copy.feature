@@ -133,7 +133,7 @@ Feature: Copy
      def
     ghi
     """
-    And the cursor should be at cell (3, 0)
+    And the cursor should be at cell (3, 2)
     And the mivi state should be "command"
     When I go to beginning of buffer
     And I type "yG"
@@ -166,4 +166,53 @@ Feature: Copy
     And I type "yl"
     Then the current kill-ring should be "f"
     And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+
+  Scenario: copy next line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+     bar
+      baz
+       qux
+        quux
+        5
+       4
+      3
+     2
+    1
+    """
+    And I go to beginning of buffer
+    And I type "yj"
+    Then the current kill-ring should be:
+    """
+    foo
+     bar
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I go to word "baz"
+    And I type "y3j"
+    Then the current kill-ring should be:
+    """
+      baz
+       qux
+        quux
+        5
+
+    """
+    And the cursor should be at cell (3, 2)
+    And the mivi state should be "command"
+    When I go to word "4"
+    And I type "3yj"
+    Then the current kill-ring should be:
+    """
+       4
+      3
+     2
+    1
+    """
+    And the cursor should be at cell (7, 3)
     And the mivi state should be "command"
