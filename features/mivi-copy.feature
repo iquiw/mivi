@@ -337,3 +337,27 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
+
+  Scenario: copy beginning of line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+      baz
+    1
+      2
+        3
+    """
+    And I place the cursor after "foo"
+    And I type "y0"
+    Then the current kill-ring should be "foo"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I type "2y0"
+    Then the current kill-ring should be:
+    """
+    foo bar
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
