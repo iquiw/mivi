@@ -216,3 +216,36 @@ Feature: Copy
     """
     And the cursor should be at cell (7, 3)
     And the mivi state should be "command"
+
+  Scenario: copy previous line
+    When I go to end of buffer
+    And I type "yk"
+    Then the current kill-ring should be:
+    """
+     2
+    1
+    """
+    And the cursor should be at cell (9, 1)
+    And the mivi state should be "command"
+    When I type "y3k"
+    Then the current kill-ring should be:
+    """
+        5
+       4
+      3
+     2
+
+    """
+    And the cursor should be at cell (6, 1)
+    And the mivi state should be "command"
+    When I go to line "3"
+    And I type "2yk"
+    Then the current kill-ring should be:
+    """
+    foo
+     bar
+      baz
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
