@@ -302,3 +302,38 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 6)
     And the mivi state should be "command"
+
+  Scenario: copy end of line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123
+        456
+             789
+    0
+    """
+    And I place the cursor after "foo"
+    And I type "y$"
+    Then the current kill-ring should be " bar baz"
+    And the cursor should be at cell (1, 3)
+    And the mivi state should be "command"
+    When I go to beginning of buffer
+    And I type "y2$"
+    Then the current kill-ring should be:
+    """
+    foo bar baz
+    123
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I type "4y$"
+    Then the current kill-ring should be:
+    """
+    foo bar baz
+    123
+        456
+             789
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
