@@ -361,3 +361,15 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
+
+  Scenario: copy beginning of text
+    When I place the cursor after "foo"
+    And I type "y^"
+    Then the current kill-ring should be "foo"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I place the cursor after "baz"
+    And I type "y^"
+    Then the current kill-ring should be "baz"
+    And the cursor should be at cell (2, 2)
+    And the mivi state should be "command"
