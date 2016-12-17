@@ -175,7 +175,7 @@
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
       (mivi--derive-key copy map 'mivi-command-state key
-                        ((beg (point)) (mivi--stop-at-space t))
+                        ((beg (point)))
         (let ((p (point)))
           (when (/= beg p)
             (kill-new (buffer-substring beg p)))

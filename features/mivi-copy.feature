@@ -249,3 +249,31 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
+
+  Scenario: copy forward word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo   bar-baz
+      qux quux
+     123.456
+    """
+    And I go to beginning of buffer
+    And I type "yw"
+    Then the current kill-ring should be "foo   "
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I type "y2w"
+    Then the current kill-ring should be "foo   bar"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I go to word "bar"
+    And I type "5yw"
+    Then the current kill-ring should be:
+    """
+    bar-baz
+      qux quux
+     
+    """
+    And the cursor should be at cell (1, 6)
+    And the mivi state should be "command"
