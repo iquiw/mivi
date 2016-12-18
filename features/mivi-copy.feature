@@ -427,3 +427,25 @@ Feature: Copy
     """
     And the cursor should be at cell (7, 0)
     And the mivi state should be "command"
+
+  Scenario: copy line by Y
+    When I go to beginning of buffer
+    And I type "Y"
+    Then the current kill-ring should be:
+    """
+    foo
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I go to word "quux"
+    And I type "4Y"
+    Then the current kill-ring should be:
+    """
+        quux
+    1
+    2
+    end
+    """
+    And the cursor should be at cell (5, 4)
+    And the mivi state should be "command"

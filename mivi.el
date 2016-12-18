@@ -83,6 +83,7 @@
     (define-key map "R" #'mivi-Replace)
     (define-key map "S" #'mivi-change-line)
     (define-key map "X" #'mivi-kill-backward-char)
+    (define-key map "Y" #'mivi-copy-line)
     (define-key map "a" #'mivi-append)
     (define-key map "c" #'mivi-change)
     (define-key map "d" #'mivi-delete)
