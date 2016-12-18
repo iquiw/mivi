@@ -211,6 +211,7 @@
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     (define-key map [t] #'mivi-command)
+    (define-key map "y" #'mivi-copy-line)
     map))
 
 (defconst mivi-delete-map
@@ -444,14 +445,14 @@
 
 (defun mivi-change-line (&optional arg)
   (interactive "p")
-  (let* ((beg (save-excursion
-                (forward-line (if (< arg 0) arg 0))
-                (point)))
-         (end (save-excursion
-                (forward-line (if (< arg 0) 1 arg))
-                (if (eobp)
-                    (point)
-                  (1- (point))))))
+  (let ((beg (save-excursion
+               (forward-line (if (< arg 0) arg 0))
+               (point)))
+        (end (save-excursion
+               (forward-line (if (< arg 0) 1 arg))
+               (if (eobp)
+                   (point)
+                 (1- (point))))))
     (unless (= beg end)
       (kill-region beg end)))
   (mivi--switch-state 'mivi-insert-state))
@@ -461,6 +462,18 @@
   (interactive "P")
   (mivi--switch-state 'mivi-copy-state)
   (setq prefix-arg arg))
+
+(defun mivi-copy-line (&optional arg)
+  (interactive "p")
+  (let ((beg (save-excursion
+               (forward-line (if (< arg 0) arg 0))
+               (point)))
+        (end (save-excursion
+               (forward-line (if (< arg 0) 1 arg))
+               (point))))
+    (unless (= beg end)
+      (kill-new (buffer-substring beg end))))
+  (mivi--switch-state 'mivi-command-state))
 
 ;; Delete commands
 (defun mivi-delete (&optional arg)

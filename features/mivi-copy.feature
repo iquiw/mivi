@@ -373,3 +373,57 @@ Feature: Copy
     Then the current kill-ring should be "baz"
     And the cursor should be at cell (2, 2)
     And the mivi state should be "command"
+
+  Scenario: copy line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+     baz
+    qux
+        quux
+    1
+    2
+    end
+    """
+    And I go to beginning of buffer
+    And I type "yy"
+    Then the current kill-ring should be:
+    """
+    foo
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I type "2yy"
+    Then the current kill-ring should be:
+    """
+    foo
+      bar
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+    When I go to word "baz"
+    And I type "y3y"
+    Then the current kill-ring should be:
+    """
+     baz
+    qux
+        quux
+
+    """
+    And the cursor should be at cell (3, 1)
+    And the mivi state should be "command"
+    When I go to word "2"
+    And I call "universal-argument"
+    And I type "-1yy"
+    Then the current kill-ring should be:
+    """
+    1
+    2
+
+    """
+    And the cursor should be at cell (7, 0)
+    And the mivi state should be "command"
