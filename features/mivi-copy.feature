@@ -490,3 +490,36 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 1)
     And the mivi state should be "command"
+
+  Scenario: copy find repeat opposite
+    When I go to beginning of buffer
+    And I type "3tb"
+    And I type "y,"
+    Then the current kill-ring should be:
+    """
+    az
+     
+    """
+    And the cursor should be at cell (2, 1)
+    And the mivi state should be "command"
+    When I type "Ta"
+    And I type "y2,"
+    Then the current kill-ring should be:
+    """
+    r
+    baz
+      b
+    """
+    And the cursor should be at cell (1, 6)
+    And the mivi state should be "command"
+    When I go to beginning of buffer
+    And I type "T "
+    And I type "3y,"
+    Then the current kill-ring should be:
+    """
+    foo bar
+    baz
+     
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
