@@ -160,3 +160,13 @@ Feature Insert
     And I type "i"
     And I press "C-h"
     Then I should see pattern "-ba$"
+
+  Scenario: C-w
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz
+    """
+    When I type "i"
+    And I press "C-w"
+    Then I should see pattern "bar-$"

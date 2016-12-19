@@ -109,6 +109,7 @@
 (defconst mivi-insert-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-h") #'delete-backward-char)
+    (define-key map (kbd "C-w") #'backward-kill-word)
     (define-key map [escape] #'mivi-command)
     map))
 
