@@ -150,3 +150,13 @@ Feature Insert
     And I type "3squux"
     Then the mivi state should be "insert"
     And I should see pattern "^quxoo quux$"
+
+  Scenario: C-h
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar-baz
+    """
+    And I type "i"
+    And I press "C-h"
+    Then I should see pattern "-ba$"
