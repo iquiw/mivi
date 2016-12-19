@@ -523,3 +523,44 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
+
+  Scenario: copy window top
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "yH"
+    Then the current kill-ring should be:
+    """
+    foo
+    bar
+
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
+
+  Scenario: copy window middle
+    When I go to cell (2, 2)
+    And I type "yM"
+    Then the current kill-ring should be:
+    """
+    bar
+
+    """
+    And the cursor should be at cell (2, 0)
+    And the mivi state should be "command"
+
+  Scenario: copy window bottom
+    When I go to cell (2, 2)
+    And I type "yL"
+    Then the current kill-ring should be:
+    """
+    bar
+    baz
+    """
+    And the cursor should be at cell (2, 2)
+    And the mivi state should be "command"
