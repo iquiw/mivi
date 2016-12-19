@@ -190,8 +190,8 @@
            ((< beg p)
             (kill-new (buffer-substring beg (1+ p))))
            ((> beg p)
-            (kill-new (buffer-substring beg p)))))
-        (goto-char beg)))
+            (kill-new (buffer-substring beg p))))
+          (goto-char (min beg p)))))
 
     (dolist (key mivi--motion-line-keys)
       (mivi--derive-key copy map 'mivi-command-state key

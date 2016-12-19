@@ -449,3 +449,44 @@ Feature: Copy
     """
     And the cursor should be at cell (5, 4)
     And the mivi state should be "command"
+
+  Scenario: copy find repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    baz
+      baz bar
+      foo
+    """
+    And I go to beginning of buffer
+    And I type "fb"
+    And I type "y;"
+    Then the current kill-ring should be:
+    """
+    bar
+    b
+    """
+    And the cursor should be at cell (1, 4)
+    And the mivi state should be "command"
+    When I type "y2;"
+    Then the current kill-ring should be:
+    """
+    bar
+    baz
+      b
+    """
+    And the cursor should be at cell (1, 4)
+    And the mivi state should be "command"
+    When I go to end of buffer
+    And I type "Fo"
+    And I type "3y;"
+    Then the current kill-ring should be:
+    """
+    oo bar
+    baz
+      baz bar
+      fo
+    """
+    And the cursor should be at cell (1, 1)
+    And the mivi state should be "command"
