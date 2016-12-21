@@ -382,3 +382,25 @@ Feature: Change
     Then I should not see pattern "\(bar\|baz\)"
     And I should see pattern "^foo$"
     And the mivi state should be "insert"
+
+  Scenario: change goto pair
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+      (bar baz))
+    """
+    And I go to cell (2, 2)
+    And I type "c%"
+    Then I should see pattern "^  )$"
+    And the mivi state should be "insert"
+    When I go to cell (1, 12)
+    And I press "<escape>"
+    And I type "c%"
+    Then I should see pattern "foo $"
+    And the mivi state should be "insert"
+    When I go to end of buffer
+    And I press "<escape>"
+    And I type "c%"
+    Then the buffer should be empty
+    And the mivi state should be "insert"

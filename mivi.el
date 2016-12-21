@@ -158,6 +158,16 @@
            ((> beg p)
             (kill-region beg p))))))
 
+    (dolist (key mivi--motion-2-keys)
+      (mivi--derive-key change map 'mivi-insert-state key
+                        ((beg (point)) (eol (eolp)))
+        (let ((p (point)))
+          (cond
+           ((< beg p)
+            (kill-region beg (1+ p)))
+           ((> beg p)
+            (kill-region (if eol beg (1+ beg)) p))))))
+
     (dolist (key mivi--motion-line-keys)
       (mivi--derive-key change map 'mivi-insert-state key
                         ((beg (progn (forward-line 0) (point))))
