@@ -207,6 +207,17 @@
             (kill-new (buffer-substring beg p))))
           (goto-char (min beg p)))))
 
+    (dolist (key mivi--motion-2-keys)
+      (mivi--derive-key copy map 'mivi-command-state key
+                        ((beg (point)) (eol (eolp)))
+        (let ((p (point)))
+          (cond
+           ((< beg p)
+            (kill-new (buffer-substring beg (1+ p))))
+           ((> beg p)
+            (kill-new (buffer-substring (if eol beg (1+ beg)) p))))
+          (goto-char (min beg p)))))
+
     (dolist (key mivi--motion-line-keys)
       (mivi--derive-key copy map 'mivi-command-state key
                         ((beg (point)))

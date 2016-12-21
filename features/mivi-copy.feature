@@ -564,3 +564,30 @@ Feature: Copy
     """
     And the cursor should be at cell (2, 2)
     And the mivi state should be "command"
+
+  Scenario: copy goto pair
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+      (bar baz))
+    """
+    And I go to cell (2, 2)
+    And I type "y%"
+    Then the current kill-ring should be "(bar baz)"
+    And the cursor should be at cell (2, 2)
+    And the mivi state should be "command"
+    When I go to cell (1, 12)
+    And I type "y%"
+    Then the current kill-ring should be "()"
+    And the cursor should be at cell (1, 11)
+    And the mivi state should be "command"
+    When I go to end of buffer
+    And I type "y%"
+    Then the current kill-ring should be:
+    """
+    (defun foo ()
+      (bar baz))
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "command"
