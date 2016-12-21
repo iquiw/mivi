@@ -339,3 +339,25 @@ Feature: Motion
     When I go to word "Bar"
     And I type "$"
     Then the cursor should be at cell (4, 19)
+
+  Scenario: goto pair
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+      (bar baz))
+    """
+    And I go to beginning of buffer
+    And I type "%"
+    Then the cursor should be at cell (2, 11)
+    When I type "%"
+    Then the cursor should be at cell (1, 0)
+    When I go to word "foo"
+    And I type "%"
+    Then the cursor should be at cell (1, 12)
+    When I place the cursor after "bar"
+    And I type "%"
+    Then the cursor should be at cell (2, 2)
+    When I go to end of buffer
+    And I type "%"
+    Then the cursor should be at cell (1, 0)
