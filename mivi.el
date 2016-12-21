@@ -136,6 +136,7 @@
 
 (defconst mivi--motion-0-keys '("$" "0" "B" "F" "T" "W" "^" "b" "h" "l" "w"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
+(defconst mivi--motion-2-keys '("%"))
 (defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))
 
 (defconst mivi-change-map
@@ -236,6 +237,16 @@
             (kill-region beg (1+ p)))
            ((> beg p)
             (kill-region beg p))))))
+
+    (dolist (key mivi--motion-2-keys)
+      (mivi--derive-key delete map 'mivi-command-state key
+                        ((beg (point)) (eol (eolp)))
+        (let ((p (point)))
+          (cond
+           ((< beg p)
+            (kill-region beg (1+ p)))
+           ((> beg p)
+            (kill-region (if eol beg (1+ beg)) p))))))
 
     (dolist (key mivi--motion-line-keys)
       (mivi--derive-key delete map 'mivi-command-state key

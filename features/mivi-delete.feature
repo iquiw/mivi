@@ -451,3 +451,20 @@ Feature: Delete
     And I type "dL"
     Then I should not see pattern "\(bar\|baz\)"
     And I should see pattern "^foo$"
+
+  Scenario: delete goto pair
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+      (bar baz))
+    """
+    And I go to cell (2, 2)
+    And I type "d%"
+    Then I should see pattern "^  )$"
+    When I go to cell (1, 12)
+    And I type "d%"
+    Then I should see pattern "foo $"
+    When I go to end of buffer
+    And I type "d%"
+    Then the buffer should be empty
