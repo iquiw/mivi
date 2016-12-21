@@ -404,6 +404,14 @@ Feature: Delete
     And I type "3d,"
     Then I should see pattern "^ foo$"
 
+    Given the buffer is empty
+    When I insert "foo"
+    And I type "fo"
+    And I type "d,"
+    Then I should see pattern "^fo$"
+    When I type "d,"
+    Then I should see pattern "^f$"
+
   Scenario: delete window top
     Given the buffer is empty
     When I insert:

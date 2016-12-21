@@ -628,7 +628,10 @@
         (forward-char (- sign))))
     (when move?
       (forward-char (- sign)))
-    (unless (memq this-command '(mivi-repeat-find mivi-repeat-find-opposite))
+    (when (memq this-command '(mivi-find
+                               mivi-Find
+                               mivi-goto-char
+                               mivi-goto-char-backward))
       (setq mivi--last-find (list till? sign ch)))))
 
 (defun mivi--numeric-or-default (arg &optional default)
