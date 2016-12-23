@@ -40,3 +40,19 @@ Feature: Motion
     And I type "2rP"
     Then I should see pattern "^7PP$"
     And the cursor should be at cell (1, 1)
+
+  Scenario: updown case
+    Given the buffer is empty
+    When I insert:
+    """
+    foo BAR BaZ
+    """
+    And I go to beginning of buffer
+    And I type "~"
+    Then I should see "Foo BAR BaZ"
+    And I type "2~"
+    Then I should see "FOO BAR BaZ"
+    And I type "4~"
+    Then I should see "FOO bar BaZ"
+    And I type "4~"
+    Then I should see "FOO bar bAz"

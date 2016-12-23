@@ -96,6 +96,7 @@
     (define-key map "u" #'mivi-undo)
     (define-key map "x" #'mivi-kill-char)
     (define-key map "y" #'mivi-copy)
+    (define-key map "~" #'mivi-updown-case)
     (define-key map "." #'mivi-repeat)
     (define-key map (kbd "C-e") #'scroll-up-line)
     (define-key map (kbd "C-y") #'scroll-down-line)
@@ -614,6 +615,18 @@
     (undo-tree-undo)
     (setq mivi--undo-direction 'undo))
   (setq mivi--last-command 'mivi-undo))
+
+(defun mivi-updown-case (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (let ((p (point))
+          (case-fold-search nil))
+      (cond
+       ((looking-at-p "[[:lower:]]")
+        (upcase-region p (1+ p)))
+       ((looking-at-p "[[:upper:]]")
+        (downcase-region p (1+ p))))
+      (forward-char))))
 
 (defun mivi-paste (&optional arg)
   (interactive "p")
