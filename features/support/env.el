@@ -23,10 +23,13 @@
 
 (Before
  ;; Before each scenario is run
+ (lisp-interaction-mode)
+ (read-only-mode -1)
  )
 
 (After
  ;; After each scenario is run
+ (define-key mivi-command-map (kbd "C-u") #'mivi-scroll-down)
  (mivi-command)
  )
 

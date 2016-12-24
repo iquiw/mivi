@@ -19,6 +19,9 @@
 (defcustom mivi-enabled-derived-modes '(conf-mode prog-mode text-mode)
   "Enable mivi in major modes that derive the specified modes.")
 
+(defcustom mivi-enabled-major-modes '(fundamental-mode)
+  "Enable mivi in the specified major modes.")
+
 (defcustom mivi-override-universal-argument-map t
   "Whether to disable \\C-u binding in `universal-argument-map'.")
 
@@ -714,10 +717,11 @@
 
 (defun mivi-local-mode-on ()
   (when (and (not (minibufferp))
-             (catch 'break
-               (dolist (mode mivi-enabled-derived-modes)
-                 (when (derived-mode-p mode)
-                   (throw 'break t)))))
+             (or (member major-mode mivi-enabled-major-modes)
+                 (catch 'break
+                   (dolist (mode mivi-enabled-derived-modes)
+                     (when (derived-mode-p mode)
+                       (throw 'break t))))))
     (mivi-local-mode 1)))
 
 (defun mivi-local-mode-off ()

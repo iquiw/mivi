@@ -20,6 +20,11 @@
   (lambda (line)
     (recenter (string-to-number line))))
 
+(When "^I disable C-u binding$"
+  "Disable C-u binding."
+  (lambda ()
+    (define-key mivi-command-map (kbd "C-u") nil)))
+
 (Then "^the cursor should be at cell (\\([0-9]+\\), *\\([0-9]+\\))$"
   "Checks that the cursor is at a specific (LINE, COLUMN)."
   (lambda (line column)
@@ -101,3 +106,10 @@
   "Checks that the current kill-ring is STRING."
   (lambda (string)
     (should (string= (current-kill 0) string))))
+
+(Then "mivi-local-mode should be \\(enabled\\|disabled\\)$"
+  "Checks that mivi-local-mode should be ENABLED or disabled."
+  (lambda (enabled)
+    (if (string= "enabled" enabled)
+        (should (eq mivi-local-mode t))
+      (should (not (eq mivi-local-mode t))))))
