@@ -38,3 +38,8 @@ Scenario: Disable in help-mode
   When I disable C-u binding
   And I turn on help-mode
   Then mivi-local-mode should be disabled
+
+Scenario: Disable by turn-off
+  Given the buffer is empty
+  When I turn off mivi-local-mode
+  Then mivi-local-mode should be disabled
