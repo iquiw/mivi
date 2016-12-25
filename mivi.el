@@ -199,7 +199,7 @@
                         ((beg (point)))
         (let ((p (point)))
           (when (/= beg p)
-            (kill-new (buffer-substring beg p)))
+            (mivi--copy-region beg p))
           (goto-char (min beg p)))))
 
     (dolist (key mivi--motion-1-keys)
@@ -208,9 +208,9 @@
         (let ((p (point)))
           (cond
            ((< beg p)
-            (kill-new (buffer-substring beg (1+ p))))
+            (mivi--copy-region beg (1+ p)))
            ((> beg p)
-            (kill-new (buffer-substring beg p))))
+            (mivi--copy-region beg p)))
           (goto-char (min beg p)))))
 
     (dolist (key mivi--motion-2-keys)
@@ -219,9 +219,9 @@
         (let ((p (point)))
           (cond
            ((< beg p)
-            (kill-new (buffer-substring beg (1+ p))))
+            (mivi--copy-region beg (1+ p)))
            ((> beg p)
-            (kill-new (buffer-substring (if eol beg (1+ beg)) p))))
+            (mivi--copy-region (if eol beg (1+ beg)) p)))
           (goto-char (min beg p)))))
 
     (dolist (key mivi--motion-line-keys)
@@ -237,7 +237,7 @@
                  (pmax (max p0 p1)))
             (goto-char pmax)
             (forward-line)
-            (kill-new (buffer-substring pmin (point)))
+            (mivi--copy-region pmin (point))
             (goto-char (min beg end))))))
 
     (dotimes (v 9)
@@ -528,7 +528,7 @@
                (forward-line (if (< arg 0) 1 arg))
                (point))))
     (unless (= beg end)
-      (kill-new (buffer-substring beg end))))
+      (mivi--copy-region beg end)))
   (mivi--switch-state 'mivi-command-state))
 
 ;; Delete commands
@@ -661,8 +661,7 @@
 
 ;; Internal functions
 (defun mivi--copy-region (beg end)
-  (kill-new (buffer-substring beg end))
-  (goto-char beg))
+  (kill-new (buffer-substring beg end)))
 
 (defun mivi--find-internal (till? arg &optional ch)
   (let ((case-fold-search nil)
