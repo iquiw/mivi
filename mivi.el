@@ -26,6 +26,7 @@
   "Whether to disable \\C-u binding in `universal-argument-map'.")
 
 (defvar mivi--last-buffer nil)
+(defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
@@ -37,7 +38,6 @@
 (defvar-local mivi-insert-state nil)
 
 (defvar-local mivi--cursor-type 'box)
-(defvar-local mivi--last-command nil)
 (defvar-local mivi--undo-direction 'undo)
 
 (defconst mivi--states
@@ -138,7 +138,10 @@
                  (let (,@pre-bindings)
                    (call-interactively orig-fn)
                    ,@edit-body)
-               (mivi--switch-state ,new-state))))))))
+               (mivi--switch-state ,new-state))
+             (setq this-command new-fn)
+             (when (memq (quote ,name) '(change delete))
+               (setq mivi--last-command this-command))))))))
 
 (defconst mivi--motion-0-keys '("$" "0" "B" "F" "T" "W" "^" "b" "h" "l" "w"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
@@ -600,11 +603,13 @@
 
 (defun mivi-repeat ()
   (interactive)
-  (if (member last-command '(mivi-undo mivi-repeat))
-      (if (eq mivi--undo-direction 'undo)
-          (undo-tree-undo)
-        (undo-tree-redo))
-    (call-interactively last-command)))
+  (cond
+   ((member last-command '(mivi-undo mivi-repeat))
+    (if (eq mivi--undo-direction 'undo)
+        (undo-tree-undo)
+      (undo-tree-redo)))
+   (mivi--last-command
+    (call-interactively mivi--last-command))))
 
 (defun mivi-undo ()
   (interactive)
