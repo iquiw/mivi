@@ -25,6 +25,7 @@
 (defcustom mivi-override-universal-argument-map t
   "Whether to disable \\C-u binding in `universal-argument-map'.")
 
+(defvar mivi--last-buffer nil)
 (defvar mivi--last-find nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
@@ -35,6 +36,7 @@
 (defvar-local mivi-delete-state nil)
 (defvar-local mivi-insert-state nil)
 
+(defvar-local mivi--cursor-type 'box)
 (defvar-local mivi--last-command nil)
 (defvar-local mivi--undo-direction 'undo)
 
@@ -484,7 +486,6 @@
 (defun mivi-Replace ()
   (interactive)
   (overwrite-mode 1)
-  (set-frame-parameter nil 'cursor-type '(hbar . 7))
   (mivi--switch-state 'mivi-replace-state))
 
 (defun mivi-substitute (&optional arg)
@@ -576,7 +577,6 @@
    ((not (bolp))
     (backward-char)))
   (overwrite-mode -1)
-  (set-frame-parameter nil 'cursor-type 'box)
   (setq mivi--last-command nil)
   (mivi--switch-state 'mivi-command-state))
 
@@ -690,11 +690,22 @@
 (defun mivi--switch-state (state)
   (cond
    ((eq state 'mivi-replace-state)
+    (setq mivi--cursor-type '(hbar . 7))
     (setq state 'mivi-insert-state))
    ((eq state 'mivi-insert-state)
-    (set-frame-parameter nil 'cursor-type 'bar)))
+    (setq mivi--cursor-type 'bar))
+   (t
+    (setq mivi--cursor-type 'box)))
+  (set-frame-parameter nil 'cursor-type mivi--cursor-type)
   (dolist (s mivi--states)
     (set s (eq s state))))
+
+(defun mivi--post-command ()
+  (unless (eq mivi--last-buffer (current-buffer))
+    (if mivi-local-mode
+        (set-frame-parameter nil 'cursor-type mivi--cursor-type)
+      (set-frame-parameter nil 'cursor-type 'box))
+    (setq mivi--last-buffer (current-buffer))))
 
 (defvar mivi-mode-map-alist
   (list
@@ -727,7 +738,16 @@
 (defun mivi-local-mode-off ()
   (mivi-local-mode -1))
 
-(define-globalized-minor-mode mivi-mode mivi-local-mode mivi-local-mode-on)
+(defvar mivi-mode nil)
+
+(defun mivi-mode-set (state)
+  (if state
+      (add-hook 'post-command-hook #'mivi--post-command)
+    (remove-hook 'post-command-hook #'mivi--post-command))
+  (setq mivi-mode state))
+
+(define-globalized-minor-mode mivi-mode mivi-local-mode mivi-local-mode-on
+  :variable (mivi-mode . mivi-mode-set))
 
 (when mivi-override-universal-argument-map
   (define-key universal-argument-map (kbd "C-u") nil))
