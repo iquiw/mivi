@@ -141,7 +141,7 @@
                (mivi--switch-state ,new-state))
              (setq this-command new-fn)
              (when (memq (quote ,name) '(change delete))
-               (setq mivi--last-command this-command))))))))
+               (mivi--store-command))))))))
 
 (defconst mivi--motion-0-keys '("$" "0" "B" "F" "T" "W" "^" "b" "h" "l" "w"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
@@ -609,11 +609,12 @@
         (undo-tree-undo)
       (undo-tree-redo)))
    (mivi--last-command
-    (call-interactively mivi--last-command))))
+    (let ((current-prefix-arg (car mivi--last-command)))
+      (call-interactively (cdr mivi--last-command))))))
 
 (defun mivi-undo ()
   (interactive)
-  (if (memq mivi--last-command '(mivi-undo mivi-repeat))
+  (if (memq (cdr mivi--last-command) '(mivi-undo mivi-repeat))
       (if (eq mivi--undo-direction 'undo)
           (progn
             (undo-tree-redo)
@@ -622,7 +623,7 @@
         (setq mivi--undo-direction 'undo))
     (undo-tree-undo)
     (setq mivi--undo-direction 'undo))
-  (setq mivi--last-command 'mivi-undo))
+  (mivi--store-command))
 
 (defun mivi-updown-case (&optional arg)
   (interactive "p")
@@ -690,6 +691,9 @@
   (if (not arg)
       (or default 0)
     (prefix-numeric-value arg)))
+
+(defun mivi--store-command (&optional command)
+  (setq mivi--last-command (cons current-prefix-arg (or command this-command))))
 
 (defun mivi--switch-state (state)
   (cond
