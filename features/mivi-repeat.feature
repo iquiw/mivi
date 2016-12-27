@@ -67,3 +67,15 @@ Feature: Undo
     Then I should see pattern "^foo bar$"
     When I type "."
     Then I should see pattern "^foo$"
+
+  Scenario: repeat delete goto char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "dt "
+    Then I should see pattern "^ bar baz$"
+    When I type "."
+    Then I should see pattern "^ baz$"
