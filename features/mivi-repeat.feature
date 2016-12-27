@@ -39,5 +39,20 @@ Feature: Undo
     """
     And I type "db"
     Then I should see pattern "^foo bar $"
-    And I type "2."
+    When I type "2."
     Then the buffer should be empty
+
+  Scenario: repeat delete find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    qux quux 0
+    """
+    And I go to beginning of buffer
+    And I type "df "
+    Then I should see pattern "^bar baz$"
+    When I type "."
+    Then I should see pattern "^baz$"
+    When I type "2."
+    Then I should see pattern "^0$"

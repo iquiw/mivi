@@ -25,6 +25,7 @@
 (defcustom mivi-override-universal-argument-map t
   "Whether to disable \\C-u binding in `universal-argument-map'.")
 
+(defvar mivi--current-find-char nil)
 (defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
@@ -340,11 +341,11 @@
 
 (defun mivi-find (&optional arg)
   (interactive "p")
-  (mivi--find-internal nil arg))
+  (mivi--find-internal nil arg t))
 
 (defun mivi-Find (&optional arg)
   (interactive "p")
-  (mivi--find-internal nil (- arg)))
+  (mivi--find-internal nil (- arg) t))
 
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
@@ -376,11 +377,11 @@
 
 (defun mivi-goto-char (&optional arg)
   (interactive "p")
-  (mivi--find-internal t arg))
+  (mivi--find-internal t arg t))
 
 (defun mivi-goto-char-backward (&optional arg)
   (interactive "p")
-  (mivi--find-internal t (- arg)))
+  (mivi--find-internal t (- arg) t))
 
 (defun mivi-goto-line (&optional arg)
   (interactive "P")
@@ -423,12 +424,16 @@
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
-    (`(,till? ,sign ,ch) (mivi--find-internal till? (* sign arg) ch))))
+    (`(,till? ,sign ,ch)
+     (let ((mivi--current-find-char ch))
+       (mivi--find-internal till? (* sign arg))))))
 
 (defun mivi-repeat-find-opposite (&optional arg)
   (interactive "p")
   (pcase mivi--last-find
-    (`(,till? ,sign ,ch) (mivi--find-internal till? (* (- sign) arg) ch))))
+    (`(,till? ,sign ,ch)
+     (let ((mivi--current-find-char ch))
+       (mivi--find-internal till? (* (- sign) arg))))))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "p")
@@ -609,7 +614,9 @@
         (undo-tree-undo)
       (undo-tree-redo)))
    (mivi--last-command
-    (let ((current-prefix-arg (or arg (car mivi--last-command))))
+    (let ((current-prefix-arg (or arg (car mivi--last-command)))
+          (mivi--current-find-char
+           (pcase mivi--last-find (`(,till? ,sign ,ch) ch))))
       (call-interactively (cdr mivi--last-command))))))
 
 (defun mivi-undo ()
@@ -669,9 +676,9 @@
 (defun mivi--copy-region (beg end)
   (kill-new (buffer-substring beg end)))
 
-(defun mivi--find-internal (till? arg &optional ch)
+(defun mivi--find-internal (till? arg &optional save?)
   (let ((case-fold-search nil)
-        (ch (or ch (read-char (if till? "t-" "f-"))))
+        (ch (or mivi--current-find-char (read-char (if till? "t-" "f-"))))
         (sign (if (> arg 0) 1 -1))
         (move? (and (> arg 0) (not (eobp)))))
     (when move?
@@ -681,10 +688,7 @@
         (forward-char (- sign))))
     (when move?
       (forward-char (- sign)))
-    (when (memq this-command '(mivi-find
-                               mivi-Find
-                               mivi-goto-char
-                               mivi-goto-char-backward))
+    (when save?
       (setq mivi--last-find (list till? sign ch)))))
 
 (defun mivi--numeric-or-default (arg &optional default)
