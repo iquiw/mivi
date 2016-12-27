@@ -777,6 +777,7 @@
    "mivi-goto-char"
    "mivi-goto-char-backward"
    "mivi-goto-line"
+   "mivi-goto-pair"
    "mivi-repeat-find"
    "mivi-repeat-find-opposite"
    "mivi-scroll-down"
