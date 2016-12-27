@@ -307,9 +307,9 @@
   (interactive "p")
   (dotimes (_ arg)
     (skip-chars-backward "[:blank:]\n")
-    (if (looking-back "[[:word:]_]" nil)
-        (skip-chars-backward "[:word:]_")
-      (skip-chars-backward "^[:word:][:blank:]\n_"))))
+    (if (looking-back "[[:alnum:]_]" nil)
+        (skip-chars-backward "[:alnum:]_")
+      (skip-chars-backward "^[:alnum:][:blank:]\n_"))))
 
 (defun mivi-Backward-word (&optional arg)
   (interactive "p")
@@ -323,9 +323,9 @@
   (let ((p (point)))
     (dotimes (_ arg)
       (skip-chars-forward "[:blank:]\n")
-      (if (looking-at-p "[[:word:]_]")
-          (skip-chars-forward "[:word:]_")
-        (skip-chars-forward "^[:word:][:blank:]\n_")))
+      (if (looking-at-p "[[:alnum:]_]")
+          (skip-chars-forward "[:alnum:]_")
+        (skip-chars-forward "^[:alnum:][:blank:]\n_")))
     (unless (= p (point))
       (backward-char))))
 
@@ -351,10 +351,10 @@
   (interactive "p")
   (dotimes (i arg)
     (cond
-     ((looking-at-p "[[:word:]_]")
-      (skip-chars-forward "[:word:]_"))
+     ((looking-at-p "[[:alnum:]_]")
+      (skip-chars-forward "[:alnum:]_"))
      ((not (looking-at-p "[[:blank:]\n]"))
-      (skip-chars-forward "^[:word:][:blank:]\n_")))
+      (skip-chars-forward "^[:alnum:][:blank:]\n_")))
     (cond
      ((and mivi--stop-at-eol
            (= i (1- arg)))
