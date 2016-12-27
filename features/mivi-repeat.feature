@@ -30,3 +30,14 @@ Feature: Undo
     When I go to line "2"
     And I type "."
     Then I should see pattern "^ 789$"
+
+  Scenario: repeat delete with current prefix
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "db"
+    Then I should see pattern "^foo bar $"
+    And I type "2."
+    Then the buffer should be empty

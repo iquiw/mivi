@@ -601,15 +601,15 @@
   (interactive "p")
   (kill-backward-chars (mivi--numeric-or-default arg 1)))
 
-(defun mivi-repeat ()
-  (interactive)
+(defun mivi-repeat (&optional arg)
+  (interactive "P")
   (cond
    ((member last-command '(mivi-undo mivi-repeat))
     (if (eq mivi--undo-direction 'undo)
         (undo-tree-undo)
       (undo-tree-redo)))
    (mivi--last-command
-    (let ((current-prefix-arg (car mivi--last-command)))
+    (let ((current-prefix-arg (or arg (car mivi--last-command))))
       (call-interactively (cdr mivi--last-command))))))
 
 (defun mivi-undo ()
