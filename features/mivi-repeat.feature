@@ -56,3 +56,14 @@ Feature: Undo
     Then I should see pattern "^baz$"
     When I type "2."
     Then I should see pattern "^0$"
+
+  Scenario: repeat delete Find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "dF "
+    Then I should see pattern "^foo bar$"
+    When I type "."
+    Then I should see pattern "^foo$"
