@@ -63,3 +63,22 @@ Feature: Scroll
     And I press "C-b"
     And I execute the action chain
     Then the current bottom line should be "3" pages up from end
+
+  Scenario: goto top or bottom
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+    2
+    3
+    4
+    5
+    """
+    And I press "C-u"
+    Then the current line should be "1"
+    When I press "C-d"
+    Then the current line should be "5"
+    When I press "C-b"
+    Then the current line should be "1"
+    When I press "C-f"
+    Then the current line should be "5"

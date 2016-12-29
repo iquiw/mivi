@@ -562,19 +562,27 @@
 ;; Scroll commands
 (defun mivi-scroll-down (&optional arg)
   (interactive "P")
-  (scroll-down (mivi--numeric-or-default arg (/ (window-body-height) 2))))
+  (condition-case nil
+      (scroll-down (mivi--numeric-or-default arg (/ (window-body-height) 2)))
+    (error (goto-char (point-min)))))
 
 (defun mivi-scroll-screen-down (&optional arg)
   (interactive "p")
-  (scroll-down (* (window-body-height) (prefix-numeric-value arg))))
+  (condition-case nil
+      (scroll-down (* (window-body-height) (prefix-numeric-value arg)))
+    (error (goto-char (point-min)))))
 
 (defun mivi-scroll-screen-up (&optional arg)
   (interactive "p")
-  (scroll-up (* (window-body-height) (prefix-numeric-value arg))))
+  (condition-case nil
+      (scroll-up (* (window-body-height) (prefix-numeric-value arg)))
+    (error (goto-char (point-max)))))
 
 (defun mivi-scroll-up (&optional arg)
   (interactive "P")
-  (scroll-up (mivi--numeric-or-default arg (/ (window-body-height) 2))))
+  (condition-case nil
+      (scroll-up (mivi--numeric-or-default arg (/ (window-body-height) 2)))
+    (error (goto-char (point-max)))))
 
 ;; Other commands
 (defun mivi-command ()
