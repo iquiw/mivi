@@ -161,6 +161,14 @@ Feature: Copy
     And the cursor should be at cell (1, 10)
     And the mivi state should be "command"
 
+    When I start an action chain
+    And I press "y"
+    And I press "C-h"
+    And I execute the action chain
+    Then the current kill-ring should be "a"
+    And the cursor should be at cell (1, 9)
+    And the mivi state should be "command"
+
   Scenario: copy forward char
     When I go to beginning of buffer
     And I type "yl"

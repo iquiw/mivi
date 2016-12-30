@@ -157,6 +157,12 @@ Feature: Delete
     When I type "10dh"
     Then I should see pattern "^f$"
 
+    When I start an action chain
+    And I press "d"
+    And I press "C-h"
+    And I execute the action chain
+    Then the buffer should be empty
+
   Scenario: delete forward char
     Given the buffer is empty
     When I insert:

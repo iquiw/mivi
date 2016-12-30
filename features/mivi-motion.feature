@@ -21,6 +21,16 @@ Feature: Motion
     When I type "h"
     Then the cursor should be at cell (2, 10)
 
+  Scenario: C-h
+    When I go to point "5"
+    And I press "C-h"
+    Then the cursor should be at cell (1, 3)
+    When I start an action chain
+    And I press "3"
+    And I press "C-h"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 0)
+
   Scenario: j
     When I go to beginning of buffer
     And I type "j"

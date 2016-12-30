@@ -130,6 +130,14 @@ Feature: Change
     Then I should see pattern "^qu$"
     And the mivi state should be "insert"
 
+    When I start an action chain
+    And I press "<escape>"
+    And I press "c"
+    And I press "C-h"
+    And I execute the action chain
+    #Then I should see pattern "^u$"
+    #And the mivi state should be "insert"
+
   Scenario: change forward char
     When I go to beginning of buffer
     And I type "cl"
