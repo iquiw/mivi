@@ -170,3 +170,11 @@ Feature Insert
     When I type "i"
     And I press "C-w"
     Then I should see pattern "bar-$"
+
+  Scenario C-v
+    Given the buffer is empty
+    When I start an action chain
+    And I press "C-v"
+    And I press "C-a"
+    And I execute the action chain
+    Then I should see ""
