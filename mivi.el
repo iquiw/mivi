@@ -626,7 +626,7 @@
    (mivi--last-command
     (let ((current-prefix-arg (or arg (car mivi--last-command)))
           (mivi--current-find-char
-           (pcase mivi--last-find (`(,till? ,sign ,ch) ch))))
+           (pcase mivi--last-find (`(,_ ,_ ,ch) ch))))
       (call-interactively (cdr mivi--last-command))))))
 
 (defun mivi-undo ()
@@ -722,13 +722,6 @@
   (dolist (s mivi--states)
     (set s (eq s state))))
 
-(defun mivi--post-command ()
-  (unless (eq mivi--last-buffer (current-buffer))
-    (if mivi-local-mode
-        (set-frame-parameter nil 'cursor-type mivi--cursor-type)
-      (set-frame-parameter nil 'cursor-type 'box))
-    (setq mivi--last-buffer (current-buffer))))
-
 (defvar mivi-mode-map-alist
   (list
    (cons 'mivi-change-state mivi-change-map)
@@ -747,6 +740,13 @@
                           emulation-mode-map-alists)))
     (setq emulation-mode-map-alists
           (delete 'mivi-mode-map-alist emulation-mode-map-alists))))
+
+(defun mivi--post-command ()
+  (unless (eq mivi--last-buffer (current-buffer))
+    (if mivi-local-mode
+        (set-frame-parameter nil 'cursor-type mivi--cursor-type)
+      (set-frame-parameter nil 'cursor-type 'box))
+    (setq mivi--last-buffer (current-buffer))))
 
 (defun mivi-local-mode-on ()
   (when (and (not (minibufferp))
