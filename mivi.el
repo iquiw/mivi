@@ -25,6 +25,9 @@
 (defcustom mivi-override-universal-argument-map t
   "Whether to disable \\C-u binding in `universal-argument-map'.")
 
+(defcustom mivi-shift-width 2
+  "Shiftwidth by which backward indent moves the current indentation.")
+
 (defvar mivi--current-find-char nil)
 (defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
@@ -117,6 +120,7 @@
 
 (defconst mivi-insert-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-d") #'mivi-backward-indent)
     (define-key map (kbd "C-h") #'delete-backward-char)
     (define-key map (kbd "C-v") #'quoted-insert)
     (define-key map (kbd "C-w") #'backward-kill-word)
@@ -587,6 +591,23 @@
     (error (goto-char (point-max)))))
 
 ;; Other commands
+(defun mivi-backward-indent ()
+  (interactive)
+  (if (looking-back "^[[:blank:]]*\\([0^]\\)?" nil)
+      (let ((pc (match-string 1)))
+        (if pc
+            (progn
+              (delete-backward-char 1)
+              (indent-line-to 0)
+              (when (and (string= pc "^")
+                         (boundp 'indent-line-function))
+                (funcall indent-line-function)))
+          (let ((column (current-column)))
+            (indent-line-to (if (< column mivi-shift-width)
+                                0
+                              (- column mivi-shift-width))))))
+    (delete-char 1)))
+
 (defun mivi-command ()
   (interactive)
   (cond

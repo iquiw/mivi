@@ -151,6 +151,35 @@ Feature Insert
     Then the mivi state should be "insert"
     And I should see pattern "^quxoo quux$"
 
+  Scenario: C-d
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+        
+    """
+    And I type "i"
+    And I press "C-d"
+    Then the cursor should be at cell (2, 2)
+    When I press "C-d"
+    Then the cursor should be at cell (2, 0)
+    When I press "C-d"
+    Then the cursor should be at cell (2, 0)
+
+    When I type "    0"
+    And I press "C-d"
+    Then the cursor should be at cell (2, 0)
+
+    When I go to cell (1, 13)
+    And I press "RET"
+    And I type "  ^"
+    And I press "C-d"
+    Then the cursor should be at cell (2, 2)
+
+    When I go to word "foo"
+    And I press "C-d"
+    Then I should see "defun oo"
+
   Scenario: C-h
     Given the buffer is empty
     When I insert:
@@ -161,6 +190,14 @@ Feature Insert
     And I press "C-h"
     Then I should see pattern "-ba$"
 
+  Scenario C-v
+    Given the buffer is empty
+    When I start an action chain
+    And I press "C-v"
+    And I press "C-a"
+    And I execute the action chain
+    Then I should see ""
+
   Scenario: C-w
     Given the buffer is empty
     When I insert:
@@ -170,11 +207,3 @@ Feature Insert
     When I type "i"
     And I press "C-w"
     Then I should see pattern "bar-$"
-
-  Scenario C-v
-    Given the buffer is empty
-    When I start an action chain
-    And I press "C-v"
-    And I press "C-a"
-    And I execute the action chain
-    Then I should see ""
