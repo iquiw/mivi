@@ -11,6 +11,9 @@ Feature: Undo
     Then I should see "fofooo"
     And the cursor should be at cell (1, 4)
 
+    When I type ".."
+    Then I should see "fofofofooooo"
+
   Scenario: repeat delete
     Given the buffer is empty
     When I insert:

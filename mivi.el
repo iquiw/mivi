@@ -647,7 +647,9 @@
 (defun mivi-repeat (&optional arg)
   (interactive "P")
   (cond
-   ((member last-command '(mivi-undo mivi-repeat))
+   ((or (eq last-command 'mivi-undo)
+        (and (eq last-command 'mivi-repeat)
+             (eq (plist-get mivi--last-command :command) 'mivi-undo)))
     (if (eq mivi--undo-direction 'undo)
         (undo-tree-undo)
       (undo-tree-redo)))
