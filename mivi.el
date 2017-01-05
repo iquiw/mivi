@@ -29,6 +29,7 @@
   "Shiftwidth by which backward indent moves the current indentation.")
 
 (defvar mivi--current-find-char nil)
+(defvar mivi--insert-beginning nil)
 (defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
@@ -476,7 +477,9 @@
 
 (defun mivi-insert ()
   (interactive)
-  (mivi--switch-state 'mivi-insert-state))
+  (mivi--switch-state 'mivi-insert-state)
+  (setq mivi--insert-beginning (point))
+  (mivi--store-command))
 
 (defun mivi-Insert ()
   (interactive)
@@ -610,13 +613,17 @@
 
 (defun mivi-command ()
   (interactive)
+  (when (and mivi--insert-beginning
+             (< mivi--insert-beginning (point)))
+    (setq mivi--last-command
+          (plist-put mivi--last-command
+                     :content (buffer-substring mivi--insert-beginning (point)))))
   (cond
    ((memq last-command '(mivi-open mivi-Open))
     (indent-to-left-margin))
    ((not (bolp))
     (backward-char)))
   (overwrite-mode -1)
-  (setq mivi--last-command nil)
   (mivi--switch-state 'mivi-command-state))
 
 (defun mivi-join (&optional arg)
@@ -645,14 +652,18 @@
         (undo-tree-undo)
       (undo-tree-redo)))
    (mivi--last-command
-    (let ((current-prefix-arg (or arg (car mivi--last-command)))
-          (mivi--current-find-char
-           (pcase mivi--last-find (`(,_ ,_ ,ch) ch))))
-      (call-interactively (cdr mivi--last-command))))))
+    (pcase (plist-get mivi--last-command :command)
+      ('mivi-insert
+       (insert (plist-get mivi--last-command :content)))
+      (command
+       (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
+             (mivi--current-find-char
+              (pcase mivi--last-find (`(,_ ,_ ,ch) ch))))
+         (call-interactively command)))))))
 
 (defun mivi-undo ()
   (interactive)
-  (if (memq (cdr mivi--last-command) '(mivi-undo mivi-repeat))
+  (if (memq (plist-get mivi--last-command :command) '(mivi-undo mivi-repeat))
       (if (eq mivi--undo-direction 'undo)
           (progn
             (undo-tree-redo)
@@ -728,7 +739,8 @@
     (prefix-numeric-value arg)))
 
 (defun mivi--store-command (&optional command)
-  (setq mivi--last-command (cons current-prefix-arg (or command this-command))))
+  (setq mivi--last-command (list :prefix current-prefix-arg
+                                 :command (or command this-command))))
 
 (defun mivi--switch-state (state)
   (cond

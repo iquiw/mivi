@@ -3,6 +3,13 @@ Feature: Undo
   As a user
   I want to repeat previous command
 
+  Scenario: repeat insert
+    Given the buffer is empty
+    When I type "ifoo"
+    And I press "<escape>"
+    And I type "."
+    Then I should see "fofooo"
+
   Scenario: repeat delete
     Given the buffer is empty
     When I insert:
