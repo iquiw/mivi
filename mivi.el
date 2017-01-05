@@ -600,7 +600,7 @@
       (let ((pc (match-string 1)))
         (if pc
             (progn
-              (delete-backward-char 1)
+              (delete-char -1)
               (indent-line-to 0)
               (when (and (string= pc "^")
                          (boundp 'indent-line-function))
