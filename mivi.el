@@ -653,7 +653,7 @@
       (undo-tree-redo)))
    (mivi--last-command
     (pcase (plist-get mivi--last-command :command)
-      ('mivi-insert
+      (`mivi-insert
        (insert (plist-get mivi--last-command :content)))
       (command
        (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
