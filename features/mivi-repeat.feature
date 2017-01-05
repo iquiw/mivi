@@ -9,6 +9,7 @@ Feature: Undo
     And I press "<escape>"
     And I type "."
     Then I should see "fofooo"
+    And the cursor should be at cell (1, 4)
 
   Scenario: repeat delete
     Given the buffer is empty

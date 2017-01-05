@@ -634,7 +634,7 @@
            (beg (save-excursion (skip-chars-backward "[:blank:]\n") (point))))
       (delete-region beg end))
     (insert " ")
-    (backward-char 1)))
+    (backward-char)))
 
 (defun mivi-kill-char (&optional arg)
   (interactive "p")
@@ -654,7 +654,10 @@
    (mivi--last-command
     (pcase (plist-get mivi--last-command :command)
       (`mivi-insert
-       (insert (plist-get mivi--last-command :content)))
+       (let ((content (plist-get mivi--last-command :content)))
+         (when content
+           (insert content)
+           (backward-char))))
       (command
        (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
              (mivi--current-find-char
