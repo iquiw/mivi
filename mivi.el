@@ -58,6 +58,7 @@
     (define-key map "$" #'end-of-line)
     (define-key map "%" #'mivi-goto-pair)
     (define-key map "," #'mivi-repeat-find-opposite)
+    (define-key map "/" #'mivi-search)
     (define-key map "0" #'beginning-of-line)
     (define-key map ";" #'mivi-repeat-find)
     (define-key map "B" #'mivi-Backward-word)
@@ -441,6 +442,12 @@
     (`(,till? ,sign ,ch)
      (let ((mivi--current-find-char ch))
        (mivi--find-internal till? (* (- sign) arg))))))
+
+(defun mivi-search (&optional arg)
+  (interactive "p")
+  (let ((re (read-string "/")))
+    (when (re-search-forward re nil t (mivi--numeric-or-default arg 1))
+      (goto-char (match-beginning 0)))))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "p")

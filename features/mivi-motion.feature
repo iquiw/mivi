@@ -371,3 +371,33 @@ Feature: Motion
     When I go to end of buffer
     And I type "%"
     Then the cursor should be at cell (1, 0)
+
+  Scenario: search
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/bar"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (2, 2)
+
+    When I go to beginning of buffer
+    And I start an action chain
+    And I type "/^ *b.z"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 0)
+
+    When I go to beginning of buffer
+    And I start an action chain
+    And I type "2/fo+"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (4, 0)
