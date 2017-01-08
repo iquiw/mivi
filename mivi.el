@@ -446,6 +446,8 @@
 (defun mivi-search (&optional arg)
   (interactive "p")
   (let ((re (read-string "/")))
+    (unless (eobp)
+      (forward-char))
     (when (re-search-forward re nil t (mivi--numeric-or-default arg 1))
       (goto-char (match-beginning 0)))))
 

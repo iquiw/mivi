@@ -390,14 +390,14 @@ Feature: Motion
 
     When I go to beginning of buffer
     And I start an action chain
-    And I type "/^ *b.z"
+    And I type "2/^ *ba."
     And I press "RET"
     And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
     When I go to beginning of buffer
     And I start an action chain
-    And I type "2/fo+"
+    And I type "/fo+"
     And I press "RET"
     And I execute the action chain
     Then the cursor should be at cell (4, 0)
