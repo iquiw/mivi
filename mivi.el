@@ -499,16 +499,20 @@
   (end-of-line)
   (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-insert ()
+(defun mivi-insert (&optional no-switch)
   (interactive)
-  (mivi--switch-state 'mivi-insert-state)
-  (setq mivi--insert-beginning (point))
-  (mivi--store-command))
+  (unless no-switch
+    (mivi--switch-state 'mivi-insert-state)
+    (setq mivi--insert-beginning (point))
+    (mivi--store-command)))
 
-(defun mivi-Insert ()
+(defun mivi-Insert (&optional no-switch)
   (interactive)
   (back-to-indentation)
-  (mivi--switch-state 'mivi-insert-state))
+  (unless no-switch
+    (mivi--switch-state 'mivi-insert-state)
+    (setq mivi--insert-beginning (point))
+    (mivi--store-command)))
 
 (defun mivi-open ()
   (interactive)
@@ -670,25 +674,27 @@
 
 (defun mivi-repeat (&optional arg)
   (interactive "P")
-  (cond
-   ((or (eq last-command 'mivi-undo)
-        (and (eq last-command 'mivi-repeat)
-             (eq (plist-get mivi--last-command :command) 'mivi-undo)))
-    (if (eq mivi--undo-direction 'undo)
-        (undo-tree-undo)
-      (undo-tree-redo)))
-   (mivi--last-command
-    (pcase (plist-get mivi--last-command :command)
-      (`mivi-insert
-       (let ((content (plist-get mivi--last-command :content)))
-         (when content
-           (insert content)
-           (backward-char))))
-      (command
-       (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
-             (mivi--current-find-char
-              (pcase mivi--last-find (`(,_ ,_ ,ch) ch))))
-         (call-interactively command)))))))
+  (let ((command (plist-get mivi--last-command :command)))
+    (cond
+     ((or (eq last-command 'mivi-undo)
+          (and (eq last-command 'mivi-repeat)
+               (eq command 'mivi-undo)))
+      (if (eq mivi--undo-direction 'undo)
+          (undo-tree-undo)
+        (undo-tree-redo)))
+     (mivi--last-command
+      (pcase command
+        ((or `mivi-insert `mivi-Insert)
+         (funcall command t)
+         (let ((content (plist-get mivi--last-command :content)))
+           (when content
+             (insert content)
+             (backward-char))))
+        (command
+         (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
+               (mivi--current-find-char
+                (pcase mivi--last-find (`(,_ ,_ ,ch) ch))))
+           (call-interactively command))))))))
 
 (defun mivi-undo ()
   (interactive)

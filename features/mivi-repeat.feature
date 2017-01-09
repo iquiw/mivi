@@ -14,6 +14,26 @@ Feature: Undo
     When I type ".."
     Then I should see "fofofofooooo"
 
+  Scenario: repeat Insert
+    Given the buffer is empty
+    When I insert:
+    """
+       1
+       2
+       3
+    """
+    And I go to beginning of buffer
+    And I type "Ifoo"
+    And I press "<escape>"
+    And I type "."
+    Then I should see pattern "^   foofoo1$"
+    And the cursor should be at cell (1, 5)
+
+    When I go to line "2"
+    And I type "."
+    Then I should see pattern "^   foo2$"
+    And the cursor should be at cell (2, 5)
+
   Scenario: repeat delete
     Given the buffer is empty
     When I insert:
