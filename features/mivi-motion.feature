@@ -401,3 +401,12 @@ Feature: Motion
     And I press "RET"
     And I execute the action chain
     Then the cursor should be at cell (4, 0)
+
+  Scenario: wrapped search
+    When I go to end of buffer
+    And I start an action chain
+    And I type "/foo"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 0)
+    And I should see message "Search wrapped"
