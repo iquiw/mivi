@@ -448,7 +448,7 @@
   (let ((re (read-string "/")))
     (unless (eobp)
       (forward-char))
-    (when (re-search-forward re nil t (mivi--numeric-or-default arg 1))
+    (when (re-search-forward re nil t arg)
       (goto-char (match-beginning 0)))))
 
 (defun mivi-window-bottom (&optional arg)
@@ -647,11 +647,11 @@
 
 (defun mivi-kill-char (&optional arg)
   (interactive "p")
-  (kill-forward-chars (mivi--numeric-or-default arg 1)))
+  (kill-forward-chars arg))
 
 (defun mivi-kill-backward-char (&optional arg)
   (interactive "p")
-  (kill-backward-chars (mivi--numeric-or-default arg 1)))
+  (kill-backward-chars arg))
 
 (defun mivi-repeat (&optional arg)
   (interactive "P")
