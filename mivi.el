@@ -446,26 +446,24 @@
 (defun mivi-search (&optional arg)
   (interactive "p")
   (let ((origin (point))
-        (re (read-string "/")))
-    (if (or (catch 'break
-              (while (> arg 0)
-                (unless (eobp)
-                  (forward-char))
-                (unless (re-search-forward re nil t)
-                  (throw 'break nil))
-                (setq arg (1- arg)))
-              t)
-            (catch 'break
-              (goto-char (point-min))
-              (while (> arg 0)
-                (unless (or (bobp) (eobp))
-                  (forward-char))
-                (unless (re-search-forward re origin t)
-                  (throw 'break nil))
-                (setq arg (1- arg)))
-              (message "Search wrapped")
-              t))
-        (goto-char (match-beginning 0))
+        (re (read-string "/"))
+        (wrapped nil))
+    (if (catch 'break
+          (unless (eobp) (forward-char))
+          (while (> arg 0)
+            (if (re-search-forward re nil t)
+                (progn
+                  (setq arg (1- arg))
+                  (unless (eobp) (forward-char)))
+              (if wrapped
+                  (throw 'break nil)
+                (setq wrapped t)
+                (goto-char (point-min)))))
+          t)
+        (progn
+          (when wrapped
+            (message "Search wrapped"))
+          (goto-char (match-beginning 0)))
       (goto-char origin))))
 
 (defun mivi-window-bottom (&optional arg)

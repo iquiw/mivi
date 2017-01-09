@@ -416,3 +416,11 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (1, 0)
     And I should see message "Search wrapped"
+
+    When I go to cell (2, 3)
+    And I start an action chain
+    And I type "/bar"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (2, 2)
+    And I should see message "Search wrapped"
