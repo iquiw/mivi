@@ -50,6 +50,24 @@ Feature: Undo
     """
     And the cursor should be at cell (3, 4)
 
+  Scenario: repeat Open
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+      bar
+    """
+    And I type "Obaz"
+    And I press "<escape>"
+    And I type "."
+    Then I should see:
+    """
+      baz
+      baz
+      bar
+    """
+    And the cursor should be at cell (2, 4)
+
   Scenario: repeat delete
     Given the buffer is empty
     When I insert:
