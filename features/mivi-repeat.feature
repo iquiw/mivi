@@ -34,6 +34,22 @@ Feature: Undo
     Then I should see pattern "^   foo2$"
     And the cursor should be at cell (2, 5)
 
+  Scenario: repeat open
+    Given the buffer is empty
+    When I insert:
+    """
+    (defun foo ()
+    """
+    And I type "obar"
+    And I press "<escape>"
+    And I type "."
+    Then I should see:
+    """
+      bar
+      bar
+    """
+    And the cursor should be at cell (3, 4)
+
   Scenario: repeat delete
     Given the buffer is empty
     When I insert:

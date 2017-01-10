@@ -499,26 +499,29 @@
   (end-of-line)
   (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-insert (&optional no-switch)
+(defun mivi-insert (&optional move-only)
   (interactive)
-  (unless no-switch
+  (unless move-only
     (mivi--switch-state 'mivi-insert-state)
     (setq mivi--insert-beginning (point))
     (mivi--store-command)))
 
-(defun mivi-Insert (&optional no-switch)
+(defun mivi-Insert (&optional move-only)
   (interactive)
   (back-to-indentation)
-  (unless no-switch
+  (unless move-only
     (mivi--switch-state 'mivi-insert-state)
     (setq mivi--insert-beginning (point))
     (mivi--store-command)))
 
-(defun mivi-open ()
+(defun mivi-open (&optional move-only)
   (interactive)
   (end-of-line)
   (newline-and-indent)
-  (mivi--switch-state 'mivi-insert-state))
+  (unless move-only
+    (mivi--switch-state 'mivi-insert-state)
+    (setq mivi--insert-beginning (point))
+    (mivi--store-command)))
 
 (defun mivi-Open ()
   (interactive)
@@ -684,7 +687,7 @@
         (undo-tree-redo)))
      (mivi--last-command
       (pcase command
-        ((or `mivi-insert `mivi-Insert)
+        ((or `mivi-insert `mivi-Insert `mivi-open)
          (funcall command t)
          (let ((content (plist-get mivi--last-command :content)))
            (when content
