@@ -702,11 +702,17 @@
      (mivi--last-command
       (pcase command
         ((or `mivi-insert `mivi-Insert `mivi-open `mivi-Open)
-         (funcall command t)
-         (let ((content (plist-get mivi--last-command :content)))
+         (let ((m (make-marker))
+               (content (plist-get mivi--last-command :content)))
            (when content
-             (insert content)
-             (backward-char))))
+             (dotimes (_ (mivi--numeric-or-default arg 1))
+               (funcall command t)
+               (insert content)
+               (when (or (not (marker-position m))
+                         (< (marker-position m) (point)))
+                 (set-marker m (point))))
+             (goto-char (1- (marker-position m)))
+             (set-marker m nil))))
         (command
          (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
                (mivi--current-find-char

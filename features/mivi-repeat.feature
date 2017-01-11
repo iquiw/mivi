@@ -13,6 +13,22 @@ Feature: Undo
 
     When I type ".."
     Then I should see "fofofofooooo"
+    And the cursor should be at cell (1, 8)
+
+    Given the buffer is empty
+    When I type "ibar"
+    And I press "RET"
+    When I type "baz"
+    And I press "<escape>"
+    And I type "2."
+    Then I should see:
+    """
+    bar
+    babar
+    bazbar
+    bazz
+    """
+    And the cursor should be at cell (4, 2)
 
   Scenario: repeat Insert
     Given the buffer is empty
@@ -34,6 +50,11 @@ Feature: Undo
     Then I should see pattern "^   foo2$"
     And the cursor should be at cell (2, 5)
 
+    When I go to line "3"
+    And I type "2."
+    Then I should see pattern "^   foofoo3$"
+    And the cursor should be at cell (3, 8)
+
   Scenario: repeat open
     Given the buffer is empty
     When I insert:
@@ -49,6 +70,16 @@ Feature: Undo
       bar
     """
     And the cursor should be at cell (3, 4)
+
+    When I type "2."
+    Then I should see:
+    """
+      bar
+      bar
+      bar
+      bar
+    """
+    And the cursor should be at cell (5, 4)
 
   Scenario: repeat Open
     Given the buffer is empty
@@ -67,6 +98,17 @@ Feature: Undo
       bar
     """
     And the cursor should be at cell (2, 4)
+
+    When I type "2."
+    Then I should see:
+    """
+      baz
+      baz
+      baz
+      baz
+      bar
+    """
+    And the cursor should be at cell (3, 4)
 
   Scenario: repeat delete
     Given the buffer is empty
