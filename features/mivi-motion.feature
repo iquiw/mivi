@@ -424,3 +424,24 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (2, 2)
     And I should see message "Search wrapped"
+
+  Scenario: search next
+    Given the buffer is empty
+    When I insert:
+    """
+     foo bar
+    baz
+     foofoo
+    qux
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/foo"
+    And I press "RET"
+    And I execute the action chain
+    And I type "n"
+    Then the cursor should be at cell (3, 1)
+
+    When I type "2n"
+    Then the cursor should be at cell (1, 1)
+    And I should see message "Search wrapped"

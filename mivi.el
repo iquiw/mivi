@@ -33,6 +33,7 @@
 (defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
+(defvar mivi--last-search nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
 
@@ -78,6 +79,7 @@
     (define-key map "j" #'mivi-next-line)
     (define-key map "k" #'mivi-previous-line)
     (define-key map "l" #'forward-char)
+    (define-key map "n" #'mivi-search-next)
     (define-key map "t" #'mivi-goto-char)
     (define-key map "w" #'mivi-forward-word)
     (define-key map (kbd "C-h") #'backward-char)
@@ -445,15 +447,24 @@
 
 (defun mivi-search (&optional arg)
   (interactive "p")
+  (let ((re (read-string "/")))
+    (mivi--search-internal re arg)
+    (setq mivi--last-search re)))
+
+(defun mivi-search-next (&optional arg)
+  (interactive "p")
+  (when mivi--last-search
+    (mivi--search-internal mivi--last-search arg)))
+
+(defun mivi--search-internal (re count)
   (let ((origin (point))
-        (re (read-string "/"))
         (wrapped nil))
     (if (catch 'break
           (unless (eobp) (forward-char))
-          (while (> arg 0)
+          (while (> count 0)
             (if (re-search-forward re nil t)
                 (progn
-                  (setq arg (1- arg))
+                  (setq count (1- count))
                   (unless (eobp) (forward-char)))
               (if wrapped
                   (throw 'break nil)
