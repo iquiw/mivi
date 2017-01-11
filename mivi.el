@@ -456,27 +456,6 @@
   (when mivi--last-search
     (mivi--search-internal mivi--last-search arg)))
 
-(defun mivi--search-internal (re count)
-  (let ((origin (point))
-        (wrapped nil))
-    (if (catch 'break
-          (unless (eobp) (forward-char))
-          (while (> count 0)
-            (if (re-search-forward re nil t)
-                (progn
-                  (setq count (1- count))
-                  (unless (eobp) (forward-char)))
-              (if wrapped
-                  (throw 'break nil)
-                (setq wrapped t)
-                (goto-char (point-min)))))
-          t)
-        (progn
-          (when wrapped
-            (message "Search wrapped"))
-          (goto-char (match-beginning 0)))
-      (goto-char origin))))
-
 (defun mivi-window-bottom (&optional arg)
   (interactive "p")
   (move-to-window-line -1)
@@ -795,6 +774,27 @@
   (if (not arg)
       (or default 0)
     (prefix-numeric-value arg)))
+
+(defun mivi--search-internal (re count)
+  (let ((origin (point))
+        (wrapped nil))
+    (if (catch 'break
+          (unless (eobp) (forward-char))
+          (while (> count 0)
+            (if (re-search-forward re nil t)
+                (progn
+                  (setq count (1- count))
+                  (unless (eobp) (forward-char)))
+              (if wrapped
+                  (throw 'break nil)
+                (setq wrapped t)
+                (goto-char (point-min)))))
+          t)
+        (progn
+          (when wrapped
+            (message "Search wrapped"))
+          (goto-char (match-beginning 0)))
+      (goto-char origin))))
 
 (defun mivi--store-command (&optional command)
   (setq mivi--last-command (list :prefix current-prefix-arg
