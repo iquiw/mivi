@@ -62,6 +62,7 @@
     (define-key map "/" #'mivi-search)
     (define-key map "0" #'beginning-of-line)
     (define-key map ";" #'mivi-repeat-find)
+    (define-key map "?" #'mivi-search-backward)
     (define-key map "B" #'mivi-Backward-word)
     (define-key map "E" #'mivi-End-of-word)
     (define-key map "F" #'mivi-Find)
@@ -448,13 +449,18 @@
 (defun mivi-search (&optional arg)
   (interactive "p")
   (let ((re (read-string "/")))
-    (mivi--search-internal re arg)
+    (mivi--search-internal re arg 1)
     (setq mivi--last-search re)))
+
+(defun mivi-search-backward (&optional arg)
+  (interactive "p")
+  (let ((re (read-string "?")))
+    (mivi--search-internal re arg -1)))
 
 (defun mivi-search-next (&optional arg)
   (interactive "p")
   (when mivi--last-search
-    (mivi--search-internal mivi--last-search arg)))
+    (mivi--search-internal mivi--last-search arg 1)))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "p")
@@ -775,20 +781,24 @@
       (or default 0)
     (prefix-numeric-value arg)))
 
-(defun mivi--search-internal (re count)
+(defun mivi--search-internal (re count sign)
   (let ((origin (point))
         (wrapped nil))
     (if (catch 'break
-          (unless (eobp) (forward-char))
+          (when (and (> sign 0) (not (eobp)))
+            (forward-char))
           (while (> count 0)
-            (if (re-search-forward re nil t)
+            (if (re-search-forward re nil t sign)
                 (progn
                   (setq count (1- count))
-                  (unless (eobp) (forward-char)))
+                  (when (and (> sign 0) (not (eobp)))
+                    (forward-char)))
               (if wrapped
                   (throw 'break nil)
                 (setq wrapped t)
-                (goto-char (point-min)))))
+                (goto-char (if (> sign 0)
+                               (point-min)
+                             (point-max))))))
           t)
         (progn
           (when wrapped

@@ -445,3 +445,24 @@ Feature: Motion
     When I type "2n"
     Then the cursor should be at cell (1, 1)
     And I should see message "Search wrapped"
+
+  Scenario: search backward
+    When I go to end of buffer
+    And I start an action chain
+    And I type "?foo"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 4)
+
+    When I start an action chain
+    And I type "2?foo"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 1)
+
+    When I start an action chain
+    And I type "?baz"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (2, 0)
+    And I should see message "Search wrapped"
