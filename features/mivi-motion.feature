@@ -478,3 +478,55 @@ Feature: Motion
 
     When I type "n"
     Then the cursor should be at cell (1, 1)
+
+  Scenario: search Next
+    When I go to beginning of buffer
+    And I start an action chain
+    And I type "2/foo"
+    And I press "RET"
+    And I type "N"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 1)
+
+    When I type "2N"
+    Then the cursor should be at cell (3, 1)
+    And I should see message "Search wrapped"
+
+  Scenario: search backward Next
+    When I go to end of buffer
+    And I start an action chain
+    And I type "2? ."
+    And I press "RET"
+    And I type "N"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 0)
+
+    When I type "N"
+    Then the cursor should be at cell (1, 0)
+    And I should see message "Search wrapped"
+
+  Scenario: search next and Next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo1
+      bar2
+        baz3
+    qux4
+    quux5
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/[a-z]\{3\}[0-9]"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (2, 2)
+
+    When I type "n"
+    Then the cursor should be at cell (3, 4)
+
+    When I type "2N"
+    Then the cursor should be at cell (1, 0)
+
+    When I type "3n"
+    Then the cursor should be at cell (4, 0)

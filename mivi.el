@@ -70,6 +70,7 @@
     (define-key map "H" #'mivi-window-top)
     (define-key map "L" #'mivi-window-bottom)
     (define-key map "M" #'mivi-window-middle)
+    (define-key map "N" #'mivi-search-Next)
     (define-key map "T" #'mivi-goto-char-backward)
     (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'back-to-indentation)
@@ -469,6 +470,12 @@
   (pcase mivi--last-search
     (`(,re . ,sign)
      (mivi--search-internal re arg sign))))
+
+(defun mivi-search-Next (&optional arg)
+  (interactive "p")
+  (pcase mivi--last-search
+    (`(,re . ,sign)
+     (mivi--search-internal re arg (- sign)))))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "p")
