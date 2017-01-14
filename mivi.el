@@ -793,7 +793,8 @@
     (prefix-numeric-value arg)))
 
 (defun mivi--search-internal (re count sign)
-  (let ((origin (point))
+  (let ((case-fold-search nil)
+        (origin (point))
         (wrapped nil))
     (if (catch 'break
           (when (and (> sign 0) (not (eobp)))
