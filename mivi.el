@@ -450,17 +450,19 @@
   (interactive "p")
   (let ((re (read-string "/")))
     (mivi--search-internal re arg 1)
-    (setq mivi--last-search re)))
+    (setq mivi--last-search (cons re 1))))
 
 (defun mivi-search-backward (&optional arg)
   (interactive "p")
   (let ((re (read-string "?")))
-    (mivi--search-internal re arg -1)))
+    (mivi--search-internal re arg -1)
+    (setq mivi--last-search (cons re -1))))
 
 (defun mivi-search-next (&optional arg)
   (interactive "p")
-  (when mivi--last-search
-    (mivi--search-internal mivi--last-search arg 1)))
+  (pcase mivi--last-search
+    (`(,re . ,sign)
+     (mivi--search-internal re arg sign))))
 
 (defun mivi-window-bottom (&optional arg)
   (interactive "p")

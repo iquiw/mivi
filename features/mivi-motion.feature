@@ -466,3 +466,15 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (2, 0)
     And I should see message "Search wrapped"
+
+  Scenario: search backward next
+    When I go to end of buffer
+    And I start an action chain
+    And I type "?foo"
+    And I press "RET"
+    And I type "n"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 1)
+
+    When I type "n"
+    Then the cursor should be at cell (1, 1)
