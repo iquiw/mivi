@@ -412,3 +412,26 @@ Feature: Change
     And I type "c%"
     Then the buffer should be empty
     And the mivi state should be "insert"
+
+  Scenario: change search
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    baz bar foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "c/bar"
+    And I press "RET"
+    And I execute the action chain
+    Then I should see pattern "^bar baz$"
+    And the mivi state should be "insert"
+
+    When I start an action chain
+    And I press "<escape>"
+    And I type "2c/baz"
+    And I press "RET"
+    And I execute the action chain
+    Then I should see pattern "^baz bar foo$"
+    And the mivi state should be "insert"
