@@ -683,10 +683,12 @@
 
 (defun mivi-kill-char (&optional arg)
   (interactive "p")
+  (mivi--store-command)
   (kill-forward-chars arg))
 
 (defun mivi-kill-backward-char (&optional arg)
   (interactive "p")
+  (mivi--store-command)
   (kill-backward-chars arg))
 
 (defun mivi-repeat (&optional arg)
@@ -714,7 +716,8 @@
              (goto-char (1- (marker-position m)))
              (set-marker m nil))))
         (command
-         (let ((current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
+         (let ((this-command command)
+               (current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
                (mivi--current-find-char (car mivi--last-find)))
            (call-interactively command))))))))
 

@@ -110,6 +110,37 @@ Feature: Undo
     """
     And the cursor should be at cell (3, 4)
 
+  Scenario: repeat kill char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "x."
+    Then I should see pattern "^o bar baz$"
+
+    When I type "2x."
+    Then I should see pattern "^r baz$"
+
+    When I type "3."
+    Then I should see pattern "^az$"
+
+  Scenario: repeat kill backward char
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "X."
+    Then I should see pattern "^foo bar b$"
+
+    When I type "2X."
+    Then I should see pattern "^foo b$"
+
+    When I type "3."
+    Then I should see pattern "^fo$"
+
   Scenario: repeat delete
     Given the buffer is empty
     When I insert:
