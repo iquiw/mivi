@@ -654,3 +654,17 @@ Feature: Copy
     And I execute the action chain
     Then the current kill-ring should be "baz "
     And the mivi state should be "command"
+
+  Scenario: copy search backward
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz qux quux
+    """
+    When I go to word "qux"
+    When I start an action chain
+    And I type "y?bar"
+    And I press "RET"
+    And I execute the action chain
+    Then the current kill-ring should be "bar baz "
+    And the mivi state should be "command"

@@ -527,3 +527,16 @@ Feature: Delete
     foo bar baz
     bar foo
     """
+
+  Scenario: delete search backward
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz qux quux
+    """
+    When I go to word "qux"
+    When I start an action chain
+    And I type "d?bar"
+    And I press "RET"
+    And I execute the action chain
+    Then I should see pattern "^foo qux quux$"

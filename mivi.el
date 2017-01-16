@@ -157,7 +157,7 @@
                (mivi--store-command))))))))
 
 (defconst mivi--motion-0-keys
-  '("$" "/" "0" "B" "F" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h"))
+  '("$" "/" "0" "?" "B" "F" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))
 (defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))

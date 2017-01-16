@@ -464,3 +464,17 @@ Feature: Change
     And I execute the action chain
     Then I should see pattern "^foo bar bar foo$"
     And the mivi state should be "insert"
+
+  Scenario: change search backward
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz qux quux
+    """
+    When I go to word "qux"
+    When I start an action chain
+    And I type "c?bar"
+    And I press "RET"
+    And I execute the action chain
+    Then I should see pattern "^foo qux quux$"
+    And the mivi state should be "insert"
