@@ -668,3 +668,28 @@ Feature: Copy
     And I execute the action chain
     Then the current kill-ring should be "bar baz "
     And the mivi state should be "command"
+
+  Scenario: copy search Next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    qux quux foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "2/qu+x"
+    And I press "RET"
+    And I type "yN"
+    And I execute the action chain
+    Then the current kill-ring should be "qux "
+    And the mivi state should be "command"
+
+    When I go to end of buffer
+    And I start an action chain
+    And I type "2?ba."
+    And I press "RET"
+    And I type "yN"
+    And I execute the action chain
+    Then the current kill-ring should be "bar "
+    And the mivi state should be "command"

@@ -478,3 +478,29 @@ Feature: Change
     And I execute the action chain
     Then I should see pattern "^foo qux quux$"
     And the mivi state should be "insert"
+
+  Scenario: change search Next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    qux quux foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "2/qu+x"
+    And I press "RET"
+    And I type "cN"
+    And I execute the action chain
+    Then I should see pattern "^quux foo$"
+    And the mivi state should be "insert"
+
+    When I go to end of buffer
+    And I start an action chain
+    And I press "<escape>"
+    And I type "2?ba."
+    And I press "RET"
+    And I type "cN"
+    And I execute the action chain
+    Then I should see pattern "^foo baz$"
+    And the mivi state should be "insert"

@@ -540,3 +540,26 @@ Feature: Delete
     And I press "RET"
     And I execute the action chain
     Then I should see pattern "^foo qux quux$"
+
+  Scenario: delete search Next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    qux quux foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "2/qu+x"
+    And I press "RET"
+    And I type "dN"
+    And I execute the action chain
+    Then I should see pattern "^quux foo$"
+
+    When I go to end of buffer
+    And I start an action chain
+    And I type "2?ba."
+    And I press "RET"
+    And I type "dN"
+    And I execute the action chain
+    Then I should see pattern "^foo baz$"
