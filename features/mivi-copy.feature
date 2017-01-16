@@ -625,3 +625,32 @@ Feature: Copy
 
     """
     And the mivi state should be "command"
+
+  Scenario: copy search next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz bar foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/bar"
+    And I press "RET"
+    And I type "yn"
+    And I execute the action chain
+    Then the current kill-ring should be "bar baz "
+    And the mivi state should be "command"
+
+  Scenario: copy search backward next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz bar foo
+    """
+    When I start an action chain
+    And I type "?ba."
+    And I press "RET"
+    And I type "yn"
+    And I execute the action chain
+    Then the current kill-ring should be "baz "
+    And the mivi state should be "command"

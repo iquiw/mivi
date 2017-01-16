@@ -494,3 +494,36 @@ Feature: Delete
     And I press "RET"
     And I execute the action chain
     Then I should see pattern "^baz bar foo$"
+
+  Scenario: delete search next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    baz bar foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/bar"
+    And I press "RET"
+    And I type "dn"
+    And I execute the action chain
+    Then I should see pattern "^foo bar foo$"
+
+  Scenario: delete search backward next
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    baz bar foo
+    """
+    When I start an action chain
+    And I type "?ba."
+    And I press "RET"
+    And I type "dn"
+    And I execute the action chain
+    Then I should see:
+    """
+    foo bar baz
+    bar foo
+    """
