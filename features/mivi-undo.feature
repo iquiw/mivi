@@ -3,6 +3,20 @@ Feature: Undo
   As a user
   I want to restore previous editing state
 
+  Scenario: undo and edit
+    Given the buffer is empty
+    When I type "ifoo"
+    And I press "<escape>"
+    And I go to beginning of buffer
+    And I call "kill-line"
+    And I type "u"
+    Then I should see pattern "^foo$"
+
+    When I go to beginning of buffer
+    And I call "kill-line"
+    And I type "u"
+    Then I should see pattern "^foo$"
+
   Scenario: undo and redo
     Given the buffer is empty
     When I type "ifoo"

@@ -36,6 +36,7 @@
 (defvar mivi--last-search nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
+(defvar mivi--undo-repeating nil)
 
 (defvar-local mivi-change-state nil)
 (defvar-local mivi-command-state nil)
@@ -44,7 +45,7 @@
 (defvar-local mivi-insert-state nil)
 
 (defvar-local mivi--cursor-type 'box)
-(defvar-local mivi--undo-direction 'undo)
+(defvar-local mivi--undo-direction 'redo)
 
 (defconst mivi--states
   '(mivi-change-state
@@ -697,11 +698,11 @@
   (let ((command (plist-get mivi--last-command :command)))
     (cond
      ((or (eq last-command 'mivi-undo)
-          (and (eq last-command 'mivi-repeat)
-               (eq command 'mivi-undo)))
+          (and mivi--undo-repeating (eq last-command 'mivi-repeat)))
       (if (eq mivi--undo-direction 'undo)
           (undo-tree-undo)
-        (undo-tree-redo)))
+        (undo-tree-redo))
+      (setq mivi--undo-repeating t))
      (mivi--last-command
       (pcase command
         ((or `mivi-insert `mivi-Insert `mivi-open `mivi-Open)
@@ -720,20 +721,17 @@
          (let ((this-command command)
                (current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
                (mivi--current-find-char (car mivi--last-find)))
-           (call-interactively command))))))))
+           (call-interactively command))))
+      (setq mivi--undo-repeating nil)))))
 
 (defun mivi-undo ()
   (interactive)
-  (if (memq (plist-get mivi--last-command :command) '(mivi-undo mivi-repeat))
-      (if (eq mivi--undo-direction 'undo)
-          (progn
-            (undo-tree-redo)
-            (setq mivi--undo-direction 'redo))
-        (undo-tree-undo)
-        (setq mivi--undo-direction 'undo))
+  (if (eq mivi--undo-direction 'undo)
+      (progn
+        (undo-tree-redo)
+        (setq mivi--undo-direction 'redo))
     (undo-tree-undo)
-    (setq mivi--undo-direction 'undo))
-  (mivi--store-command))
+    (setq mivi--undo-direction 'undo)))
 
 (defun mivi-updown-case (&optional arg)
   (interactive "p")
@@ -851,12 +849,18 @@
   :init-value nil
   (if mivi-local-mode
       (progn
+        (add-hook 'after-change-functions #'mivi--after-change-function nil t)
         (setq mivi-command-state t)
         (setq-local emulation-mode-map-alists
                     (cons 'mivi-mode-map-alist
                           emulation-mode-map-alists)))
+    (remove-hook 'after-change-functions #'mivi--after-change-function t)
     (setq emulation-mode-map-alists
           (delete 'mivi-mode-map-alist emulation-mode-map-alists))))
+
+(defun mivi--after-change-function (_beg _end _len)
+  (unless undo-in-progress
+    (setq mivi--undo-direction 'redo)))
 
 (defun mivi--post-command ()
   (unless (eq mivi--last-buffer (current-buffer))
