@@ -29,6 +29,7 @@
   "Shiftwidth by which backward indent moves the current indentation.")
 
 (defvar mivi--current-find-char nil)
+(defvar mivi--current-search-string nil)
 (defvar mivi--insert-beginning nil)
 (defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
@@ -457,13 +458,13 @@
 
 (defun mivi-search (&optional arg)
   (interactive "p")
-  (let ((re (read-string "/")))
+  (let ((re (or mivi--current-search-string (read-string "/"))))
     (mivi--search-internal re arg 1)
     (setq mivi--last-search (cons re 1))))
 
 (defun mivi-search-backward (&optional arg)
   (interactive "p")
-  (let ((re (read-string "?")))
+  (let ((re (or mivi--current-search-string (read-string "?"))))
     (mivi--search-internal re arg -1)
     (setq mivi--last-search (cons re -1))))
 
@@ -720,7 +721,8 @@
         (command
          (let ((this-command command)
                (current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
-               (mivi--current-find-char (car mivi--last-find)))
+               (mivi--current-find-char (car mivi--last-find))
+               (mivi--current-search-string (car mivi--last-search)))
            (call-interactively command))))
       (setq mivi--undo-repeating nil)))))
 

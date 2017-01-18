@@ -228,3 +228,32 @@ Feature: Undo
     Then I should see pattern "^foo bar $"
     When I type "2."
     Then I should see pattern "^foo $"
+
+  Scenario: repeat delete search
+    Given the buffer is empty
+    When I insert:
+    """
+    1 2 3 4 5
+    6 7 8 9 10
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "d/[39]"
+    And I press "RET"
+    And I type "."
+    And I execute the action chain
+    Then I should see pattern "^9 10$"
+
+  Scenario: repeat delete search backward
+    Given the buffer is empty
+    When I insert:
+    """
+    1 2 3 4 5
+    6 7 8 9 10
+    """
+    And I start an action chain
+    And I type "d?[46]"
+    And I press "RET"
+    And I type "."
+    And I execute the action chain
+    Then I should see pattern "^1 2 3 $"
