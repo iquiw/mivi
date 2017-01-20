@@ -537,7 +537,7 @@ Feature: Motion
     When I type "3n"
     Then the cursor should be at cell (4, 0)
 
-  Scenario: not search empty
+  Scenario: not search (backward) empty
     Given the buffer is empty
     When I insert "foo"
     And I set "mivi--last-search" to "nil"
@@ -554,3 +554,31 @@ Feature: Motion
     And I press "RET"
     And I execute the action chain
     Then the cursor should be at cell (1, 3)
+
+  Scenario: search (backward) history
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+    2
+    3
+    4
+    5
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/[24]"
+    And I press "RET"
+    And I type "/"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (4, 0)
+
+    When I go to end of buffer
+    And I start an action chain
+    And I type "?[135]"
+    And I press "RET"
+    And I type "?"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 0)
