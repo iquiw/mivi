@@ -536,3 +536,21 @@ Feature: Motion
 
     When I type "3n"
     Then the cursor should be at cell (4, 0)
+
+  Scenario: not search empty
+    Given the buffer is empty
+    When I insert "foo"
+    And I set "mivi--last-search" to "nil"
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "/"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 0)
+
+    When I go to end of buffer
+    And I start an action chain
+    And I type "?"
+    And I press "RET"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 3)
