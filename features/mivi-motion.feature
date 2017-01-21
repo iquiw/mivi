@@ -582,3 +582,21 @@ Feature: Motion
     And I press "RET"
     And I execute the action chain
     Then the cursor should be at cell (3, 0)
+
+  Scenario: RET
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+     bar
+      baz
+     qux
+    quux
+    """
+    And I go to beginning of buffer
+    And I press "RET"
+    Then the cursor should be at cell (2, 1)
+
+    When I type "2"
+    And I press "RET"
+    Then the cursor should be at cell (4, 1)
