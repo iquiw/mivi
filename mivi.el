@@ -928,6 +928,10 @@
    "mivi-scroll-screen-down"
    "mivi-scroll-screen-up"
    "mivi-scroll-up"
+   "mivi-search"
+   "mivi-search-Next"
+   "mivi-search-backward"
+   "mivi-search-next"
    "mivi-window-bottom"
    "mivi-window-middle"
    "mivi-window-top"))
