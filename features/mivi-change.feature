@@ -504,3 +504,21 @@ Feature: Change
     And I execute the action chain
     Then I should see pattern "^foo baz$"
     And the mivi state should be "insert"
+
+  Scenario: change next line at bol
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to beginning of buffer
+    And I type "c"
+    And I press "RET"
+    Then I should see:
+    """
+    bar
+        baz
+    """
+    And the mivi state should be "insert"

@@ -693,3 +693,21 @@ Feature: Copy
     And I execute the action chain
     Then the current kill-ring should be "bar "
     And the mivi state should be "command"
+
+  Scenario: copy next line at bol
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to beginning of buffer
+    And I type "y"
+    And I press "RET"
+    Then the current kill-ring should be:
+    """
+    foo
+      
+    """
+    And the mivi state should be "command"

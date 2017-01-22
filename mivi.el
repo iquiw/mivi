@@ -88,6 +88,7 @@
     (define-key map "w" #'mivi-forward-word)
     (define-key map (kbd "C-h") #'backward-char)
     (define-key map (kbd "C-m") #'mivi-next-line-at-bol)
+    (define-key map [return] #'mivi-next-line-at-bol)
     map))
 
 (defconst mivi-command-map
@@ -160,7 +161,8 @@
                (mivi--store-command))))))))
 
 (defconst mivi--motion-0-keys
-  '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h"))
+  '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h" "\C-m"
+    [return]))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))
 (defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))

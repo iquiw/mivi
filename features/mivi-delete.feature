@@ -563,3 +563,20 @@ Feature: Delete
     And I type "dN"
     And I execute the action chain
     Then I should see pattern "^foo baz$"
+
+  Scenario: delete next line at bol
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to beginning of buffer
+    And I type "d"
+    And I press "RET"
+    Then I should see:
+    """
+    bar
+        baz
+    """
