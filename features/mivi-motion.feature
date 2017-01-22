@@ -597,6 +597,8 @@ Feature: Motion
     And I press "RET"
     Then the cursor should be at cell (2, 1)
 
-    When I type "2"
+    When I start an action chain
+    And I type "2"
     And I press "RET"
+    And I execute the action chain
     Then the cursor should be at cell (4, 1)
