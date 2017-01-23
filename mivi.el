@@ -88,7 +88,6 @@
     (define-key map "w" #'mivi-forward-word)
     (define-key map (kbd "C-h") #'backward-char)
     (define-key map (kbd "C-m") #'mivi-next-line-at-bot)
-    (define-key map [return] #'mivi-next-line-at-bot)
     map))
 
 (defconst mivi-command-map
@@ -161,8 +160,7 @@
                (mivi--store-command))))))))
 
 (defconst mivi--motion-0-keys
-  '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h" "\C-m"
-    [return]))
+  '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h" "\C-m"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))
 (defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))
@@ -212,6 +210,7 @@
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     (define-key map [t] #'mivi-command)
     (define-key map "c" #'mivi-change-line)
+    (define-key map [return] 'mivi-change-next-line-at-bot)
     map))
 
 (defconst mivi-copy-map
@@ -266,6 +265,7 @@
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     (define-key map [t] #'mivi-command)
     (define-key map "y" #'mivi-copy-line)
+    (define-key map [return] 'mivi-copy-next-line-at-bot)
     map))
 
 (defconst mivi-delete-map
@@ -315,6 +315,7 @@
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     (define-key map [t] #'mivi-command)
     (define-key map "d" #'mivi-delete-line)
+    (define-key map [return] 'mivi-delete-next-line-at-bot)
     map))
 
 (defun mivi-nil ()
