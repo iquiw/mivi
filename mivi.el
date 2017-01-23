@@ -865,13 +865,13 @@
   (if mivi-local-mode
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
-        (setq mivi-command-state t)
-        (setq-local emulation-mode-map-alists
-                    (cons 'mivi-mode-map-alist
-                          emulation-mode-map-alists)))
+        (setq mivi-command-state t))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
-    (setq emulation-mode-map-alists
-          (delete 'mivi-mode-map-alist emulation-mode-map-alists))))
+    (setq mivi-change-state nil
+          mivi-command-state nil
+          mivi-copy-state nil
+          mivi-delete-state nil
+          mivi-insert-state nil)))
 
 (defun mivi--after-change-function (_beg _end _len)
   (unless undo-in-progress
@@ -900,7 +900,12 @@
 
 (defun mivi-mode-set (state)
   (if state
-      (add-hook 'post-command-hook #'mivi--post-command)
+      (progn
+        (setq emulation-mode-map-alists
+              (cons mivi-mode-map-alist emulation-mode-map-alists))
+        (add-hook 'post-command-hook #'mivi--post-command))
+    (setq emulation-mode-map-alists
+          (delete 'mivi-mode-map-alist emulation-mode-map-alists))
     (remove-hook 'post-command-hook #'mivi--post-command))
   (setq mivi-mode state))
 
