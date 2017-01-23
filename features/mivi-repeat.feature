@@ -145,6 +145,27 @@ Feature: Undo
     """
     And the cursor should be at cell (4, 2)
 
+  Scenario: repeat replace char
+    Given the buffer is empty
+    When I insert:
+    """
+    foobar
+    """
+    And I go to beginning of buffer
+    And I type "rx"
+    And I go to cell (1, 1)
+    And I type "."
+    Then I should see "xxobar"
+
+    When I go to cell (1, 3)
+    And I type "2."
+    Then I should see "xxoxxr"
+
+    When I type "3ry"
+    And I go to beginning of buffer
+    And I type "."
+    Then I should see "yyyyyy"
+
   Scenario: repeat kill char
     Given the buffer is empty
     When I insert:
