@@ -110,6 +110,18 @@ Feature: Undo
     """
     And the cursor should be at cell (3, 4)
 
+  Scenario: repeat append
+    Given the buffer is empty
+    When I type "afoo"
+    And I press "<escape>"
+    And I type "."
+    Then I should see "foofoo"
+    And the cursor should be at cell (1, 5)
+
+    When I type "3."
+    Then I should see "foofoofoofoofoo"
+    And the cursor should be at cell (1, 14)
+
   Scenario: repeat kill char
     Given the buffer is empty
     When I insert:

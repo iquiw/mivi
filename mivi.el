@@ -515,11 +515,12 @@
   (back-to-indentation))
 
 ;; Insert commands
-(defun mivi-append ()
+(defun mivi-append (&optional move-only)
   (interactive)
   (unless (eolp)
     (forward-char))
-  (mivi--switch-state 'mivi-insert-state))
+  (unless move-only
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Append ()
   (interactive)
@@ -529,26 +530,20 @@
 (defun mivi-insert (&optional move-only)
   (interactive)
   (unless move-only
-    (mivi--switch-state 'mivi-insert-state)
-    (setq mivi--insert-beginning (point))
-    (mivi--store-command)))
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Insert (&optional move-only)
   (interactive)
   (back-to-indentation)
   (unless move-only
-    (mivi--switch-state 'mivi-insert-state)
-    (setq mivi--insert-beginning (point))
-    (mivi--store-command)))
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-open (&optional move-only)
   (interactive)
   (end-of-line)
   (newline-and-indent)
   (unless move-only
-    (mivi--switch-state 'mivi-insert-state)
-    (setq mivi--insert-beginning (point))
-    (mivi--store-command)))
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Open (&optional move-only)
   (interactive)
@@ -557,9 +552,7 @@
   (forward-line -1)
   (indent-according-to-mode)
   (unless move-only
-    (mivi--switch-state 'mivi-insert-state)
-    (setq mivi--insert-beginning (point))
-    (mivi--store-command)))
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Replace ()
   (interactive)
@@ -709,7 +702,8 @@
 
 (defun mivi-repeat (&optional arg)
   (interactive "P")
-  (let ((command (plist-get mivi--last-command :command)))
+  (let ((command (plist-get mivi--last-command :command))
+        (content (plist-get mivi--last-command :content)))
     (cond
      ((or (eq last-command 'mivi-undo)
           (and mivi--undo-repeating (eq last-command 'mivi-repeat)))
@@ -717,26 +711,26 @@
           (undo-tree-undo)
         (undo-tree-redo))
       (setq mivi--undo-repeating t))
-     (mivi--last-command
-      (pcase command
-        ((or `mivi-insert `mivi-Insert `mivi-open `mivi-Open)
-         (let ((m (make-marker))
-               (content (plist-get mivi--last-command :content)))
-           (when content
-             (dotimes (_ (mivi--numeric-or-default arg 1))
-               (funcall command t)
-               (insert content)
-               (when (or (not (marker-position m))
-                         (< (marker-position m) (point)))
-                 (set-marker m (point))))
-             (goto-char (1- (marker-position m)))
-             (set-marker m nil))))
-        (command
-         (let ((this-command command)
-               (current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
-               (mivi--current-find-char (car mivi--last-find))
-               (mivi--current-search-string (car mivi--last-search)))
-           (call-interactively command))))
+
+     (content
+      (let ((m (make-marker)))
+        (when content
+          (dotimes (_ (mivi--numeric-or-default arg 1))
+            (funcall command t)
+            (insert content)
+            (when (or (not (marker-position m))
+                      (< (marker-position m) (point)))
+              (set-marker m (point))))
+          (goto-char (1- (marker-position m)))
+          (set-marker m nil)))
+      (setq mivi--undo-repeating nil))
+
+     (command
+      (let ((this-command command)
+            (current-prefix-arg (or arg (plist-get mivi--last-command :prefix)))
+            (mivi--current-find-char (car mivi--last-find))
+            (mivi--current-search-string (car mivi--last-search)))
+        (call-interactively command))
       (setq mivi--undo-repeating nil)))))
 
 (defun mivi-undo ()
@@ -845,6 +839,8 @@
     (setq mivi--cursor-type '(hbar . 7))
     (setq state 'mivi-insert-state))
    ((eq state 'mivi-insert-state)
+    (setq mivi--insert-beginning (point))
+    (mivi--store-command)
     (setq mivi--cursor-type 'bar))
    (t
     (setq mivi--cursor-type 'box)))
