@@ -522,10 +522,11 @@
   (unless move-only
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-Append ()
+(defun mivi-Append (&optional move-only)
   (interactive)
   (end-of-line)
-  (mivi--switch-state 'mivi-insert-state))
+  (unless move-only
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-insert (&optional move-only)
   (interactive)

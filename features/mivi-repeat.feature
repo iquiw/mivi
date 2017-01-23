@@ -122,6 +122,29 @@ Feature: Undo
     Then I should see "foofoofoofoofoo"
     And the cursor should be at cell (1, 14)
 
+  Scenario: repeat Append
+    Given the buffer is empty
+    When I type "Afoo"
+    And I press "<escape>"
+    And I go to beginning of buffer
+    And I type "."
+    Then I should see "foofoo"
+    And the cursor should be at cell (1, 5)
+
+    When I type "Abar"
+    And I press "RET"
+    When I type "baz"
+    And I press "<escape>"
+    And I type "2."
+    Then I should see:
+    """
+    foofoobar
+    bazbar
+    bazbar
+    baz
+    """
+    And the cursor should be at cell (4, 2)
+
   Scenario: repeat kill char
     Given the buffer is empty
     When I insert:
