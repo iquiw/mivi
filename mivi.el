@@ -87,8 +87,8 @@
     (define-key map "t" #'mivi-goto-char)
     (define-key map "w" #'mivi-forward-word)
     (define-key map (kbd "C-h") #'backward-char)
-    (define-key map (kbd "C-m") #'mivi-next-line-at-bol)
-    (define-key map [return] #'mivi-next-line-at-bol)
+    (define-key map (kbd "C-m") #'mivi-next-line-at-bot)
+    (define-key map [return] #'mivi-next-line-at-bot)
     map))
 
 (defconst mivi-command-map
@@ -441,7 +441,7 @@
     (call-interactively #'next-line))
   (setq this-command #'next-line))
 
-(defun mivi-next-line-at-bol (&optional arg)
+(defun mivi-next-line-at-bot (&optional arg)
   (interactive "p")
   (forward-line arg)
   (back-to-indentation))
@@ -923,7 +923,7 @@
    "mivi-goto-char-backward"
    "mivi-goto-line"
    "mivi-goto-pair"
-   "mivi-next-line-at-bol"
+   "mivi-next-line-at-bot"
    "mivi-repeat-find"
    "mivi-repeat-find-opposite"
    "mivi-scroll-down"

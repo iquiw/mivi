@@ -505,7 +505,7 @@ Feature: Change
     Then I should see pattern "^foo baz$"
     And the mivi state should be "insert"
 
-  Scenario: change next line at bol
+  Scenario: change next line at bot
     Given the buffer is empty
     When I insert:
     """

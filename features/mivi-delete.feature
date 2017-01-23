@@ -564,7 +564,7 @@ Feature: Delete
     And I execute the action chain
     Then I should see pattern "^foo baz$"
 
-  Scenario: delete next line at bol
+  Scenario: delete next line at bot
     Given the buffer is empty
     When I insert:
     """

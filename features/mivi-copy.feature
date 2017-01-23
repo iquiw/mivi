@@ -694,7 +694,7 @@ Feature: Copy
     Then the current kill-ring should be "bar "
     And the mivi state should be "command"
 
-  Scenario: copy next line at bol
+  Scenario: copy next line at bot
     Given the buffer is empty
     When I insert:
     """
