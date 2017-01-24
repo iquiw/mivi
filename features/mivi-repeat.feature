@@ -30,6 +30,15 @@ Feature: Undo
     """
     And the cursor should be at cell (4, 2)
 
+  Scenario: repeat insert empty
+    Given the buffer is empty
+    When I insert "foo"
+    And I type "i"
+    And I press "<escape>"
+    And I type "."
+    Then I should see pattern "^foo$"
+    And the cursor should be at cell (1, 1)
+
   Scenario: repeat Insert
     Given the buffer is empty
     When I insert:

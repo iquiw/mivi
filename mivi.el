@@ -671,7 +671,7 @@
 (defun mivi-command ()
   (interactive)
   (when (and mivi--insert-beginning
-             (< mivi--insert-beginning (point)))
+             (<= mivi--insert-beginning (point)))
     (setq mivi--last-command
           (plist-put mivi--last-command
                      :content (buffer-substring mivi--insert-beginning (point)))))
