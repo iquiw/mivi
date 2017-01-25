@@ -185,6 +185,39 @@ Feature: Undo
     And I type "."
     Then I should see "yyyyyy"
 
+  Scenario: repeat Replace
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    1234567
+    xxxxxxxxxxxxx
+    z
+    """
+    And I go to beginning of buffer
+    And I type "Rbar"
+    And I press "<escape>"
+    And I go to line "2"
+    And I type "."
+    Then I should see pattern "^bar4567$"
+    And the cursor should be at cell (2, 2)
+
+    When I go to cell (3, 3)
+    And I type "3."
+    Then I should see pattern "^xxxbarbarbarxxxxxxx$"
+    And the cursor should be at cell (3, 11)
+
+    When I go to cell (4, 0)
+    And I type "."
+    Then I should see:
+    """
+    bar
+    bar4567
+    xxxbarbarbarxxxxxxx
+    bar
+    """
+    And the cursor should be at cell (4, 2)
+
   Scenario: repeat kill char
     Given the buffer is empty
     When I insert:

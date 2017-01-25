@@ -719,8 +719,12 @@
       (let ((content (plist-get mivi--last-command :content))
             (m (make-marker)))
         (when content
+          (when (eq command 'mivi-Replace)
+            (delete-region (point) (min (+ (length content) (point))
+                                        (line-end-position))))
           (dotimes (_ (mivi--numeric-or-default arg 1))
-            (funcall command t)
+            (unless (eq command 'mivi-Replace)
+              (funcall command t))
             (insert content)
             (when (or (not (marker-position m))
                       (< (marker-position m) (point)))
@@ -853,11 +857,14 @@
     (setq mivi--cursor-type '(hbar . 7))
     (setq state 'mivi-insert-state))
    ((eq state 'mivi-insert-state)
-    (setq mivi--insert-beginning (point))
-    (mivi--store-command :category 'insert)
     (setq mivi--cursor-type 'bar))
    (t
     (setq mivi--cursor-type 'box)))
+
+  (when (eq state 'mivi-insert-state)
+    (setq mivi--insert-beginning (point))
+    (mivi--store-command :category 'insert))
+
   (set-frame-parameter nil 'cursor-type mivi--cursor-type)
   (dolist (s mivi--states)
     (set s (eq s state))))
