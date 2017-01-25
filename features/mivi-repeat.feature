@@ -154,6 +154,16 @@ Feature: Undo
     """
     And the cursor should be at cell (4, 2)
 
+  Scenario: repeat Append and back point
+    Given the buffer is empty
+    When I insert "foo"
+    And I type "Abar"
+    And I go to beginning of buffer
+    And I press "<escape>"
+    And I type "."
+    Then I should see pattern "^foobar$"
+    And the cursor should be at cell (1, 0)
+
   Scenario: repeat replace char
     Given the buffer is empty
     When I insert:
