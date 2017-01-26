@@ -513,12 +513,14 @@ Feature: Change
       bar
         baz
     """
-    And I go to beginning of buffer
+    And I go to cell (1, 2)
     And I type "c"
     And I press "RET"
-    Then I should see:
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see:
     """
-    bar
+
         baz
     """
+    And the cursor should be at cell (1, 0)
     And the mivi state should be "insert"

@@ -702,12 +702,13 @@ Feature: Copy
       bar
         baz
     """
-    And I go to beginning of buffer
+    And I go to cell (1, 2)
     And I type "y"
     And I press "RET"
     Then the current kill-ring should be:
     """
     foo
-      
+      bar
+
     """
     And the mivi state should be "command"

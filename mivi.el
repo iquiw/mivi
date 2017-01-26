@@ -162,10 +162,10 @@
                (mivi--store-command))))))))
 
 (defconst mivi--motion-0-keys
-  '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h" "\C-m"))
+  '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))
-(defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k"))
+(defconst mivi--motion-line-keys '("G" "H" "L" "M" "j" "k" "\C-m"))
 
 (defconst mivi-change-map
   (let ((map (make-sparse-keymap)))

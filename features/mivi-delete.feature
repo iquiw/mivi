@@ -572,11 +572,9 @@ Feature: Delete
       bar
         baz
     """
-    And I go to beginning of buffer
+    And I go to cell (1, 2)
     And I type "d"
     And I press "RET"
-    Then I should see:
-    """
-    bar
-        baz
-    """
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see "baz"
+    And the cursor should be at cell (1, 4)
