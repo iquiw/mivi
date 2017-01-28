@@ -583,7 +583,7 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
-  Scenario: RET
+  Scenario: next line at bot
     Given the buffer is empty
     When I insert:
     """
@@ -602,3 +602,19 @@ Feature: Motion
     And I press "RET"
     And I execute the action chain
     Then the cursor should be at cell (4, 1)
+
+  Scenario: previous line at bot
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+      qux
+    quux
+    """
+    And I type "-"
+    Then the cursor should be at cell (4, 2)
+
+    When I type "2-"
+    Then the cursor should be at cell (2, 2)

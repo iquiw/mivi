@@ -64,6 +64,7 @@
     (define-key map "%" #'mivi-goto-pair)
     (define-key map "+" #'mivi-next-line-at-bot)
     (define-key map "," #'mivi-repeat-find-opposite)
+    (define-key map "-" #'mivi-previous-line-at-bot)
     (define-key map "/" #'mivi-search)
     (define-key map "0" #'beginning-of-line)
     (define-key map ";" #'mivi-repeat-find)
@@ -455,6 +456,11 @@
   (let ((line-move-visual nil))
     (call-interactively #'previous-line))
   (setq this-command #'previous-line))
+
+(defun mivi-previous-line-at-bot (&optional arg)
+  (interactive "p")
+  (forward-line (- arg))
+  (back-to-indentation))
 
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
