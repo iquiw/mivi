@@ -356,6 +356,7 @@ Feature: Delete
     And I go to beginning of buffer
     And I type "dd"
     Then I should not see pattern "^foo"
+    And the cursor should be at cell (1, 2)
     And the mivi state should be "command"
     When I type "2dd"
     Then I should not see pattern "\(bar\|baz\)"
