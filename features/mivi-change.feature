@@ -524,3 +524,24 @@ Feature: Change
     """
     And the cursor should be at cell (1, 0)
     And the mivi state should be "insert"
+
+  Scenario: change previous line at bot
+    Given the buffer is empty
+    When I insert:
+    """
+
+    foo
+      bar
+        baz
+    """
+    And I go to cell (3, 2)
+    And I type "c-"
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see:
+    """
+
+
+        baz
+    """
+    And the cursor should be at cell (2, 0)
+    And the mivi state should be "insert"

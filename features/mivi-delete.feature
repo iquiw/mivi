@@ -594,3 +594,17 @@ Feature: Delete
     Then I should not see pattern "\(foo\|bar\)"
     And I should see "baz"
     And the cursor should be at cell (2, 2)
+
+  Scenario: delete previous line at bot
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I type "d"
+    And I press "-"
+    Then I should not see pattern "\(bar\|baz\)"
+    And I should see "foo"
+    And the cursor should be at cell (1, 3)
