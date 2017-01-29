@@ -193,17 +193,31 @@ Feature: Delete
      2
     1
     """
-    And I go to beginning of buffer
+    And I go to cell (1, 2)
     And I type "dj"
     Then I should not see pattern "\(foo\|bar\)"
     And the cursor should be at cell (1, 2)
     When I type "d2j"
     Then I should not see pattern "\(baz\|qux\|quux\)"
-    And the cursor should be at cell (1, 4)
-    When I go to line "2"
+    And the cursor should be at cell (1, 2)
+    When I go to cell (2, 3)
     And I type "3dj"
     Then I should not see pattern "[1-4]"
-    And the cursor should be at cell (1, 4)
+    And the cursor should be at cell (1, 3)
+
+    Given the buffer is empty
+    When I insert:
+    """
+
+    foo
+     bar
+      baz
+    """
+    And I go to cell (2, 2)
+    And I type "dj"
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see pattern "^  baz$"
+    And the cursor should be at cell (2, 2)
 
   Scenario: delete previous line
     Given the buffer is empty
@@ -214,22 +228,22 @@ Feature: Delete
       baz
        qux
         quux
-        5
-       4
-      3
-     2
-    1
+         5
+          4
+           3
+            2
+             1
     """
     And I type "dk"
     Then I should not see pattern "[12]"
-    And the cursor should be at cell (8, 2)
+    And the cursor should be at cell (8, 8)
     When I type "d3k"
     Then I should not see pattern "\([345]\|quux\)"
-    And the cursor should be at cell (4, 3)
-    When I go to line "3"
+    And the cursor should be at cell (4, 6)
+    When I go to cell (3, 2)
     And I type "2dk"
     Then I should not see pattern "\(foo\|bar\|baz\)"
-    And the cursor should be at cell (1, 3)
+    And the cursor should be at cell (1, 2)
 
   Scenario: delete forward word
     Given the buffer is empty
@@ -569,13 +583,14 @@ Feature: Delete
     Given the buffer is empty
     When I insert:
     """
+
     foo
       bar
         baz
     """
-    And I go to cell (1, 2)
+    And I go to cell (2, 2)
     And I type "d"
     And I press "RET"
     Then I should not see pattern "\(foo\|bar\)"
     And I should see "baz"
-    And the cursor should be at cell (1, 4)
+    And the cursor should be at cell (2, 2)
