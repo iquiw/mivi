@@ -200,8 +200,7 @@
             (kill-region (if eol beg (1+ beg)) p))))))
 
     (dolist (kpc mivi--motion-line-keys)
-      (let ((key (car kpc))
-            (preserve-column (cdr kpc)))
+      (let ((key (car kpc)))
         (mivi--derive-key change map 'mivi-insert-state key
                           ((beg (progn (forward-line 0) (point))))
           (forward-line 0)
@@ -256,8 +255,7 @@
           (goto-char (min beg p)))))
 
     (dolist (kpc mivi--motion-line-keys)
-      (let ((key (car kpc))
-            (preserve-column (cdr kpc)))
+      (let ((key (car kpc)))
         (mivi--derive-key copy map 'mivi-command-state key
                           ((beg (point)))
           (let ((end (point)))
