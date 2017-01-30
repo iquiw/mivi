@@ -972,6 +972,7 @@
    "mivi-goto-line"
    "mivi-goto-pair"
    "mivi-next-line-at-bot"
+   "mivi-previous-line-at-bot"
    "mivi-repeat-find"
    "mivi-repeat-find-opposite"
    "mivi-scroll-down"
