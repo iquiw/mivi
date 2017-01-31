@@ -389,3 +389,30 @@ Feature: Undo
     quux
     """
     And the cursor should be at cell (2, 3)
+
+  Scenario: repeat change with previous prefix
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123 456 789
+    """
+    And I go to beginning of buffer
+    And I type "2cequux"
+    And I press "<escape>"
+    Then I should see pattern "^quux baz$"
+    When I go to line "2"
+    And I type "."
+    Then I should see pattern "^quux 789$"
+
+  Scenario: repeat change with current prefix
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar quux
+    """
+    And I type "cbquux"
+    And I press "<escape>"
+    Then I should see pattern "^foo bar quux$"
+    When I type "3."
+    Then I should see pattern "^quuxx$"
