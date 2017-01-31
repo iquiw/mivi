@@ -365,3 +365,27 @@ Feature: Undo
     And I type "."
     And I execute the action chain
     Then I should see pattern "^1 2 3 $"
+
+  Scenario: repeat change
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    1234567890
+    """
+    And I go to beginning of buffer
+    And I type "cwquux"
+    And I press "<escape>"
+    And I go to word "bar"
+    And I type "."
+    Then I should see pattern "^quux quux$"
+    And the cursor should be at cell (1, 8)
+
+    When I go to line "2"
+    And I type "."
+    Then I should see:
+    """
+    quux quux
+    quux
+    """
+    And the cursor should be at cell (2, 3)
