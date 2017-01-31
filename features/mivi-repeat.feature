@@ -416,3 +416,30 @@ Feature: Undo
     Then I should see pattern "^foo bar quux$"
     When I type "3."
     Then I should see pattern "^quuxx$"
+
+  Scenario: repeat change find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123 456 789
+    """
+    And I go to beginning of buffer
+    And I type "2cf hello"
+    And I press "<escape>"
+    Then I should see pattern "^hellobaz$"
+    When I go to line "2"
+    And I type "."
+    Then I should see pattern "^hello789$"
+
+  Scenario: repeat change Find
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "cFbqux"
+    And I press "<escape>"
+    Then I should see pattern "^foo bar qux$"
+    And I type "."
+    Then I should see pattern "^foo quxx$"
