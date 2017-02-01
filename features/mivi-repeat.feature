@@ -443,3 +443,36 @@ Feature: Undo
     Then I should see pattern "^foo bar qux$"
     And I type "."
     Then I should see pattern "^foo quxx$"
+
+  Scenario: repeat change search
+    Given the buffer is empty
+    When I insert:
+    """
+    1 2 3 4 5
+    6 7 8 9 10
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "c/[14]"
+    And I press "RET"
+    And I type "foo bar"
+    And I press "<escape>"
+    And I type "2."
+    And I execute the action chain
+    Then I should see pattern "^foo bafoo bar10$"
+
+  Scenario: repeat change search backward
+    Given the buffer is empty
+    When I insert:
+    """
+    1 2 3 4 5
+    6 7 8 9 10
+    """
+    And I start an action chain
+    And I type "c?[57]"
+    And I press "RET"
+    And I type "hello"
+    And I press "<escape>"
+    And I type "."
+    And I execute the action chain
+    Then I should see pattern "^1 2 3 4 helloo$"

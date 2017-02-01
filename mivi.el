@@ -764,7 +764,8 @@
         (let ((content (plist-get mivi--last-command :content))
               (current-prefix-arg
                (or arg (plist-get mivi--last-command :prefix)))
-              (mivi--current-find-char (car mivi--last-find)))
+              (mivi--current-find-char (car mivi--last-find))
+              (mivi--current-search-string (car mivi--last-search)))
           (when content
             (funcall command t)
             (insert content)
