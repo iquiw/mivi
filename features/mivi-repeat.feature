@@ -366,6 +366,23 @@ Feature: Undo
     And I execute the action chain
     Then I should see pattern "^1 2 3 $"
 
+  Scenario: repeate delete line
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    5 quux
+    """
+    And I go to beginning of buffer
+    And I type "dd."
+    Then I should not see pattern "\(1\|2\)"
+
+    When I type "2."
+    Then I should not see pattern "\(3\|4\)"
+
   Scenario: repeat change
     Given the buffer is empty
     When I insert:

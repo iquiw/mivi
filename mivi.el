@@ -649,7 +649,8 @@
   (when (eobp)
     (forward-line -1))
   (back-to-indentation)
-  (mivi--switch-state 'mivi-command-state))
+  (mivi--switch-state 'mivi-command-state)
+  (mivi--store-command :command 'mivi-delete-line))
 
 ;; Scroll commands
 (defun mivi-scroll-down (&optional arg)
