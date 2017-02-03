@@ -288,6 +288,13 @@ Feature: Undo
     When I type "2."
     Then the buffer should be empty
 
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "."
+    Then I should see pattern "^foo $"
+
   Scenario: repeat delete find
     Given the buffer is empty
     When I insert:
@@ -433,6 +440,14 @@ Feature: Undo
     Then I should see pattern "^foo bar quux$"
     When I type "3."
     Then I should see pattern "^quuxx$"
+
+    Given the buffer is empty
+    And I insert:
+    """
+    1 2 3
+    """
+    And I type "."
+    Then I should see pattern "^quux$"
 
   Scenario: repeat change find
     Given the buffer is empty

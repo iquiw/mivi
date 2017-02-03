@@ -152,17 +152,16 @@
                                       orig-name)))))
        (define-key ,map ,key
          (defalias new-fn
-           (lambda (&optional edit-only)
+           (lambda ()
              (interactive)
              (unwind-protect
                  (let* (,@pre-bindings)
                    (call-interactively orig-fn)
                    ,@edit-body)
-               (unless edit-only
-                 (mivi--switch-state ,new-state)
-                 (setq this-command new-fn)
-                 ,(when (memq name '(change delete))
-                    `(mivi--store-command :category (quote ,name)))))))))))
+               (mivi--switch-state ,new-state)
+               (setq this-command new-fn)
+               ,(when (memq name '(change delete))
+                  `(mivi--store-command :category (quote ,name))))))))))
 
 (defconst mivi--motion-0-keys
   '("$" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w" "\C-h"))
@@ -702,6 +701,7 @@
     (setq mivi--last-command
           (plist-put mivi--last-command
                      :content (buffer-substring mivi--insert-beginning (point)))))
+  (setq mivi--insert-beginning nil)
   (cond
    ((memq last-command '(mivi-open mivi-Open))
     (indent-to-left-margin))
@@ -768,9 +768,12 @@
               (mivi--current-find-char (car mivi--last-find))
               (mivi--current-search-string (car mivi--last-search)))
           (when content
-            (funcall command t)
+            (funcall command)
+            (setq mivi--last-command
+                  (plist-put mivi--last-command :content content))
             (insert content)
-            (goto-char (1- (point))))))
+            (goto-char (1- (point)))
+            (mivi--switch-state 'mivi-command-state))))
 
        (command
         (let ((this-command command)
