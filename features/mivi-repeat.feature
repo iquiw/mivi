@@ -15,6 +15,7 @@ Feature: Undo
     Then I should see "fofofofooooo"
     And the cursor should be at cell (1, 8)
 
+  Scenario: repeat insert with current prefix
     Given the buffer is empty
     When I type "ibar"
     And I press "RET"
@@ -29,6 +30,16 @@ Feature: Undo
     bazz
     """
     And the cursor should be at cell (4, 2)
+
+    Given the buffer is empty
+    And I type "."
+    Then I should see:
+    """
+    bar
+    bazbar
+    baz
+    """
+    And the cursor should be at cell (3, 2)
 
   Scenario: repeat insert empty
     Given the buffer is empty
@@ -214,9 +225,9 @@ Feature: Undo
     bar
     bar4567
     xxxbarbarbarxxxxxxx
-    bar
+    barbarbar
     """
-    And the cursor should be at cell (4, 2)
+    And the cursor should be at cell (4, 8)
 
   Scenario: repeat kill char
     Given the buffer is empty

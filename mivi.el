@@ -541,45 +541,39 @@
   (back-to-indentation))
 
 ;; Insert commands
-(defun mivi-append (&optional move-only)
+(defun mivi-append ()
   (interactive)
   (unless (eolp)
     (forward-char))
-  (unless move-only
-    (mivi--switch-state 'mivi-insert-state)))
+  (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-Append (&optional move-only)
+(defun mivi-Append ()
   (interactive)
   (end-of-line)
-  (unless move-only
-    (mivi--switch-state 'mivi-insert-state)))
+  (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-insert (&optional move-only)
+(defun mivi-insert ()
   (interactive)
-  (unless move-only
-    (mivi--switch-state 'mivi-insert-state)))
+  (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-Insert (&optional move-only)
+(defun mivi-Insert ()
   (interactive)
   (back-to-indentation)
-  (unless move-only
-    (mivi--switch-state 'mivi-insert-state)))
+  (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-open (&optional move-only)
+(defun mivi-open ()
   (interactive)
   (end-of-line)
   (newline-and-indent)
-  (unless move-only
-    (mivi--switch-state 'mivi-insert-state)))
+  (mivi--switch-state 'mivi-insert-state))
 
-(defun mivi-Open (&optional move-only)
+(defun mivi-Open ()
   (interactive)
   (forward-line 0)
   (newline 1 nil)
   (forward-line -1)
   (indent-according-to-mode)
-  (unless move-only
-    (mivi--switch-state 'mivi-insert-state)))
+  (mivi--switch-state 'mivi-insert-state))
 
 (defun mivi-Replace ()
   (interactive)
@@ -609,7 +603,8 @@
                  (1- (point))))))
     (unless (= beg end)
       (kill-region beg end)))
-  (mivi--switch-state 'mivi-insert-state))
+  (mivi--switch-state 'mivi-insert-state)
+  (mivi--store-command :command 'mivi-change-line :category 'change))
 
 ;; Copy commands
 (defun mivi-copy (&optional arg)
@@ -745,19 +740,24 @@
           (command (plist-get mivi--last-command :command)))
       (cond
        ((eq category 'insert)
-        (let ((content (plist-get mivi--last-command :content))
+        (let ((count (mivi--numeric-or-default
+                      arg (or (plist-get mivi--last-command :prefix) 1)))
+              (content (plist-get mivi--last-command :content))
               (m (make-marker)))
           (when content
             (when (eq command 'mivi-Replace)
               (delete-region (point) (min (+ (length content) (point))
                                           (line-end-position))))
-            (dotimes (_ (mivi--numeric-or-default arg 1))
+            (dotimes (_ count)
               (unless (eq command 'mivi-Replace)
-                (funcall command t))
+                (funcall command))
               (insert content)
               (when (or (not (marker-position m))
                         (< (marker-position m) (point)))
                 (set-marker m (point))))
+            (mivi--switch-state 'mivi-command-state)
+            (mivi--store-command :prefix count :command command
+                                 :category category :content content)
             (goto-char (1- (marker-position m)))
             (set-marker m nil))))
 
