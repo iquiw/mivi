@@ -581,9 +581,10 @@
   (mivi--switch-state 'mivi-replace-state))
 
 (defun mivi-substitute (&optional arg)
-  (interactive "p")
-  (delete-char arg)
-  (mivi--switch-state 'mivi-insert-state))
+  (interactive "P")
+  (delete-char (mivi--numeric-or-default arg 1))
+  (mivi--switch-state 'mivi-insert-state)
+  (setq mivi--last-command (plist-put mivi--last-command :category 'change)))
 
 ;; Change commands
 (defun mivi-change (&optional arg)
@@ -762,13 +763,14 @@
             (set-marker m nil))))
 
        ((eq category 'change)
-        (let ((content (plist-get mivi--last-command :content))
+        (let ((this-command command)
+              (content (plist-get mivi--last-command :content))
               (current-prefix-arg
                (or arg (plist-get mivi--last-command :prefix)))
               (mivi--current-find-char (car mivi--last-find))
               (mivi--current-search-string (car mivi--last-search)))
           (when content
-            (funcall command)
+            (call-interactively command)
             (setq mivi--last-command
                   (plist-put mivi--last-command :content content))
             (insert content)

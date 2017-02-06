@@ -229,6 +229,30 @@ Feature: Undo
     """
     And the cursor should be at cell (4, 8)
 
+  Scenario: repeat substitute
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "s123"
+    And I press "<escape>"
+    And I go to word "bar"
+    And I type "."
+    Then I should see pattern "^123oo 123ar"
+    And the cursor should be at cell (1, 8)
+
+    And I go to word "baz"
+    And I type "3."
+    Then I should see pattern "^123oo 123ar 123$"
+    And the cursor should be at cell (1, 14)
+
+    And I go to cell (1, 3)
+    And I type "."
+    Then I should see pattern "^123123123ar 123$"
+    And the cursor should be at cell (1, 5)
+
   Scenario: repeat kill char
     Given the buffer is empty
     When I insert:
@@ -519,3 +543,27 @@ Feature: Undo
     And I type "."
     And I execute the action chain
     Then I should see pattern "^1 2 3 4 helloo$"
+#
+#  Scenario: repeat change line
+#    Given the buffer is empty
+#    When I insert:
+#    """
+#    1 foo
+#    2 bar
+#    3 baz
+#    4 qux
+#    5 quux
+#    """
+#    And I go to beginning of buffer
+#    And I type "cchello"
+#    And I press "<escape>"
+#    And I go to line "2"
+#    And I type "."
+#    Then I should see:
+#    """
+#    hello
+#    hello
+#    3 baz
+#    4 qux
+#    5 quux
+#    """
