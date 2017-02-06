@@ -545,27 +545,37 @@
   (interactive)
   (unless (eolp)
     (forward-char))
-  (mivi--switch-state 'mivi-insert-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Append ()
   (interactive)
   (end-of-line)
-  (mivi--switch-state 'mivi-insert-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-insert ()
   (interactive)
-  (mivi--switch-state 'mivi-insert-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Insert ()
   (interactive)
   (back-to-indentation)
-  (mivi--switch-state 'mivi-insert-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-open ()
   (interactive)
   (end-of-line)
   (newline-and-indent)
-  (mivi--switch-state 'mivi-insert-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Open ()
   (interactive)
@@ -573,18 +583,23 @@
   (newline 1 nil)
   (forward-line -1)
   (indent-according-to-mode)
-  (mivi--switch-state 'mivi-insert-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Replace ()
   (interactive)
   (overwrite-mode 1)
-  (mivi--switch-state 'mivi-replace-state))
+  (when (called-interactively-p)
+    (mivi--store-command :category 'insert)
+    (mivi--switch-state 'mivi-replace-state)))
 
 (defun mivi-substitute (&optional arg)
   (interactive "P")
   (delete-char (mivi--numeric-or-default arg 1))
-  (mivi--switch-state 'mivi-insert-state)
-  (setq mivi--last-command (plist-put mivi--last-command :category 'change)))
+  (when (called-interactively-p)
+    (mivi--switch-state 'mivi-insert-state)
+    (mivi--store-command :category 'change)))
 
 ;; Change commands
 (defun mivi-change (&optional arg)
@@ -756,9 +771,8 @@
               (when (or (not (marker-position m))
                         (< (marker-position m) (point)))
                 (set-marker m (point))))
-            (mivi--switch-state 'mivi-command-state)
-            (mivi--store-command :prefix count :command command
-                                 :category category :content content)
+            (setq mivi--last-command
+                  (plist-put mivi--last-command :prefix count))
             (goto-char (1- (marker-position m)))
             (set-marker m nil))))
 
@@ -905,12 +919,8 @@
    (t
     (setq mivi--cursor-type 'box)))
 
-  (cond
-   ((eq state 'mivi-insert-state)
-    (setq mivi--insert-beginning (point))
-    (mivi--store-command :category 'insert))
-   ((eq state 'mivi-change-state)
-    (setq mivi--insert-beginning (point))))
+  (when (memq state '(mivi-insert-state mivi-change-state))
+     (setq mivi--insert-beginning (point)))
 
   (set-frame-parameter nil 'cursor-type mivi--cursor-type)
   (dolist (s mivi--states)
