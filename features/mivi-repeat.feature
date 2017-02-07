@@ -543,27 +543,44 @@ Feature: Undo
     And I type "."
     And I execute the action chain
     Then I should see pattern "^1 2 3 4 helloo$"
-#
-#  Scenario: repeat change line
-#    Given the buffer is empty
-#    When I insert:
-#    """
-#    1 foo
-#    2 bar
-#    3 baz
-#    4 qux
-#    5 quux
-#    """
-#    And I go to beginning of buffer
-#    And I type "cchello"
-#    And I press "<escape>"
-#    And I go to line "2"
-#    And I type "."
-#    Then I should see:
-#    """
-#    hello
-#    hello
-#    3 baz
-#    4 qux
-#    5 quux
-#    """
+
+  Scenario: repeat change line
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    5 quux
+    """
+    And I go to beginning of buffer
+    And I type "cchello"
+    And I press "<escape>"
+    And I go to line "2"
+    And I type "."
+    Then I should see:
+    """
+    hello
+    hello
+    3 baz
+    4 qux
+    5 quux
+    """
+
+    When I type "2."
+    Then I should see:
+    """
+    hello
+    hello
+    4 qux
+    5 quux
+    """
+
+    When I type "."
+    Then I should see:
+    """
+    hello
+    hello
+    5 quux
+    """
