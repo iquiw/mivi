@@ -541,65 +541,64 @@
   (back-to-indentation))
 
 ;; Insert commands
-(defun mivi-append ()
+(defun mivi-append (&optional move-only)
   (interactive)
   (unless (eolp)
     (forward-char))
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-Append ()
+(defun mivi-Append (&optional move-only)
   (interactive)
   (end-of-line)
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-insert ()
+(defun mivi-insert (&optional move-only)
   (interactive)
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-Insert ()
+(defun mivi-Insert (&optional move-only)
   (interactive)
   (back-to-indentation)
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-open ()
+(defun mivi-open (&optional move-only)
   (interactive)
   (end-of-line)
   (newline-and-indent)
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-Open ()
+(defun mivi-Open (&optional move-only)
   (interactive)
   (forward-line 0)
   (newline 1 nil)
   (forward-line -1)
   (indent-according-to-mode)
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
-(defun mivi-Replace ()
+(defun mivi-Replace (&optional move-only)
   (interactive)
   (overwrite-mode 1)
-  (when (called-interactively-p 'any)
+  (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-replace-state)))
 
 (defun mivi-substitute (&optional arg)
-  (interactive "P")
-  (delete-char (mivi--numeric-or-default arg 1))
-  (when (called-interactively-p 'any)
-    (mivi--switch-state 'mivi-insert-state)
-    (mivi--store-command :category 'change)))
+  (interactive "p")
+  (delete-char arg)
+  (mivi--store-command :category 'change)
+  (mivi--switch-state 'mivi-insert-state))
 
 ;; Change commands
 (defun mivi-change (&optional arg)
@@ -766,7 +765,7 @@
                                           (line-end-position))))
             (dotimes (_ count)
               (unless (eq command 'mivi-Replace)
-                (funcall command))
+                (funcall command t))
               (insert content)
               (when (or (not (marker-position m))
                         (< (marker-position m) (point)))
