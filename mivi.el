@@ -752,12 +752,12 @@
 
     (setq mivi--undo-repeating nil)
     (let ((category (plist-get mivi--last-command :category))
-          (command (plist-get mivi--last-command :command)))
+          (command (plist-get mivi--last-command :command))
+          (content (plist-get mivi--last-command :content))
+          (prefix (plist-get mivi--last-command :prefix)))
       (cond
        ((eq category 'insert)
-        (let ((count (mivi--numeric-or-default
-                      arg (or (plist-get mivi--last-command :prefix) 1)))
-              (content (plist-get mivi--last-command :content))
+        (let ((count (mivi--numeric-or-default arg (or prefix 1)))
               (m (make-marker)))
           (when content
             (when (eq command 'mivi-Replace)
@@ -777,9 +777,7 @@
 
        ((eq category 'change)
         (let ((this-command command)
-              (content (plist-get mivi--last-command :content))
-              (current-prefix-arg
-               (or arg (plist-get mivi--last-command :prefix)))
+              (current-prefix-arg (or arg prefix))
               (mivi--current-find-char (car mivi--last-find))
               (mivi--current-search-string (car mivi--last-search)))
           (when content
@@ -792,8 +790,7 @@
 
        (command
         (let ((this-command command)
-              (current-prefix-arg
-               (or arg (plist-get mivi--last-command :prefix)))
+              (current-prefix-arg (or arg prefix))
               (mivi--current-find-char (car mivi--last-find))
               (mivi--current-replace-char mivi--last-replace-char)
               (mivi--current-search-string (car mivi--last-search)))
