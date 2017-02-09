@@ -31,7 +31,6 @@
 (defvar mivi--current-find-char nil)
 (defvar mivi--current-replace-char nil)
 (defvar mivi--current-search-string nil)
-(defvar mivi--insert-beginning nil)
 (defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
@@ -49,6 +48,9 @@
 
 (defvar-local mivi--cursor-type 'box)
 (defvar-local mivi--undo-direction 'redo)
+
+(defvar-local mivi--insert-beginning nil)
+(defvar-local mivi--insert-end (make-marker))
 
 (defconst mivi--states
   '(mivi-change-state
@@ -708,10 +710,22 @@
   (interactive)
   (when (and mivi--insert-beginning
              (<= mivi--insert-beginning (point)))
-    (setq mivi--last-command
-          (plist-put mivi--last-command
-                     :content (buffer-substring mivi--insert-beginning (point)))))
+    (if (marker-position mivi--insert-end)
+        (let ((end (if (and (eq (plist-get mivi--last-command :command)
+                                'mivi-Replace)
+                            (< mivi--insert-end (point)))
+                       (point)
+                     (1- mivi--insert-end))))
+          (when (< mivi--insert-beginning mivi--insert-end)
+            (setq mivi--last-command
+                  (plist-put mivi--last-command :content
+                             (buffer-substring mivi--insert-beginning end)))))
+      (setq mivi--last-command
+            (plist-put mivi--last-command :content
+                       (buffer-substring mivi--insert-beginning (point-max))))))
   (setq mivi--insert-beginning nil)
+  (set-marker mivi--insert-end nil)
+
   (cond
    ((memq last-command '(mivi-open mivi-Open))
     (indent-to-left-margin))
@@ -916,7 +930,10 @@
     (setq mivi--cursor-type 'box)))
 
   (when (memq state '(mivi-insert-state mivi-change-state))
-     (setq mivi--insert-beginning (point)))
+    (setq mivi--insert-beginning (point))
+    (if (eobp)
+        (set-marker mivi--insert-end nil)
+      (set-marker mivi--insert-end (1+ (point)))))
 
   (set-frame-parameter nil 'cursor-type mivi--cursor-type)
   (dolist (s mivi--states)

@@ -50,6 +50,16 @@ Feature: Undo
     Then I should see pattern "^foo$"
     And the cursor should be at cell (1, 1)
 
+  Scenario: repeat insert pair
+    Given the buffer is empty
+    When I type "i(foo"
+    # This emulates electric pair mode
+    And I insert ")"
+    And I press "<escape>"
+    Then I should see "(foo)"
+    When I type "."
+    Then I should see "(foo(foo))"
+
   Scenario: repeat Insert
     Given the buffer is empty
     When I insert:
