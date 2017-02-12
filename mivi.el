@@ -92,6 +92,7 @@
     (define-key map "n" #'mivi-search-next)
     (define-key map "t" #'mivi-goto-char)
     (define-key map "w" #'mivi-forward-word)
+    (define-key map (kbd "C-a") #'mivi-search-current-word)
     (define-key map (kbd "C-h") #'backward-char)
     (define-key map (kbd "C-m") #'mivi-next-line-at-bot)
     map))
@@ -508,6 +509,25 @@
     (unless (string= re "")
       (mivi--search-internal re arg -1)
       (setq mivi--last-search (cons re -1)))))
+
+(defun mivi-search-current-word ()
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning)
+              end (region-end))
+      (save-excursion
+        (when (not (looking-back "\\_>"))
+          (skip-syntax-backward "w_")
+          (setq beg (point))
+          (skip-syntax-forward "w_")
+          (setq end (point)))))
+    (when (and beg end (< beg end))
+      (let ((mivi--current-search-string
+             (if (region-active-p)
+                 (buffer-substring beg end)
+               (concat "\\_<" (buffer-substring beg end) "\\_>"))))
+        (call-interactively 'mivi-search)))))
 
 (defun mivi-search-next (&optional arg)
   (interactive "p")

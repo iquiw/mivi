@@ -431,6 +431,29 @@ Feature: Motion
     Then the cursor should be at cell (2, 2)
     And I should see message "Search wrapped"
 
+  Scenario: search current word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    123 456 789
+    foobarbaz
+    quux qux baz bar foo
+    <> @#$ <> @#$ <>
+    bar()baz
+    """
+    And I go to word "bar"
+    And I press "C-a"
+    Then the cursor should be at cell (4, 13)
+
+    When I go to cell (4, 11)
+    And I start an action chain
+    And I type "2"
+    And I press "C-a"
+    And I execute the action chain
+    Then the cursor should be at cell (1, 8)
+    And I should see message "Search wrapped"
+
   Scenario: search next
     Given the buffer is empty
     When I insert:
