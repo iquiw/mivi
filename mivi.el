@@ -1045,6 +1045,7 @@
    "mivi-search"
    "mivi-search-Next"
    "mivi-search-backward"
+   "mivi-search-current-word"
    "mivi-search-next"
    "mivi-window-bottom"
    "mivi-window-middle"
