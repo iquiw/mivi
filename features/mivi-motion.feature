@@ -439,7 +439,7 @@ Feature: Motion
     123 456 789
     foobarbaz
     quux qux baz bar foo
-    <> @#$ <> @#$ <>
+    <*> @#$ <> @#$ <*>
     bar()baz
     """
     And I go to word "bar"
@@ -453,6 +453,24 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (1, 8)
     And I should see message "Search wrapped"
+
+    When I go to cell (1, 8)
+    And I press "C-a"
+    Then the cursor should be at cell (4, 9)
+
+  Scenario: search region string
+    Given transient mark mode is active
+    When I go to beginning of buffer
+    And I set the mark
+    And I type "e"
+    And I press "C-a"
+    Then the cursor should be at cell (3, 0)
+
+    When I go to cell (5, 0)
+    And I set the mark
+    And I type "f "
+    And I press "C-a"
+    Then the cursor should be at cell (5, 15)
 
   Scenario: search next
     Given the buffer is empty

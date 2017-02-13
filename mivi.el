@@ -512,22 +512,20 @@
 
 (defun mivi-search-current-word ()
   (interactive)
-  (let (beg end)
-    (if (region-active-p)
-        (setq beg (region-beginning)
-              end (region-end))
-      (save-excursion
-        (when (not (looking-back "\\_>"))
-          (skip-syntax-backward "w_")
-          (setq beg (point))
-          (skip-syntax-forward "w_")
-          (setq end (point)))))
-    (when (and beg end (< beg end))
-      (let ((mivi--current-search-string
-             (if (region-active-p)
-                 (buffer-substring beg end)
-               (concat "\\_<" (buffer-substring beg end) "\\_>"))))
-        (call-interactively 'mivi-search)))))
+  (let ((mivi--current-search-string
+         (if (region-active-p)
+             (let ((s (buffer-substring (region-beginning) (region-end))))
+               (unless (string= s "")
+                 (regexp-quote s)))
+           (skip-syntax-forward "^w_")
+           (let ((s (buffer-substring
+                     (progn (skip-syntax-backward "w_") (point))
+                     (progn (skip-syntax-forward "w_") (point)))))
+             (unless (string= s "")
+               (concat "\\_<" (regexp-quote s) "\\_>"))))))
+    (when mivi--current-search-string
+      (deactivate-mark)
+      (call-interactively 'mivi-search))))
 
 (defun mivi-search-next (&optional arg)
   (interactive "p")
