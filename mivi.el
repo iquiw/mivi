@@ -709,20 +709,22 @@
 ;; Other commands
 (defun mivi-backward-indent ()
   (interactive)
-  (if (looking-back "^[[:blank:]]*\\([0^]\\)?" nil)
-      (let ((pc (match-string 1)))
-        (if pc
-            (progn
-              (delete-char -1)
-              (indent-line-to 0)
-              (when (and (string= pc "^")
-                         (boundp 'indent-line-function))
-                (funcall indent-line-function)))
-          (let ((column (current-column)))
-            (indent-line-to (if (< column mivi-shift-width)
-                                0
-                              (- column mivi-shift-width))))))
-    (delete-char 1)))
+  (cond
+   ((looking-back "^[[:blank:]]+\\([0^]\\)?" nil)
+    (let ((pc (match-string 1)))
+      (if pc
+          (progn
+            (delete-char -1)
+            (indent-line-to 0)
+            (when (and (string= pc "^")
+                       (boundp 'indent-line-function))
+              (funcall indent-line-function)))
+        (let ((column (current-column)))
+          (indent-line-to (if (< column mivi-shift-width)
+                              0
+                            (- column mivi-shift-width)))))))
+   ((not (eobp))
+    (delete-char 1))))
 
 (defun mivi-command ()
   (interactive)

@@ -178,7 +178,11 @@ Feature Insert
 
     When I go to word "foo"
     And I press "C-d"
-    Then I should see "defun oo"
+    Then I should see pattern "^(defun oo"
+
+    When I go to beginning of buffer
+    And I press "C-d"
+    Then I should see pattern "^defun oo"
 
   Scenario: C-h
     Given the buffer is empty
