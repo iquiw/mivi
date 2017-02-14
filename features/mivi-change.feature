@@ -436,6 +436,21 @@ Feature: Change
     Then I should see pattern "^baz bar foo$"
     And the mivi state should be "insert"
 
+  Scenario: change search current word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    bar foo bar qux
+    """
+    And I go to word "bar"
+    And I start an action chain
+    And I type "2c"
+    And I press "C-a"
+    And I execute the action chain
+    Then I should see pattern "^foo bar qux$"
+    And the mivi state should be "insert"
+
   Scenario: change search next
     Given the buffer is empty
     When I insert:

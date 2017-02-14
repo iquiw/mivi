@@ -510,6 +510,18 @@ Feature: Delete
     And I execute the action chain
     Then I should see pattern "^baz bar foo$"
 
+  Scenario: delete search current word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    qux foo quux
+    """
+    And I go to beginning of buffer
+    And I type "d"
+    And I press "C-a"
+    Then I should see pattern "^foo quux$"
+
   Scenario: delete search next
     Given the buffer is empty
     When I insert:

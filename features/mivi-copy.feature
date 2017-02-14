@@ -626,6 +626,25 @@ Feature: Copy
     """
     And the mivi state should be "command"
 
+  Scenario: copy search current word
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    1 2 3
+    quux foo
+    """
+    And I go to beginning of buffer
+    And I type "y"
+    And I press "C-a"
+    Then the current kill-ring should be:
+    """
+    foo bar
+    1 2 3
+    quux 
+    """
+    And the mivi state should be "command"
+
   Scenario: copy search next
     Given the buffer is empty
     When I insert:
