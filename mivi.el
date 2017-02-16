@@ -64,6 +64,7 @@
     (suppress-keymap map)
     (define-key map "$" #'end-of-line)
     (define-key map "%" #'mivi-goto-pair)
+    (define-key map ")" #'mivi-next-sentence)
     (define-key map "+" #'mivi-next-line-at-bot)
     (define-key map "," #'mivi-repeat-find-opposite)
     (define-key map "-" #'mivi-previous-line-at-bot)
@@ -470,6 +471,19 @@
   (interactive "p")
   (forward-line arg)
   (back-to-indentation))
+
+(defun mivi-next-sentence (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (if (save-excursion
+          (forward-line 0)
+          (looking-at-p "^[[:blank:]\r]*$"))
+        (when (re-search-forward "[^[:blank:]\r\n]" nil t)
+          (backward-char))
+      (when (re-search-forward
+             "\\(\\.\\([[:blank:]\r]\\|$\\)\\|^[[:blank:]\r]*$\\)" nil t)
+        (when (string-match-p "\\`\\." (match-string 1))
+          (skip-chars-forward "[:blank:]\r\n"))))))
 
 (defun mivi-previous-line ()
   (interactive)

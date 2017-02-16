@@ -659,3 +659,42 @@ Feature: Motion
 
     When I type "2-"
     Then the cursor should be at cell (2, 2)
+
+  Scenario: next sentence
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type ")"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 0)
+
+    When I start an action chain
+    And I type ")"
+    And I execute the action chain
+    Then the cursor should be at cell (4, 0)
+
+    When I start an action chain
+    And I type ")"
+    And I execute the action chain
+    Then the cursor should be at cell (5, 4)
+
+    When I start an action chain
+    And I type ")"
+    And I execute the action chain
+    Then the cursor should be at cell (5, 18)
+
+    When I start an action chain
+    And I type "2)"
+    And I execute the action chain
+    Then the cursor should be at cell (8, 0)
