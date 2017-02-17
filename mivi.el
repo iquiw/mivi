@@ -52,6 +52,15 @@
 (defvar-local mivi--insert-beginning nil)
 (defvar-local mivi--insert-end (make-marker))
 
+(defconst mivi--blank-chars "[:blank:]\r")
+(defconst mivi--blanknl-chars (concat mivi--blank-chars "\n"))
+(defconst mivi--non-blank-chars (concat "^" mivi--blank-chars))
+(defconst mivi--non-blanknl-chars (concat "^" mivi--blank-chars "\n"))
+(defconst mivi--word-chars "[:alnum:]_"
+  "Word characters, not same as \"word\" in Emacs context.")
+(defconst mivi--non-blanknlword-chars
+  (concat "^" mivi--blanknl-chars mivi--word-chars))
+
 (defconst mivi--states
   '(mivi-change-state
     mivi-command-state
@@ -350,26 +359,26 @@
 (defun mivi-backward-word (&optional arg)
   (interactive "p")
   (dotimes (_ arg)
-    (skip-chars-backward "[:blank:]\n")
+    (skip-chars-backward mivi--blanknl-chars)
     (if (looking-back "[[:alnum:]_]" nil)
-        (skip-chars-backward "[:alnum:]_")
-      (skip-chars-backward "^[:alnum:][:blank:]\n_"))))
+        (skip-chars-backward mivi--word-chars)
+      (skip-chars-backward mivi--non-blanknlword-chars))))
 
 (defun mivi-Backward-word (&optional arg)
   (interactive "p")
   (dotimes (_ arg)
-    (skip-chars-backward "[:blank:]\n")
-    (skip-chars-backward "^[:blank:]\n")))
+    (skip-chars-backward mivi--blanknl-chars)
+    (skip-chars-backward mivi--non-blanknl-chars)))
 
 (defun mivi-end-of-word (&optional arg)
   (interactive "p")
   (forward-char)
   (let ((p (point)))
     (dotimes (_ arg)
-      (skip-chars-forward "[:blank:]\n")
+      (skip-chars-forward mivi--blanknl-chars)
       (if (looking-at-p "[[:alnum:]_]")
-          (skip-chars-forward "[:alnum:]_")
-        (skip-chars-forward "^[:alnum:][:blank:]\n_")))
+          (skip-chars-forward mivi--word-chars)
+        (skip-chars-forward mivi--non-blanknlword-chars)))
     (unless (= p (point))
       (backward-char))))
 
@@ -378,8 +387,8 @@
   (forward-char)
   (let ((p (point)))
     (dotimes (_ arg)
-      (skip-chars-forward "[:blank:]\n")
-      (skip-chars-forward "^[:blank:]\n"))
+      (skip-chars-forward mivi--blanknl-chars)
+      (skip-chars-forward mivi--non-blanknl-chars))
     (unless (= p (point))
       (backward-char))))
 
@@ -400,28 +409,28 @@
   (dotimes (i arg)
     (cond
      ((looking-at-p "[[:alnum:]_]")
-      (skip-chars-forward "[:alnum:]_"))
+      (skip-chars-forward mivi--word-chars))
      ((not (looking-at-p "[[:blank:]\n]"))
-      (skip-chars-forward "^[:alnum:][:blank:]\n_")))
+      (skip-chars-forward mivi--non-blanknlword-chars)))
     (cond
      ((and mivi--stop-at-eol
            (= i (1- arg)))
-      (skip-chars-forward "[:blank:]"))
+      (skip-chars-forward mivi--blank-chars))
      ((not (and mivi--stop-at-space
                 (= i (1- arg))))
-      (skip-chars-forward "[:blank:]\n")))))
+      (skip-chars-forward mivi--blanknl-chars)))))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
   (dotimes (i arg)
-    (skip-chars-forward "^[:blank:]\n")
+    (skip-chars-forward mivi--non-blanknl-chars)
     (cond
      ((and mivi--stop-at-eol
            (= i (1- arg)))
-      (skip-chars-forward "[:blank:]"))
+      (skip-chars-forward mivi--blank-chars))
      ((not (and mivi--stop-at-space
                 (= i (1- arg))))
-      (skip-chars-forward "[:blank:]\n")))))
+      (skip-chars-forward mivi--blanknl-chars)))))
 
 (defun mivi-goto-char (&optional arg)
   (interactive "p")
@@ -483,7 +492,7 @@
       (when (re-search-forward
              "\\(\\.\\([[:blank:]\r]\\|$\\)\\|^[[:blank:]\r]*$\\)" nil t)
         (when (string-match-p "\\`\\." (match-string 1))
-          (skip-chars-forward "[:blank:]\r\n"))))))
+          (skip-chars-forward mivi--blanknl-chars))))))
 
 (defun mivi-previous-line ()
   (interactive)
@@ -772,8 +781,12 @@
   (interactive "p")
   (dotimes (_ (if (< arg 3) 1 (1- arg)))
     (forward-line 1)
-    (let* ((end (save-excursion (skip-chars-forward "[:blank:]") (point)))
-           (beg (save-excursion (skip-chars-backward "[:blank:]\n") (point))))
+    (let* ((end (save-excursion
+                  (skip-chars-forward mivi--blank-chars)
+                  (point)))
+           (beg (save-excursion
+                  (skip-chars-backward mivi--blanknl-chars)
+                  (point))))
       (delete-region beg end))
     (insert " ")
     (backward-char)))
