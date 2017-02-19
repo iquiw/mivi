@@ -61,6 +61,12 @@
 (defconst mivi--non-blanknlword-chars
   (concat "^" mivi--blanknl-chars mivi--word-chars))
 
+(defconst mivi--blank-regexp (concat "[" mivi--blank-chars "]"))
+(defconst mivi--blankline-regexp (concat "^[" mivi--blank-chars "]*$"))
+(defconst mivi--blanknl-regexp (concat "[" mivi--blanknl-chars "]"))
+(defconst mivi--non-blanknl-regexp (concat "[" mivi--non-blanknl-chars "]"))
+(defconst mivi--wordchar-regexp (concat "[" mivi--word-chars "]"))
+
 (defconst mivi--states
   '(mivi-change-state
     mivi-command-state
@@ -360,7 +366,7 @@
   (interactive "p")
   (dotimes (_ arg)
     (skip-chars-backward mivi--blanknl-chars)
-    (if (looking-back "[[:alnum:]_]" nil)
+    (if (looking-back mivi--wordchar-regexp nil)
         (skip-chars-backward mivi--word-chars)
       (skip-chars-backward mivi--non-blanknlword-chars))))
 
@@ -376,7 +382,7 @@
   (let ((p (point)))
     (dotimes (_ arg)
       (skip-chars-forward mivi--blanknl-chars)
-      (if (looking-at-p "[[:alnum:]_]")
+      (if (looking-at-p mivi--wordchar-regexp)
           (skip-chars-forward mivi--word-chars)
         (skip-chars-forward mivi--non-blanknlword-chars)))
     (unless (= p (point))
@@ -408,9 +414,9 @@
   (interactive "p")
   (dotimes (i arg)
     (cond
-     ((looking-at-p "[[:alnum:]_]")
+     ((looking-at-p mivi--wordchar-regexp)
       (skip-chars-forward mivi--word-chars))
-     ((not (looking-at-p "[[:blank:]\n]"))
+     ((not (looking-at-p mivi--blanknl-regexp))
       (skip-chars-forward mivi--non-blanknlword-chars)))
     (cond
      ((and mivi--stop-at-eol
@@ -486,8 +492,8 @@
   (dotimes (_ arg)
     (if (save-excursion
           (forward-line 0)
-          (looking-at-p "^[[:blank:]\r]*$"))
-        (when (re-search-forward "[^[:blank:]\r\n]" nil t)
+          (looking-at-p mivi--blankline-regexp))
+        (when (re-search-forward mivi--non-blanknl-regexp nil t)
           (backward-char))
       (when (re-search-forward
              "\\(\\.\\([[:blank:]\r]\\|$\\)\\|^[[:blank:]\r]*$\\)" nil t)
@@ -785,7 +791,7 @@
       (end-of-line)
       (unless (eobp)
         (let ((limit (point))
-              (end-blank? (looking-back "[[:blank:]\r]" (1- (point)))))
+              (end-blank? (looking-back mivi--blank-regexp (1- (point)))))
           (forward-line 1)
           (let* ((end (save-excursion
                         (skip-chars-forward mivi--blank-chars)
