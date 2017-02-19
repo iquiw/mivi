@@ -780,16 +780,23 @@
 (defun mivi-join (&optional arg)
   (interactive "p")
   (dotimes (_ (if (< arg 3) 1 (1- arg)))
-    (forward-line 1)
-    (let* ((end (save-excursion
-                  (skip-chars-forward mivi--blank-chars)
-                  (point)))
-           (beg (save-excursion
-                  (skip-chars-backward mivi--blanknl-chars)
-                  (point))))
-      (delete-region beg end))
-    (insert " ")
-    (backward-char)))
+    (if (save-excursion (forward-line 0) (looking-at-p "^$"))
+        (delete-char 1)
+      (end-of-line)
+      (unless (eobp)
+        (let ((limit (point))
+              (end-blank? (looking-back "[[:blank:]\r]" (1- (point)))))
+          (forward-line 1)
+          (let* ((end (save-excursion
+                        (skip-chars-forward mivi--blank-chars)
+                        (point)))
+                 (beg (save-excursion
+                        (skip-chars-backward mivi--blanknl-chars limit)
+                        (point))))
+            (delete-region beg end))
+          (unless end-blank?
+            (insert " "))
+          (backward-char))))))
 
 (defun mivi-kill-char (&optional arg)
   (interactive "p")

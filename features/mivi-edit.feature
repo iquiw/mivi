@@ -21,8 +21,24 @@ Feature: Motion
     Then I should see pattern "^foo bar baz$"
     And the cursor should be at cell (1, 7)
     When I type "3J"
-    Then I should see pattern "^foo bar baz qux quux$"
-    And the cursor should be at cell (1, 15)
+    Then I should see pattern "^foo bar baz qux  quux$"
+    And the cursor should be at cell (1, 16)
+
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+
+    bar
+    """
+    And I go to line "2"
+    And I type "J"
+    Then I should see:
+    """
+    foo
+    bar
+    """
+    And the cursor should be at cell (2, 0)
 
   Scenario: replace char
     Given the buffer is empty
