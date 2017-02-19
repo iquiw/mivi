@@ -780,7 +780,7 @@
 (defun mivi-join (&optional arg)
   (interactive "p")
   (dotimes (_ (if (< arg 3) 1 (1- arg)))
-    (if (save-excursion (forward-line 0) (looking-at-p "^$"))
+    (if (looking-at-p "^$")
         (delete-char 1)
       (end-of-line)
       (unless (eobp)
