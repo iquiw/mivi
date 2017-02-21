@@ -66,6 +66,8 @@
 (defconst mivi--blanknl-regexp (concat "[" mivi--blanknl-chars "]"))
 (defconst mivi--non-blanknl-regexp (concat "[" mivi--non-blanknl-chars "]"))
 (defconst mivi--wordchar-regexp (concat "[" mivi--word-chars "]"))
+(defconst mivi--end-of-sentence-regexp
+  "\\(\\.[[:blank:]\r\n]+\\|^[[:blank:]\r]*$\\)")
 
 (defconst mivi--states
   '(mivi-change-state
@@ -79,6 +81,7 @@
     (suppress-keymap map)
     (define-key map "$" #'end-of-line)
     (define-key map "%" #'mivi-goto-pair)
+    (define-key map "(" #'mivi-previous-sentence)
     (define-key map ")" #'mivi-next-sentence)
     (define-key map "+" #'mivi-next-line-at-bot)
     (define-key map "," #'mivi-repeat-find-opposite)
@@ -495,10 +498,8 @@
           (looking-at-p mivi--blankline-regexp))
         (when (re-search-forward mivi--non-blanknl-regexp nil t)
           (backward-char))
-      (when (re-search-forward
-             "\\(\\.\\([[:blank:]\r]\\|$\\)\\|^[[:blank:]\r]*$\\)" nil t)
-        (when (string-match-p "\\`\\." (match-string 1))
-          (skip-chars-forward mivi--blanknl-chars))))))
+      (when (re-search-forward mivi--end-of-sentence-regexp nil t)
+        (goto-char (match-end 0))))))
 
 (defun mivi-previous-line ()
   (interactive)
@@ -510,6 +511,34 @@
   (interactive "p")
   (forward-line (- arg))
   (back-to-indentation))
+
+(defun mivi-previous-sentence (&optional arg)
+  (interactive "p")
+  (skip-chars-backward mivi--blank-chars)
+  (cond
+   ((and (not (eobp))
+         (looking-at-p mivi--blankline-regexp))
+    (skip-chars-backward mivi--blanknl-chars)
+    (if (re-search-backward mivi--end-of-sentence-regexp nil t)
+        (progn
+          (when (looking-at-p "\\.")
+            (forward-char))
+          (skip-chars-forward mivi--blanknl-chars))
+      (goto-char (point-min))))
+   ((and (bolp) (not (bobp))
+         (save-excursion
+           (forward-line -1)
+           (looking-at-p mivi--blankline-regexp)))
+    (forward-line -1))
+   (t
+    (when (and (not (bobp)) (bolp))
+      (backward-char))
+    (if (re-search-backward mivi--end-of-sentence-regexp nil t)
+        (progn
+          (when (looking-at-p "\\.")
+            (forward-char))
+          (skip-chars-forward mivi--blanknl-chars))
+      (goto-char (point-min))))))
 
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")
