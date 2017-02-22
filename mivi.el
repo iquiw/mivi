@@ -186,7 +186,7 @@
                   `(mivi--store-command :category (quote ,name))))))))))
 
 (defconst mivi--motion-0-keys
-  '("$" ")" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w"
+  '("$" "(" ")" "/" "0" "?" "B" "F" "N" "T" "W" "^" "b" "h" "l" "n" "w"
     "\C-a" "\C-h"))
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))

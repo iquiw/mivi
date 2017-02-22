@@ -787,3 +787,21 @@ Feature: Copy
 
 
     """
+
+  Scenario: copy previous sentence
+    When I go to end of buffer
+    And I start an action chain
+    And I type "y("
+    And I execute the action chain
+    Then the current kill-ring should be "4567890"
+
+    When I go to cell (5, 17)
+    And I start an action chain
+    And I type "3y("
+    And I execute the action chain
+    Then the current kill-ring should be:
+    """
+
+    foo bar.
+        baz qux quux.
+    """

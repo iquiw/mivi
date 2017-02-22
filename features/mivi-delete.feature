@@ -651,3 +651,23 @@ Feature: Delete
     """
     fo123
     """
+
+  Scenario: delete previous sentence
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I start an action chain
+    And I type "3d("
+    And I execute the action chain
+    Then I should see pattern "^    baz qux quux\. $"
+
+    And I start an action chain
+    And I type "d("
+    And I execute the action chain
+    Then I should see pattern "^    $"

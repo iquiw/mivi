@@ -598,3 +598,27 @@ Feature: Change
     """
     And the cursor should be at cell (1, 5)
     And the mivi state should be "insert"
+
+  Scenario: change previous sentence
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+    """
+    And I start an action chain
+    And I type "c("
+    And I execute the action chain
+    Then I should not see pattern "^foo bar\.$"
+    And the cursor should be at cell (4, 0)
+    And the mivi state should be "insert"
+
+    When I start an action chain
+    And I press "<escape>"
+    And I type "2c("
+    And I execute the action chain
+    Then the buffer should be empty
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
