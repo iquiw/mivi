@@ -514,31 +514,29 @@
 
 (defun mivi-previous-sentence (&optional arg)
   (interactive "p")
-  (skip-chars-backward mivi--blank-chars)
-  (cond
-   ((and (not (eobp))
-         (looking-at-p mivi--blankline-regexp))
-    (skip-chars-backward mivi--blanknl-chars)
-    (if (re-search-backward mivi--end-of-sentence-regexp nil t)
-        (progn
-          (when (looking-at-p "\\.")
-            (forward-char))
-          (skip-chars-forward mivi--blanknl-chars))
-      (goto-char (point-min))))
-   ((and (bolp) (not (bobp))
-         (save-excursion
-           (forward-line -1)
-           (looking-at-p mivi--blankline-regexp)))
-    (forward-line -1))
-   (t
-    (when (and (not (bobp)) (bolp))
-      (backward-char))
-    (if (re-search-backward mivi--end-of-sentence-regexp nil t)
-        (progn
-          (when (looking-at-p "\\.")
-            (forward-char))
-          (skip-chars-forward mivi--blanknl-chars))
-      (goto-char (point-min))))))
+  (dotimes (_ arg)
+    (skip-chars-backward mivi--blank-chars)
+    (let ((blank? (and (not (eobp))
+                       (looking-at-p mivi--blankline-regexp))))
+      (cond
+       ((and (bolp) (not (bobp))
+             (not blank?)
+             (save-excursion
+               (forward-line -1)
+               (looking-at-p mivi--blankline-regexp)))
+        (forward-line -1))
+       (t
+        (cond
+         (blank?
+          (skip-chars-backward mivi--blanknl-chars))
+         ((and (not (bobp)) (bolp))
+          (backward-char)))
+        (if (re-search-backward mivi--end-of-sentence-regexp nil t)
+            (progn
+              (when (looking-at-p "\\.")
+                (forward-char))
+              (skip-chars-forward mivi--blanknl-chars))
+          (goto-char (point-min))))))))
 
 (defun mivi-repeat-find (&optional arg)
   (interactive "p")

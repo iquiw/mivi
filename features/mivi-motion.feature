@@ -722,12 +722,7 @@ Feature: Motion
     Then the cursor should be at cell (5, 4)
 
     When I start an action chain
-    And I type "("
-    And I execute the action chain
-    Then the cursor should be at cell (4, 0)
-
-    When I start an action chain
-    And I type "("
+    And I type "2("
     And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
