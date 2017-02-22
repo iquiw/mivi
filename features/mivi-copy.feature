@@ -750,3 +750,40 @@ Feature: Copy
     """
     And the cursor should be at cell (1, 2)
     And the mivi state should be "command"
+
+  Scenario: copy next sentence
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I go to cell (1, 3)
+    And I start an action chain
+    And I type "y)"
+    And I execute the action chain
+    Then the current kill-ring should be:
+    """
+     bar baz
+    1234567890
+
+    """
+
+    When I go to cell (4, 0)
+    When I start an action chain
+    And I type "y4)"
+    And I execute the action chain
+    Then the current kill-ring should be:
+    """
+    foo bar.
+        baz qux quux. 123
+
+
+
+    """

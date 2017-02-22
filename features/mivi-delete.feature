@@ -620,3 +620,34 @@ Feature: Delete
     Then I should not see pattern "\(bar\|baz\)"
     And I should see "foo"
     And the cursor should be at cell (1, 3)
+
+  Scenario: delete next sentence
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I go to cell (1, 2)
+    And I start an action chain
+    And I type "d)"
+    And I execute the action chain
+    Then I should see:
+    """
+    fo
+    foo bar.
+    """
+
+    When I start an action chain
+    And I type "d2)"
+    And I execute the action chain
+    Then I should see:
+    """
+    fo123
+    """

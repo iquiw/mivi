@@ -560,3 +560,41 @@ Feature: Change
     """
     And the cursor should be at cell (2, 0)
     And the mivi state should be "insert"
+
+  Scenario: change next sentence
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I go to cell (1, 6)
+    And I start an action chain
+    And I type "c)"
+    And I execute the action chain
+    Then I should see:
+    """
+    foo ba
+    foo bar.
+    """
+    And the cursor should be at cell (1, 6)
+    And the mivi state should be "insert"
+
+    When I start an action chain
+    And I press "<escape>"
+    And I type "c3)"
+    And I execute the action chain
+    Then I should see:
+    """
+    foo b
+
+    4567890
+    """
+    And the cursor should be at cell (1, 5)
+    And the mivi state should be "insert"
