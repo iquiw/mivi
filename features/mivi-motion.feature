@@ -730,3 +730,18 @@ Feature: Motion
     And I type "("
     And I execute the action chain
     Then the cursor should be at cell (1, 0)
+
+  Scenario: next paragraph
+    When I go to beginning of buffer
+    And I type "}"
+    Then the cursor should be at cell (3, 0)
+
+    When I type "}"
+    Then the cursor should be at cell (6, 0)
+
+    When I type "}"
+    Then the cursor should be at cell (8, 7)
+
+    When I go to cell (2, 5)
+    When I type "2}"
+    Then the cursor should be at cell (6, 0)

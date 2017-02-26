@@ -111,6 +111,7 @@
     (define-key map "n" #'mivi-search-next)
     (define-key map "t" #'mivi-goto-char)
     (define-key map "w" #'mivi-forward-word)
+    (define-key map "}" #'mivi-next-paragraph)
     (define-key map (kbd "C-a") #'mivi-search-current-word)
     (define-key map (kbd "C-h") #'backward-char)
     (define-key map (kbd "C-m") #'mivi-next-line-at-bot)
@@ -491,12 +492,20 @@
   (forward-line arg)
   (back-to-indentation))
 
+(defun mivi-next-paragraph (&optional arg)
+  (interactive "p")
+  (catch 'break
+    (dotimes (_ arg)
+      (when (mivi--blankline-p 0)
+        (skip-chars-forward mivi--blanknl-chars))
+      (unless (re-search-forward mivi--blankline-regexp nil t)
+        (goto-char (point-max))
+        (throw 'break nil)))))
+
 (defun mivi-next-sentence (&optional arg)
   (interactive "p")
   (dotimes (_ arg)
-    (if (save-excursion
-          (forward-line 0)
-          (looking-at-p mivi--blankline-regexp))
+    (if (mivi--blankline-p 0)
         (when (re-search-forward mivi--non-blanknl-regexp nil t)
           (backward-char))
       (when (re-search-forward mivi--end-of-sentence-regexp nil t)
@@ -522,9 +531,7 @@
       (cond
        ((and (bolp) (not (bobp))
              (not blank?)
-             (save-excursion
-               (forward-line -1)
-               (looking-at-p mivi--blankline-regexp)))
+             (mivi--blankline-p -1))
         (forward-line -1))
        (t
         (cond
@@ -950,6 +957,11 @@
     (mivi--store-command)))
 
 ;; Internal functions
+(defun mivi--blankline-p (n)
+  (save-excursion
+    (forward-line n)
+    (looking-at-p mivi--blankline-regexp)))
+
 (defun mivi--copy-region (beg end)
   (kill-new (buffer-substring beg end)))
 
