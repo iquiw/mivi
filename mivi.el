@@ -508,8 +508,9 @@
     (if (mivi--blankline-p 0)
         (when (re-search-forward mivi--non-blanknl-regexp nil t)
           (backward-char))
-      (when (re-search-forward mivi--end-of-sentence-regexp nil t)
-        (goto-char (match-end 0))))))
+      (if (re-search-forward mivi--end-of-sentence-regexp nil t)
+          (goto-char (match-end 0))
+        (goto-char (point-max))))))
 
 (defun mivi-previous-line ()
   (interactive)
