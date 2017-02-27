@@ -750,3 +750,18 @@ Feature: Motion
     When I go to cell (2, 5)
     When I type "2}"
     Then the cursor should be at cell (6, 0)
+
+  Scenario previous paragraph
+    When I go to end of buffer
+    And I type "{"
+    Then the cursor should be at cell (7, 0)
+
+    When I type "{"
+    Then the cursor should be at cell (3, 0)
+
+    When I type "{"
+    Then the cursor should be at cell (1, 0)
+
+    When I go to end of buffer
+    When I type "3{"
+    Then the cursor should be at cell (1, 0)

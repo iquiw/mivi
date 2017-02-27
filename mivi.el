@@ -111,6 +111,7 @@
     (define-key map "n" #'mivi-search-next)
     (define-key map "t" #'mivi-goto-char)
     (define-key map "w" #'mivi-forward-word)
+    (define-key map "{" #'mivi-previous-paragraph)
     (define-key map "}" #'mivi-next-paragraph)
     (define-key map (kbd "C-a") #'mivi-search-current-word)
     (define-key map (kbd "C-h") #'backward-char)
@@ -522,6 +523,14 @@
   (interactive "p")
   (forward-line (- arg))
   (back-to-indentation))
+
+(defun mivi-previous-paragraph (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (when (mivi--blankline-p 0)
+      (skip-chars-backward mivi--blanknl-chars))
+    (unless (re-search-backward mivi--blankline-regexp nil t)
+      (goto-char (point-min)))))
 
 (defun mivi-previous-sentence (&optional arg)
   (interactive "p")
