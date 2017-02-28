@@ -622,3 +622,31 @@ Feature: Change
     Then the buffer should be empty
     And the cursor should be at cell (1, 0)
     And the mivi state should be "insert"
+
+  Scenario: change next paragraph
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I go to beginning of buffer
+    And I type "c}"
+    Then I should see:
+    """
+
+    foo bar.
+    """
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+
+    When I press "<escape>"
+    And I type "2c}"
+    Then the buffer should be empty
+    And the mivi state should be "insert"

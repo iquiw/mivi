@@ -671,3 +671,28 @@ Feature: Delete
     And I type "d("
     And I execute the action chain
     Then I should see pattern "^    $"
+
+  Scenario: delete next paragraph
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I go to beginning of buffer
+    And I type "d}"
+    Then I should see:
+    """
+
+    foo bar.
+    """
+
+    When I type "d2}"
+    Then the buffer should be empty
+

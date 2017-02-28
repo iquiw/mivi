@@ -776,7 +776,7 @@ Feature: Copy
     """
 
     When I go to cell (4, 0)
-    When I start an action chain
+    And I start an action chain
     And I type "y4)"
     And I execute the action chain
     Then the current kill-ring should be:
@@ -804,4 +804,26 @@ Feature: Copy
 
     foo bar.
         baz qux quux.
+    """
+
+  Scenario: copy next paragraph
+    And I go to beginning of buffer
+    And I type "y2}"
+    Then the current kill-ring should be:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+    """
+
+    When I go to cell (6, 0)
+    And I type "y}"
+    Then the current kill-ring should be:
+    """
+
+
+    4567890
     """
