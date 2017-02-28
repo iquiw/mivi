@@ -696,3 +696,26 @@ Feature: Delete
     When I type "d2}"
     Then the buffer should be empty
 
+  Scenario: delete previous paragraph
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    1234567890
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+    And I type "d{"
+    Then I should not see:
+    """
+
+    4567890
+    """
+
+    When I type "d2{"
+    Then the buffer should be empty
+

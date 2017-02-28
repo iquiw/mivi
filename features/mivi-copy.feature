@@ -807,7 +807,7 @@ Feature: Copy
     """
 
   Scenario: copy next paragraph
-    And I go to beginning of buffer
+    When I go to beginning of buffer
     And I type "y2}"
     Then the current kill-ring should be:
     """
@@ -826,4 +826,26 @@ Feature: Copy
 
 
     4567890
+    """
+
+  Scenario: copy previous paragraph
+    When I go to end of buffer
+    And I type "y2{"
+    Then the current kill-ring should be:
+    """
+
+    foo bar.
+        baz qux quux. 123
+
+
+    4567890
+    """
+
+    When I go to cell (3, 0)
+    And I type "y{"
+    Then the current kill-ring should be:
+    """
+    foo bar baz
+    1234567890
+
     """
