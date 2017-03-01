@@ -1062,7 +1062,7 @@
   (if mivi-local-mode
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
-        (setq mivi-command-state t))
+        (mivi--switch-state 'mivi-command-state))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
     (setq mivi-change-state nil
           mivi-command-state nil
