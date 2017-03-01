@@ -19,7 +19,7 @@
 (require 'ert)
 
 (Setup
- (mivi-mode 1))
+ (mivi-global-mode 1))
 
 (Before
  ;; Before each scenario is run

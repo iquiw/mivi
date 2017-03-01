@@ -25,10 +25,10 @@
   (lambda ()
     (define-key mivi-command-map (kbd "C-u") nil)))
 
-(When "^I turn off mivi-local-mode$"
-  "Turn off mivi-local-mode."
+(When "^I turn off mivi-mode$"
+  "Turn off mivi-mode."
   (lambda ()
-    (mivi-local-mode-off)))
+    (mivi-mode-off)))
 
 (Then "^the cursor should be at cell (\\([0-9]+\\), *\\([0-9]+\\))$"
   "Checks that the cursor is at a specific (LINE, COLUMN)."
@@ -112,9 +112,9 @@
   (lambda (string)
     (should (string= (current-kill 0) string))))
 
-(Then "mivi-local-mode should be \\(enabled\\|disabled\\)$"
-  "Checks that mivi-local-mode should be ENABLED or disabled."
+(Then "mivi-mode should be \\(enabled\\|disabled\\)$"
+  "Checks that mivi-mode should be ENABLED or disabled."
   (lambda (enabled)
     (if (string= "enabled" enabled)
-        (should (eq mivi-local-mode t))
-      (should (not (eq mivi-local-mode t))))))
+        (should (eq mivi-mode t))
+      (should (not (eq mivi-mode t))))))

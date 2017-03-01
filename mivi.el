@@ -1057,9 +1057,10 @@
    (cons 'mivi-delete-state mivi-delete-map)
    (cons 'mivi-insert-state mivi-insert-map)))
 
-(define-minor-mode mivi-local-mode "MiVi command"
+(define-minor-mode mivi-mode
+  "Toggle MiVi mode in the current buffer."
   :init-value nil
-  (if mivi-local-mode
+  (if mivi-mode
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
         (mivi--switch-state 'mivi-command-state))
@@ -1076,26 +1077,26 @@
 
 (defun mivi--post-command ()
   (unless (eq mivi--last-buffer (current-buffer))
-    (if mivi-local-mode
+    (if mivi-mode
         (set-frame-parameter nil 'cursor-type mivi--cursor-type)
       (set-frame-parameter nil 'cursor-type 'box))
     (setq mivi--last-buffer (current-buffer))))
 
-(defun mivi-local-mode-on ()
+(defun mivi-mode-on ()
   (when (and (not (minibufferp))
              (or (member major-mode mivi-enabled-major-modes)
                  (catch 'break
                    (dolist (mode mivi-enabled-derived-modes)
                      (when (derived-mode-p mode)
                        (throw 'break t))))))
-    (mivi-local-mode 1)))
+    (mivi-mode 1)))
 
-(defun mivi-local-mode-off ()
-  (mivi-local-mode -1))
+(defun mivi-mode-off ()
+  (mivi-mode -1))
 
-(defvar mivi-mode nil)
+(defvar mivi-global-mode nil)
 
-(defun mivi-mode-set (state)
+(defun mivi-global-mode-set (state)
   (if state
       (progn
         (setq emulation-mode-map-alists
@@ -1104,10 +1105,10 @@
     (setq emulation-mode-map-alists
           (delete 'mivi-mode-map-alist emulation-mode-map-alists))
     (remove-hook 'post-command-hook #'mivi--post-command))
-  (setq mivi-mode state))
+  (setq mivi-global-mode state))
 
-(define-globalized-minor-mode mivi-mode mivi-local-mode mivi-local-mode-on
-  :variable (mivi-mode . mivi-mode-set))
+(define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on
+  :variable (mivi-global-mode . mivi-global-mode-set))
 
 (when mivi-override-universal-argument-map
   (define-key universal-argument-map (kbd "C-u") nil))
