@@ -1065,11 +1065,12 @@
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
         (mivi--switch-state 'mivi-command-state))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
-    (setq mivi-change-state nil
-          mivi-command-state nil
-          mivi-copy-state nil
-          mivi-delete-state nil
-          mivi-insert-state nil)))
+    (mapcar #'kill-local-variable
+            '(mivi-change-state
+              mivi-command-state
+              mivi-copy-state
+              mivi-delete-state
+              mivi-insert-state))))
 
 (defun mivi--after-change-function (_beg _end _len)
   (unless undo-in-progress
