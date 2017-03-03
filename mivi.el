@@ -31,7 +31,6 @@
 (defvar mivi--current-find-char nil)
 (defvar mivi--current-replace-char nil)
 (defvar mivi--current-search-string nil)
-(defvar mivi--last-buffer nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
 (defvar mivi--last-replace-char nil)
@@ -46,7 +45,6 @@
 (defvar-local mivi-delete-state nil)
 (defvar-local mivi-insert-state nil)
 
-(defvar-local mivi--cursor-type 'box)
 (defvar-local mivi--undo-direction 'redo)
 
 (defvar-local mivi--insert-beginning nil)
@@ -975,6 +973,12 @@
 (defun mivi--copy-region (beg end)
   (kill-new (buffer-substring beg end)))
 
+(defun mivi--current-state ()
+  (catch 'result
+    (dolist (s mivi--states)
+      (when (symbol-value s)
+        (throw 'result s)))))
+
 (defun mivi--find-internal (ch till? count)
   (let ((case-fold-search nil)
         (sign (if (> count 0) 1 -1))
@@ -1030,14 +1034,16 @@
     (setq mivi--last-command plist)))
 
 (defun mivi--switch-state (state)
-  (cond
-   ((eq state 'mivi-replace-state)
-    (setq mivi--cursor-type '(hbar . 7))
-    (setq state 'mivi-insert-state))
-   ((eq state 'mivi-insert-state)
-    (setq mivi--cursor-type 'bar))
-   (t
-    (setq mivi--cursor-type 'box)))
+  (let (new-cursor-type)
+    (cond
+     ((eq state 'mivi-replace-state)
+      (setq new-cursor-type '(hbar . 7))
+      (setq state 'mivi-insert-state))
+     ((eq state 'mivi-insert-state)
+      (setq new-cursor-type 'bar))
+     (t
+      (setq new-cursor-type (default-value 'cursor-type))))
+    (setq cursor-type new-cursor-type))
 
   (when (memq state '(mivi-insert-state mivi-change-state))
     (setq mivi--insert-beginning (point))
@@ -1045,7 +1051,6 @@
         (set-marker mivi--insert-end nil)
       (set-marker mivi--insert-end (1+ (point)))))
 
-  (set-frame-parameter nil 'cursor-type mivi--cursor-type)
   (dolist (s mivi--states)
     (set s (eq s state))))
 
@@ -1063,8 +1068,10 @@
   (if mivi-mode
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
-        (mivi--switch-state 'mivi-command-state))
+        (unless (mivi--current-state)
+          (mivi--switch-state 'mivi-command-state)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
+    (setq cursor-type (default-value 'cursor-type))
     (mapcar #'kill-local-variable
             '(mivi-change-state
               mivi-command-state
@@ -1076,15 +1083,9 @@
   (unless undo-in-progress
     (setq mivi--undo-direction 'redo)))
 
-(defun mivi--post-command ()
-  (unless (eq mivi--last-buffer (current-buffer))
-    (if mivi-mode
-        (set-frame-parameter nil 'cursor-type mivi--cursor-type)
-      (set-frame-parameter nil 'cursor-type 'box))
-    (setq mivi--last-buffer (current-buffer))))
-
 (defun mivi-mode-on ()
   (when (and (not (minibufferp))
+             (not (eq (aref (buffer-name) 0) ?\s))
              (or (member major-mode mivi-enabled-major-modes)
                  (catch 'break
                    (dolist (mode mivi-enabled-derived-modes)
@@ -1101,11 +1102,9 @@
   (if state
       (progn
         (setq emulation-mode-map-alists
-              (cons mivi-mode-map-alist emulation-mode-map-alists))
-        (add-hook 'post-command-hook #'mivi--post-command))
+              (cons mivi-mode-map-alist emulation-mode-map-alists)))
     (setq emulation-mode-map-alists
-          (delete 'mivi-mode-map-alist emulation-mode-map-alists))
-    (remove-hook 'post-command-hook #'mivi--post-command))
+          (delete 'mivi-mode-map-alist emulation-mode-map-alists)))
   (setq mivi-global-mode state))
 
 (define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on
