@@ -1072,12 +1072,12 @@
           (mivi--switch-state 'mivi-command-state)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
     (setq cursor-type (default-value 'cursor-type))
-    (mapcar #'kill-local-variable
-            '(mivi-change-state
-              mivi-command-state
-              mivi-copy-state
-              mivi-delete-state
-              mivi-insert-state))))
+    (mapc #'kill-local-variable
+          '(mivi-change-state
+            mivi-command-state
+            mivi-copy-state
+            mivi-delete-state
+            mivi-insert-state))))
 
 (defun mivi--after-change-function (_beg _end _len)
   (unless undo-in-progress
