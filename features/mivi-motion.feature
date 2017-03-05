@@ -765,3 +765,26 @@ Feature: Motion
     When I go to end of buffer
     When I type "3{"
     Then the cursor should be at cell (1, 0)
+
+  Scenario: goto mark
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to cell (2, 3)
+    And I type "ma"
+    And I go to beginning of buffer
+    And I type "`a"
+    Then the cursor should be at cell (2, 3)
+
+    And I go to cell (3, 1)
+    And I type "m&"
+    And I go to end of buffer
+    And I type "`&"
+    Then the cursor should be at cell (3, 1)
+
+    And I type "`8"
+    Then the cursor should be at cell (3, 1)

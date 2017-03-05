@@ -50,6 +50,8 @@
 (defvar-local mivi--insert-beginning nil)
 (defvar-local mivi--insert-end (make-marker))
 
+(defvar-local mivi--mark-slots (make-hash-table :test 'eq))
+
 (defconst mivi--blank-chars "[:blank:]\r")
 (defconst mivi--blanknl-chars (concat mivi--blank-chars "\n"))
 (defconst mivi--non-blank-chars (concat "^" mivi--blank-chars))
@@ -99,6 +101,7 @@
     (define-key map "T" #'mivi-goto-char-backward)
     (define-key map "W" #'mivi-forward-Word)
     (define-key map "^" #'back-to-indentation)
+    (define-key map "`" #'mivi-goto-mark)
     (define-key map "b" #'mivi-backward-word)
     (define-key map "e" #'mivi-end-of-word)
     (define-key map "f" #'mivi-find)
@@ -134,6 +137,7 @@
     (define-key map "c" #'mivi-change)
     (define-key map "d" #'mivi-delete)
     (define-key map "i" #'mivi-insert)
+    (define-key map "m" #'mivi-mark)
     (define-key map "o" #'mivi-open)
     (define-key map "p" #'mivi-paste)
     (define-key map "r" #'mivi-replace-char)
@@ -464,6 +468,12 @@
       (goto-char (point-max))
       (forward-line n)))
   (back-to-indentation))
+
+(defun mivi-goto-mark (ch)
+  (interactive "c")
+  (let ((p (gethash ch mivi--mark-slots)))
+    (when p
+      (goto-char p))))
 
 (defun mivi-goto-pair ()
   (interactive)
@@ -856,6 +866,10 @@
   (interactive "p")
   (mivi--store-command)
   (kill-backward-chars arg))
+
+(defun mivi-mark (ch)
+  (interactive "c")
+  (puthash ch (point) mivi--mark-slots))
 
 (defun mivi-repeat (&optional arg)
   (interactive "P")
