@@ -1110,43 +1110,48 @@
 (define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on
   :variable (mivi-global-mode . mivi-global-mode-set))
 
-(when mivi-override-universal-argument-map
-  (define-key universal-argument-map (kbd "C-u") nil))
+(defun mivi-setup ()
+  "Setup mivi initial configurations and enable `mivi-global-mode'."
 
-(with-eval-after-load 'eldoc
-  (eldoc-add-command
-   "mivi-Backward-word"
-   "mivi-End-of-word"
-   "mivi-Find"
-   "mivi-backward-word"
-   "mivi-end-of-word"
-   "mivi-find"
-   "mivi-forward-Word"
-   "mivi-forward-word"
-   "mivi-goto-char"
-   "mivi-goto-char-backward"
-   "mivi-goto-line"
-   "mivi-goto-pair"
-   "mivi-next-line-at-bot"
-   "mivi-next-paragraph"
-   "mivi-next-sentence"
-   "mivi-previous-line-at-bot"
-   "mivi-previous-paragraph"
-   "mivi-previous-sentence"
-   "mivi-repeat-find"
-   "mivi-repeat-find-opposite"
-   "mivi-scroll-down"
-   "mivi-scroll-screen-down"
-   "mivi-scroll-screen-up"
-   "mivi-scroll-up"
-   "mivi-search"
-   "mivi-search-Next"
-   "mivi-search-backward"
-   "mivi-search-current-word"
-   "mivi-search-next"
-   "mivi-window-bottom"
-   "mivi-window-middle"
-   "mivi-window-top"))
+  (when mivi-override-universal-argument-map
+    (define-key universal-argument-map (kbd "C-u") nil))
+
+  (with-eval-after-load 'eldoc
+    (eldoc-add-command
+     "mivi-Backward-word"
+     "mivi-End-of-word"
+     "mivi-Find"
+     "mivi-backward-word"
+     "mivi-end-of-word"
+     "mivi-find"
+     "mivi-forward-Word"
+     "mivi-forward-word"
+     "mivi-goto-char"
+     "mivi-goto-char-backward"
+     "mivi-goto-line"
+     "mivi-goto-pair"
+     "mivi-next-line-at-bot"
+     "mivi-next-paragraph"
+     "mivi-next-sentence"
+     "mivi-previous-line-at-bot"
+     "mivi-previous-paragraph"
+     "mivi-previous-sentence"
+     "mivi-repeat-find"
+     "mivi-repeat-find-opposite"
+     "mivi-scroll-down"
+     "mivi-scroll-screen-down"
+     "mivi-scroll-screen-up"
+     "mivi-scroll-up"
+     "mivi-search"
+     "mivi-search-Next"
+     "mivi-search-backward"
+     "mivi-search-current-word"
+     "mivi-search-next"
+     "mivi-window-bottom"
+     "mivi-window-middle"
+     "mivi-window-top"))
+
+  (mivi-global-mode 1))
 
 (provide 'mivi)
 ;;; mivi.el ends here
