@@ -849,3 +849,29 @@ Feature: Copy
     1234567890
 
     """
+
+  Scenario: copy goto mark
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to cell (2, 4)
+    And I type "mA"
+    And I go to beginning of buffer
+    And I type "y`A"
+    Then the current kill-ring should be:
+    """
+    foo
+      ba
+    """
+
+    When I go to end of buffer
+    And I type "y`A"
+    Then the current kill-ring should be:
+    """
+    r
+        baz
+    """

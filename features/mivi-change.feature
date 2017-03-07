@@ -677,3 +677,26 @@ Feature: Change
     And I type "2c{"
     Then the buffer should be empty
     And the mivi state should be "insert"
+
+  Scenario: change goto mark
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to cell (2, 3)
+    And I type "m`"
+    And I go to beginning of buffer
+    And I type "c``"
+    Then I should see pattern "^ar$"
+    And the mivi state should be "insert"
+
+    When I press "<escape>"
+    And I go to cell (2, 1)
+    And I type "mT"
+    And I go to end of buffer
+    And I type "c`T"
+    Then I should see pattern "^ $"
+    And the mivi state should be "insert"

@@ -739,3 +739,22 @@ Feature: Delete
     When I type "d2{"
     Then the buffer should be empty
 
+  Scenario: delete goto mark
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to cell (2, 2)
+    And I type "ma"
+    And I go to beginning of buffer
+    And I type "d`a"
+    Then I should see pattern "^bar$"
+
+    When I go to cell (1, 2)
+    And I type "m9"
+    And I go to end of buffer
+    And I type "d`9"
+    Then I should see pattern "^ba$"
