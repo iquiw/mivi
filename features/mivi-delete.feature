@@ -263,6 +263,16 @@ Feature: Delete
     When I type "4dw"
     Then I should see pattern "^\.456$"
 
+    Given the buffer is empty
+    When I insert:
+    """
+
+       foo
+    """
+    And I go to beginning of buffer
+    And I type "dw"
+    Then I should see pattern "^foo$"
+
   Scenario: delete forward Word
     Given the buffer is empty
     When I insert:
@@ -280,6 +290,16 @@ Feature: Delete
     And I should see pattern "^$"
     When I type "4dW"
     Then the buffer should be empty
+
+    Given the buffer is empty
+    When I insert:
+    """
+
+       foo
+    """
+    And I go to beginning of buffer
+    And I type "dW"
+    Then I should see pattern "^foo$"
 
   Scenario: delete end of line
     Given the buffer is empty

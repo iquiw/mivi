@@ -421,30 +421,34 @@
 (defun mivi-forward-word (&optional arg)
   (interactive "p")
   (dotimes (i arg)
-    (cond
-     ((looking-at-p mivi--wordchar-regexp)
-      (skip-chars-forward mivi--word-chars))
-     ((not (looking-at-p mivi--blanknl-regexp))
-      (skip-chars-forward mivi--non-blanknlword-chars)))
-    (cond
-     ((and mivi--stop-at-eol
-           (= i (1- arg)))
-      (skip-chars-forward mivi--blank-chars))
-     ((not (and mivi--stop-at-space
-                (= i (1- arg))))
-      (skip-chars-forward mivi--blanknl-chars)))))
+    (let ((skipped t))
+      (cond
+       ((looking-at-p mivi--wordchar-regexp)
+        (skip-chars-forward mivi--word-chars))
+       ((not (looking-at-p mivi--blanknl-regexp))
+        (skip-chars-forward mivi--non-blanknlword-chars))
+       (t (setq skipped nil)))
+      (cond
+       ((and mivi--stop-at-eol
+             (= i (1- arg))
+             skipped)
+        (skip-chars-forward mivi--blank-chars))
+       ((not (and mivi--stop-at-space
+                  (= i (1- arg))))
+        (skip-chars-forward mivi--blanknl-chars))))))
 
 (defun mivi-forward-Word (&optional arg)
   (interactive "p")
   (dotimes (i arg)
-    (skip-chars-forward mivi--non-blanknl-chars)
-    (cond
-     ((and mivi--stop-at-eol
-           (= i (1- arg)))
-      (skip-chars-forward mivi--blank-chars))
-     ((not (and mivi--stop-at-space
-                (= i (1- arg))))
-      (skip-chars-forward mivi--blanknl-chars)))))
+    (let ((skipped (> (skip-chars-forward mivi--non-blanknl-chars) 0)))
+      (cond
+       ((and mivi--stop-at-eol
+             (= i (1- arg))
+             skipped)
+        (skip-chars-forward mivi--blank-chars))
+       ((not (and mivi--stop-at-space
+                  (= i (1- arg))))
+        (skip-chars-forward mivi--blanknl-chars))))))
 
 (defun mivi-goto-char (&optional arg)
   (interactive "p")
