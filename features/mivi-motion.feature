@@ -788,3 +788,26 @@ Feature: Motion
 
     And I type "`8"
     Then the cursor should be at cell (3, 1)
+
+  Scenario: goto mark line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+    """
+    And I go to cell (2, 3)
+    And I type "ma"
+    And I go to beginning of buffer
+    And I type "'a"
+    Then the cursor should be at cell (2, 2)
+
+    And I go to cell (3, 1)
+    And I type "m&"
+    And I go to end of buffer
+    And I type "'&"
+    Then the cursor should be at cell (3, 4)
+
+    And I type "'8"
+    Then the cursor should be at cell (3, 4)

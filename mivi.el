@@ -81,6 +81,7 @@
     (suppress-keymap map)
     (define-key map "$" #'end-of-line)
     (define-key map "%" #'mivi-goto-pair)
+    (define-key map "'" #'mivi-goto-mark-line)
     (define-key map "(" #'mivi-previous-sentence)
     (define-key map ")" #'mivi-next-sentence)
     (define-key map "+" #'mivi-next-line-at-bot)
@@ -478,6 +479,11 @@
   (let ((p (gethash ch mivi--mark-slots)))
     (when p
       (goto-char p))))
+
+(defun mivi-goto-mark-line ()
+  (interactive)
+  (call-interactively #'mivi-goto-mark)
+  (back-to-indentation))
 
 (defun mivi-goto-pair ()
   (interactive)
