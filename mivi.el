@@ -47,7 +47,7 @@
 
 (defvar-local mivi--undo-direction 'redo)
 
-(defvar-local mivi--insert-beginning nil)
+(defvar-local mivi--insert-beginning (make-marker))
 (defvar-local mivi--insert-end (make-marker))
 
 (defvar-local mivi--mark-slots (make-hash-table :test 'eq))
@@ -820,7 +820,7 @@
 
 (defun mivi-command ()
   (interactive)
-  (when (and mivi--insert-beginning
+  (when (and (marker-position mivi--insert-beginning)
              (<= mivi--insert-beginning (point)))
     (if (marker-position mivi--insert-end)
         (let ((end (if (and (or (eq (plist-get mivi--last-command :command)
@@ -836,7 +836,7 @@
       (setq mivi--last-command
             (plist-put mivi--last-command :content
                        (buffer-substring mivi--insert-beginning (point-max))))))
-  (setq mivi--insert-beginning nil)
+  (set-marker mivi--insert-beginning nil)
   (set-marker mivi--insert-end nil)
 
   (cond
@@ -1071,7 +1071,7 @@
     (setq cursor-type new-cursor-type))
 
   (when (memq state '(mivi-insert-state mivi-change-state))
-    (setq mivi--insert-beginning (point))
+    (set-marker mivi--insert-beginning (point))
     (if (eobp)
         (set-marker mivi--insert-end nil)
       (set-marker mivi--insert-end (1+ (point)))))

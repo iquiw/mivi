@@ -74,6 +74,20 @@ Feature: Undo
     When I type "."
     Then I should see "foo121233"
 
+  Scenario: repeat insert after delete backward
+    Given the buffer is empty
+    When I insert "foobar"
+    And I go to cell (1, 3)
+    And I type "i"
+    And I press "<backspace>"
+    And I press "<backspace>"
+    And I press "<backspace>"
+    And I insert "123"
+    And I press "<escape>"
+    Then I should see "123bar"
+    When I type "."
+    Then I should see "121233bar"
+
   Scenario: repeat Insert
     Given the buffer is empty
     When I insert:
