@@ -60,6 +60,20 @@ Feature: Undo
     When I type "."
     Then I should see "(foo(foo))"
 
+  Scenario: repeat insert after delete
+    Given the buffer is empty
+    When I insert "foobar"
+    And I go to cell (1, 3)
+    And I type "i"
+    And I press "C-d"
+    And I press "C-d"
+    And I press "C-d"
+    And I insert "123"
+    And I press "<escape>"
+    Then I should see "foo123"
+    When I type "."
+    Then I should see "foo121233"
+
   Scenario: repeat Insert
     Given the buffer is empty
     When I insert:

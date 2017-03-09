@@ -823,12 +823,13 @@
   (when (and mivi--insert-beginning
              (<= mivi--insert-beginning (point)))
     (if (marker-position mivi--insert-end)
-        (let ((end (if (and (eq (plist-get mivi--last-command :command)
-                                'mivi-Replace)
+        (let ((end (if (and (or (eq (plist-get mivi--last-command :command)
+                                    'mivi-Replace)
+                                (= mivi--insert-end mivi--insert-beginning))
                             (< mivi--insert-end (point)))
                        (point)
                      (1- mivi--insert-end))))
-          (when (< mivi--insert-beginning mivi--insert-end)
+          (when (< mivi--insert-beginning end)
             (setq mivi--last-command
                   (plist-put mivi--last-command :content
                              (buffer-substring mivi--insert-beginning end)))))
