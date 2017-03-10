@@ -196,7 +196,7 @@
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))
 (defconst mivi--motion-line-keys
-  '(("G" . nil) ("H" . nil) ("L" . nil) ("M" . nil) ("j" . t) ("k" . t)))
+  '(("'" . nil) ("G" . nil) ("H" . nil) ("L" . nil) ("M" . nil) ("j" . t) ("k" . t)))
 
 (defconst mivi-change-map
   (let ((map (make-sparse-keymap)))
@@ -230,7 +230,7 @@
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc)))
         (mivi--derive-key change map 'mivi-insert-state key
-                          ((beg (progn (forward-line 0) (point))))
+                          ((beg (save-excursion (forward-line 0) (point))))
           (forward-line 0)
           (let* ((p (point))
                  (pmin (min beg p))
@@ -480,10 +480,12 @@
     (when p
       (goto-char p))))
 
-(defun mivi-goto-mark-line ()
-  (interactive)
-  (call-interactively #'mivi-goto-mark)
-  (back-to-indentation))
+(defun mivi-goto-mark-line (ch)
+  (interactive "c")
+  (let ((p (gethash ch mivi--mark-slots)))
+    (when p
+      (goto-char p)
+      (back-to-indentation))))
 
 (defun mivi-goto-pair ()
   (interactive)

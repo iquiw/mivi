@@ -875,3 +875,34 @@ Feature: Copy
     r
         baz
     """
+
+  Scenario: copy goto mark line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+          123
+            456
+    """
+    And I go to cell (2, 4)
+    And I type "mA"
+    And I go to beginning of buffer
+    And I type "y'A"
+    Then the current kill-ring should be:
+    """
+    foo
+      bar
+
+    """
+
+    When I go to end of buffer
+    And I type "c'A"
+    Then the current kill-ring should be:
+    """
+      bar
+        baz
+          123
+            456
+    """

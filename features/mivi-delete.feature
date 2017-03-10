@@ -758,3 +758,28 @@ Feature: Delete
     And I go to end of buffer
     And I type "d`9"
     Then I should see pattern "^ba$"
+
+  Scenario: delete goto mark line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+          123
+            456
+    """
+    And I go to cell (2, 2)
+    And I type "ma"
+    And I go to beginning of buffer
+    And I type "d'a"
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see pattern "^    baz$"
+    And the cursor should be at cell (1, 4)
+
+    When I type "m9"
+    And I go to word "123"
+    And I type "d'9"
+    Then I should not see pattern "\(baz\|123\)"
+    And I should see pattern "^        456$"
+    And the cursor should be at cell (1, 8)

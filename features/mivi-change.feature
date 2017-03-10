@@ -700,3 +700,32 @@ Feature: Change
     And I type "c`T"
     Then I should see pattern "^ $"
     And the mivi state should be "insert"
+
+  Scenario: change goto mark line
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+        baz
+          123
+            456
+    """
+    And I go to cell (2, 3)
+    And I type "m'"
+    And I go to beginning of buffer
+    And I type "c''"
+    Then I should not see pattern "\(foo\|bar\)"
+    And I should see pattern "^    baz$"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
+
+    When I press "<escape>"
+    And I go to word "123"
+    And I type "m9"
+    And I go to end of buffer
+    And I type "c'9"
+    Then I should not see pattern "\(123\|456\)"
+    And I should see pattern "^    baz$"
+    And the cursor should be at cell (3, 0)
+    And the mivi state should be "insert"
