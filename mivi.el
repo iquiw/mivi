@@ -1157,6 +1157,7 @@
      "mivi-goto-char-backward"
      "mivi-goto-line"
      "mivi-goto-mark"
+     "mivi-goto-mark-line"
      "mivi-goto-pair"
      "mivi-next-line-at-bot"
      "mivi-next-paragraph"
