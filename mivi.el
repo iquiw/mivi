@@ -161,7 +161,6 @@
 (defconst mivi-insert-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-d") #'mivi-backward-indent)
-    (define-key map (kbd "C-h") #'delete-backward-char)
     (define-key map (kbd "C-v") #'quoted-insert)
     (define-key map (kbd "C-w") #'backward-kill-word)
     (define-key map [escape] #'mivi-command)

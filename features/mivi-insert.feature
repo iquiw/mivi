@@ -184,16 +184,6 @@ Feature Insert
     And I press "C-d"
     Then I should see pattern "^defun oo"
 
-  Scenario: C-h
-    Given the buffer is empty
-    When I insert:
-    """
-    foo bar-baz
-    """
-    And I type "i"
-    And I press "C-h"
-    Then I should see pattern "-ba$"
-
   Scenario C-v
     Given the buffer is empty
     When I start an action chain
