@@ -25,11 +25,6 @@
   (lambda ()
     (define-key mivi-command-map (kbd "C-u") nil)))
 
-(When "^I turn off mivi-mode$"
-  "Turn off mivi-mode."
-  (lambda ()
-    (mivi-mode-off)))
-
 (Then "^the cursor should be at cell (\\([0-9]+\\), *\\([0-9]+\\))$"
   "Checks that the cursor is at a specific (LINE, COLUMN)."
   (lambda (line column)

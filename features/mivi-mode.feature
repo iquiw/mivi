@@ -41,5 +41,7 @@ Scenario: Disable in help-mode
 
 Scenario: Disable by turn-off
   Given the buffer is empty
-  When I turn off mivi-mode
+  When I disable C-u binding
+  And I turn off minor mode mivi-mode
+  Then mivi-mode should be disabled
   Then mivi-mode should be disabled
