@@ -44,4 +44,14 @@ Scenario: Disable by turn-off
   When I disable C-u binding
   And I turn off minor mode mivi-mode
   Then mivi-mode should be disabled
+
+Scenario: Global mivi mode off and on
+  Given the buffer is empty
+  When I disable C-u binding
+  And I turn off minor mode mivi-global-mode
+  And I turn on prog-mode
   Then mivi-mode should be disabled
+
+  When I turn on mivi-global-mode
+  And I turn on fundamental-mode
+  Then mivi-mode should be enabled
