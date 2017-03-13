@@ -166,6 +166,12 @@
     (define-key map [escape] #'mivi-command)
     map))
 
+(defconst mivi--non-repeatable-commands
+  '(mivi-change-goto-mark
+    mivi-change-goto-mark-line
+    mivi-delete-goto-mark
+    mivi-delete-goto-mark-line))
+
 (defmacro mivi--derive-key (name map new-state key pre-bindings &rest edit-body)
   (declare (debug (form form form form form form body))
            (indent 5))
@@ -195,7 +201,8 @@
 (defconst mivi--motion-1-keys '("," ";" "E" "e" "f" "t"))
 (defconst mivi--motion-2-keys '("%"))
 (defconst mivi--motion-line-keys
-  '(("'" . nil) ("G" . nil) ("H" . nil) ("L" . nil) ("M" . nil) ("j" . t) ("k" . t)))
+  '(("'" . nil) ("G" . nil) ("H" . nil) ("L" . nil) ("M" . nil)
+    ("j" . t) ("k" . t)))
 
 (defconst mivi-change-map
   (let ((map (make-sparse-keymap)))
@@ -899,6 +906,8 @@
           (content (plist-get mivi--last-command :content))
           (prefix (plist-get mivi--last-command :prefix)))
       (cond
+       ((memq command mivi--non-repeatable-commands)
+        nil)
        ((eq category 'insert)
         (let ((count (mivi--numeric-or-default arg (or prefix 1)))
               (m (make-marker)))

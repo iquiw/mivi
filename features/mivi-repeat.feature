@@ -622,3 +622,86 @@ Feature: Undo
     hello
     5 quux
     """
+
+  Scenario: not repeat delete goto mark
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+    2
+    3
+    4
+    """
+    And I type "ma"
+    And I go to line "3"
+    And I type "d`a"
+    And I go to beginning of buffer
+    And I type "."
+    Then I should see:
+    """
+    1
+    2
+    """
+
+  Scenario: not repeat delete goto mark line
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+    2
+    3
+    4
+    """
+    And I type "mb"
+    And I go to line "3"
+    And I type "d'b"
+    And I go to beginning of buffer
+    And I type "."
+    Then I should see:
+    """
+    1
+    2
+    """
+
+  Scenario: not repeat change goto mark
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+    2
+    3
+    4
+    """
+    And I type "ma"
+    And I go to line "3"
+    And I type "c`afoo"
+    And I press "<escape>"
+    And I go to beginning of buffer
+    And I type "."
+    Then I should see:
+    """
+    1
+    2
+    foo
+    """
+
+  Scenario: not repeat change goto mark line
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+    2
+    3
+    4
+    """
+    And I type "mb"
+    And I go to line "3"
+    And I type "c'bbar"
+    And I go to beginning of buffer
+    And I type "."
+    Then I should see:
+    """
+    1
+    2
+    bar
+    """
