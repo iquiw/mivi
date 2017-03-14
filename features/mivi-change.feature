@@ -331,10 +331,8 @@ Feature: Change
     Given the buffer is empty
     When I insert:
     """
-    foo bar
-    baz
-      baz bar
-      foo
+    foo bar baz
+      baz bar foo
     """
     And I go to beginning of buffer
     And I type "fb"

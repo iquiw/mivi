@@ -1017,10 +1017,11 @@
 (defun mivi--find-internal (ch till? count)
   (let ((case-fold-search nil)
         (sign (if (> count 0) 1 -1))
-        (move? (and (> count 0) (not (eobp)))))
+        (move? (and (> count 0) (not (eobp))))
+        (limit (if (> count 0) (line-end-position) (line-beginning-position))))
     (when move?
       (forward-char sign))
-    (when (search-forward (char-to-string ch) nil t count)
+    (when (search-forward (char-to-string ch) limit t count)
       (when till?
         (forward-char (- sign))))
     (when move?

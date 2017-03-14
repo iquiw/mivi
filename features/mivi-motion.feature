@@ -165,10 +165,14 @@ Feature: Motion
     And I type "fh"
     Then the cursor should be at cell (1, 9)
     When I type "f2"
+    Then the cursor should be at cell (1, 9)
+    When I go to line "3"
+    And I type "f2"
     Then the cursor should be at cell (3, 2)
     When I type "2f "
     Then the cursor should be at cell (3, 7)
-    When I type "fofo"
+    When I go to line "4"
+    And I type "fofo"
     Then the cursor should be at cell (4, 2)
     When I type "fA"
     Then the cursor should be at cell (4, 2)
@@ -180,6 +184,9 @@ Feature: Motion
     When I go to end of buffer
     And I type "Fr"
     Then the cursor should be at cell (4, 6)
+    When I type "Fi"
+    Then the cursor should be at cell (4, 6)
+    When I go to cell (1, 11)
     When I type "Fi"
     Then the cursor should be at cell (1, 10)
     When I go to end of buffer
@@ -197,34 +204,38 @@ Feature: Motion
     And I type "f "
     And I type ";"
     Then the cursor should be at cell (1, 7)
+    When I go to beginning of buffer
     And I type "2;"
-    Then the cursor should be at cell (3, 7)
+    Then the cursor should be at cell (1, 7)
     When I type "F!"
     And I go to end of buffer
     And I type "2;"
     Then the cursor should be at cell (4, 3)
 
   Scenario: repeat find opposite
-    When I go to beginning of buffer
-    And I type "4f "
+    When I go to line "3"
+    And I type "2f "
     And I type ","
     Then the cursor should be at cell (3, 3)
+    When I go to cell (1, 11)
     And I type "2,"
     Then the cursor should be at cell (1, 3)
     When I go to end of buffer
-    When I type "3Fa"
-    And I type "2,"
+    And I type "2Fa"
+    And I type ","
     Then the cursor should be at cell (4, 9)
 
   Scenario: goto char
-    And I go to beginning of buffer
+    When I go to beginning of buffer
     And I type "th"
     Then the cursor should be at cell (1, 8)
-    When I type "t2"
+    When I go to line "3"
+    And I type "t2"
     Then the cursor should be at cell (3, 1)
     When I type "2t "
     Then the cursor should be at cell (3, 6)
-    When I type "toto"
+    When I go to line "4"
+    And I type "toto"
     Then the cursor should be at cell (4, 0)
     When I type "t@"
     Then the cursor should be at cell (4, 0)
@@ -236,7 +247,8 @@ Feature: Motion
     When I go to end of buffer
     And I type "Tr"
     Then the cursor should be at cell (4, 7)
-    When I type "Ti"
+    When I go to cell (1, 11)
+    And I type "Ti"
     Then the cursor should be at cell (1, 11)
     When I go to end of buffer
     And I type "TaTa"
@@ -262,14 +274,15 @@ Feature: Motion
     Then the cursor should be at cell (4, 4)
 
   Scenario: repeat goto char opposite
-    When I go to beginning of buffer
-    And I type "4t "
+    When I go to line "3"
+    And I type "2t "
     And I type ","
     Then the cursor should be at cell (3, 4)
+    When I go to cell (1, 11)
     And I type "2,"
-    Then the cursor should be at cell (1, 8)
-    When I go to end of buffer
-    When I type "3Ta"
+    Then the cursor should be at cell (1, 4)
+    When I type "Ta"
+    And I go to line "4"
     And I type "2,"
     Then the cursor should be at cell (4, 8)
 

@@ -73,8 +73,9 @@ Feature: Delete
     Then I should see pattern "^baz "
     When I type "3dfu"
     Then I should see pattern "^x$"
-    When I type "d2f1"
-    Then the buffer should be empty
+    When I go to line "2"
+    And I type "d2f1"
+    Then I should see pattern "^$"
 
   Scenario: delete Find
     Given the buffer is empty
@@ -85,6 +86,7 @@ Feature: Delete
     """
     And I type "d2F3"
     Then I should see pattern "^   12$"
+    When I go to cell (1, 20)
     When I type "2dF-"
     Then I should see pattern " bar$"
     When I type "dFr"
@@ -102,7 +104,8 @@ Feature: Delete
     Then I should see pattern "^-baz "
     When I type "3dtu"
     Then I should see pattern "^ux$"
-    When I type "d2t1"
+    When I go to line "2"
+    And I type "d2t1"
     Then I should see pattern "^1$"
 
   Scenario: delete goto char backward
@@ -114,7 +117,8 @@ Feature: Delete
     """
     And I type "d2T3"
     Then I should see pattern "^   123$"
-    When I type "2dT-"
+    When I go to cell (1, 20)
+    And I type "2dT-"
     Then I should see pattern " bar-$"
     When I type "dTr"
     Then I should see pattern " bar$"
@@ -408,8 +412,7 @@ Feature: Delete
     Given the buffer is empty
     When I insert:
     """
-    foo bar
-    baz
+    foo bar baz
       baz bar
       foo
     """
@@ -417,33 +420,32 @@ Feature: Delete
     And I type "fb"
     And I type "d;"
     Then I should see pattern "^foo az$"
-    When I type "d2;"
-    Then I should see pattern "^foo ar$"
-    When I go to end of buffer
-    And I type "Fo"
-    And I type "3d;"
-    Then I should see pattern "^fo$"
+    When I go to line "2"
+    And I type "d2;"
+    Then I should see pattern "^ar$"
+    When I type "Fo"
+    And I go to end of buffer
+    And I type "2d;"
+    Then I should see pattern "^  f$"
 
   Scenario: delete find repeat opposite
     Given the buffer is empty
     When I insert:
     """
-    foo bar
-    baz
-      baz bar
+    foo bar baz baz bar
       foo
     """
     And I go to beginning of buffer
     And I type "3tb"
     And I type "d,"
-    Then I should see pattern "^b baz bar$"
+    Then I should see pattern " b baz bar$"
     When I type "Ta"
     And I type "d2,"
     Then I should see pattern "^foo baar$"
-    When I go to beginning of buffer
-    And I type "T "
-    And I type "3d,"
-    Then I should see pattern "^ foo$"
+    When I type "To"
+    And I go to line "2"
+    And I type "2d,"
+    Then I should see pattern "^o$"
 
     Given the buffer is empty
     When I insert "foo"

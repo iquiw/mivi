@@ -462,27 +462,22 @@ Feature: Copy
     Given the buffer is empty
     When I insert:
     """
-    foo bar
-    baz
-      baz bar
-      foo
+    foo bar baz baz bar
+      foo bar foo
     """
     And I go to beginning of buffer
     And I type "fb"
     And I type "y;"
     Then the current kill-ring should be:
     """
-    bar
-    b
+    bar b
     """
     And the cursor should be at cell (1, 4)
     And the mivi state should be "command"
     When I type "y2;"
     Then the current kill-ring should be:
     """
-    bar
-    baz
-      b
+    bar baz b
     """
     And the cursor should be at cell (1, 4)
     And the mivi state should be "command"
@@ -491,12 +486,9 @@ Feature: Copy
     And I type "3y;"
     Then the current kill-ring should be:
     """
-    oo bar
-    baz
-      baz bar
-      fo
+    oo bar fo
     """
-    And the cursor should be at cell (1, 1)
+    And the cursor should be at cell (2, 3)
     And the mivi state should be "command"
 
   Scenario: copy find repeat opposite
@@ -506,17 +498,14 @@ Feature: Copy
     Then the current kill-ring should be:
     """
     az
-     
     """
-    And the cursor should be at cell (2, 1)
+    And the cursor should be at cell (1, 9)
     And the mivi state should be "command"
     When I type "Ta"
     And I type "y2,"
     Then the current kill-ring should be:
     """
-    r
-    baz
-      b
+    r baz b
     """
     And the cursor should be at cell (1, 6)
     And the mivi state should be "command"
@@ -525,9 +514,7 @@ Feature: Copy
     And I type "3y,"
     Then the current kill-ring should be:
     """
-    foo bar
-    baz
-     
+    foo bar baz
     """
     And the cursor should be at cell (1, 0)
     And the mivi state should be "command"
