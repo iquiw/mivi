@@ -1129,6 +1129,9 @@
                        (throw 'break t))))))
     (mivi-mode 1)))
 
+(defun mivi-mode-off ()
+  (mivi-mode -1))
+
 (defvar mivi-global-mode nil)
 
 (defun mivi-global-mode-set (state)
