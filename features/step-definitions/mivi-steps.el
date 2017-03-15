@@ -89,13 +89,10 @@
                         (line-number-at-pos))))
       (should (= (+ first-line (/ (window-body-height) 2)) (line-number-at-pos))))))
 
-(Then "^the current line should be the last line$"
-  "Checks that the current line is the last line."
+(Then "^the current line should be the bottom of window$"
+  "Checks that the current line is the bottom of window."
   (lambda ()
-    (let ((last-line (save-excursion
-                       (goto-char (point-max))
-                       (1- (line-number-at-pos)))))
-      (should (= last-line (line-number-at-pos))))))
+    (should (= (window-body-height) (line-number-at-pos)))))
 
 (Then "^the mivi state should be \"\\(.+\\)\"$"
   "Checks that the mivi state is STATE."

@@ -291,7 +291,7 @@ Feature: Motion
     When I insert "1" pages
     And I go to beginning of buffer
     And I type "L"
-    Then the current line should be the last line
+    Then the current line should be the bottom of window
     When I type "H"
     Then the current line should be "1"
     When I type "M"
