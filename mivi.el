@@ -1125,7 +1125,8 @@
              (mivi-copy-state
               (propertize "[Y]" 'face 'mivi-mode-line
                           'help-echo "MiVi: COPY state"))
-             (t "[-]")))))
+             (t
+              (propertize "[-]" 'help-echo "MiVi: COMMAND state"))))))
   (force-mode-line-update))
 
 (defun mivi--mode-line-insert ()
