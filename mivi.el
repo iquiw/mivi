@@ -1133,7 +1133,8 @@
     (setq mode-line-format
           (let (l)
             (dolist (e mode-line-format (nreverse l))
-              (push e l)
+              (unless (eq e 'mivi-mode-line)
+                (push e l))
               (when (eq e 'mode-line-mule-info)
                 (push 'mivi-mode-line l)))))))
 
