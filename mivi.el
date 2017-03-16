@@ -1088,8 +1088,10 @@
       (set-marker mivi--insert-end (1+ (point)))))
 
   (dolist (s mivi--states)
-    (set s (eq s state))))
+    (set s (eq s state)))
+  (mivi--mode-line-update))
 
+;; mode related
 (defvar mivi-mode-map-alist
   (list
    (cons 'mivi-change-state mivi-change-map)
@@ -1098,15 +1100,59 @@
    (cons 'mivi-delete-state mivi-delete-map)
    (cons 'mivi-insert-state mivi-insert-map)))
 
+(defvar-local mivi-mode-line nil)
+(put 'mivi-mode-line 'risky-local-variable t)
+
+(defface mivi-mode-line
+  '((((class color) (min-colors 89)) (:foreground "black" :background "#ffdd00"))
+    (t :foreground "black" :background "yellow"))
+  "Mode line face for MiVi.")
+
+(defun mivi--mode-line-update ()
+  (setq mivi-mode-line
+        `(mivi-mode
+          (" "
+           ,(cond
+             (mivi-insert-state
+              (propertize "[I]" 'face 'mivi-mode-line
+                          'help-echo "MiVi: INSERT state"))
+             (mivi-change-state
+              (propertize "[C]" 'face 'mivi-mode-line
+                          'help-echo "MiVi: CHANGE state"))
+             (mivi-delete-state
+              (propertize "[D]" 'face 'mivi-mode-line
+                          'help-echo "MiVi: DELETE state"))
+             (mivi-copy-state
+              (propertize "[Y]" 'face 'mivi-mode-line
+                          'help-echo "MiVi: COPY state"))
+             (t "[-]")))))
+  (force-mode-line-update))
+
+(defun mivi--mode-line-insert ()
+  (when (listp mode-line-format)
+    (setq mode-line-format
+          (let (l)
+            (dolist (e mode-line-format (nreverse l))
+              (push e l)
+              (when (eq e 'mode-line-mule-info)
+                (push 'mivi-mode-line l)))))))
+
+(defun mivi--mode-line-remove ()
+  (when (listp mode-line-format)
+    (setq mode-line-format
+          (delete 'mivi-mode-line mode-line-format))))
+
 (define-minor-mode mivi-mode
   "Toggle MiVi mode in the current buffer."
   :init-value nil
   (if mivi-mode
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
+        (mivi--mode-line-insert)
         (unless (mivi--current-state)
           (mivi--switch-state 'mivi-command-state)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
+    (mivi--mode-line-remove)
     (setq cursor-type (default-value 'cursor-type))
     (mapc #'kill-local-variable
           '(mivi-change-state
