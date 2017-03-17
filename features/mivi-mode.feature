@@ -8,6 +8,7 @@ Scenario: Enable in prog-mode
   When I disable C-u binding
   And I turn on prog-mode
   Then mivi-mode should be enabled
+  And mode line should contain mivi-mode-line
 
 Scenario: Enable in emacs-lisp-mode
   Given the buffer is empty
@@ -38,11 +39,13 @@ Scenario: Disable in help-mode
   When I disable C-u binding
   And I turn on help-mode
   Then mivi-mode should be disabled
+  And mode line should not contain mivi-mode-line
 
 Scenario: Disable by turn-off
   Given the buffer is empty
   When I turn off mivi-mode
   Then mivi-mode should be disabled
+  And mode line should not contain mivi-mode-line
 
 Scenario: Global mivi mode off and on
   Given the buffer is empty
@@ -50,7 +53,9 @@ Scenario: Global mivi mode off and on
   And I turn off minor mode mivi-global-mode
   And I turn on prog-mode
   Then mivi-mode should be disabled
+  And mode line should not contain mivi-mode-line
 
   When I turn on mivi-global-mode
   And I turn on fundamental-mode
   Then mivi-mode should be enabled
+  And mode line should contain mivi-mode-line

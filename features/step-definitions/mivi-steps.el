@@ -109,9 +109,16 @@
   (lambda (string)
     (should (string= (current-kill 0) string))))
 
-(Then "mivi-mode should be \\(enabled\\|disabled\\)$"
+(Then "^mivi-mode should be \\(enabled\\|disabled\\)$"
   "Checks that mivi-mode should be ENABLED or disabled."
   (lambda (enabled)
     (if (string= "enabled" enabled)
         (should (eq mivi-mode t))
       (should (not (eq mivi-mode t))))))
+
+(Then "^mode line should \\(\\|not \\)contain mivi-mode-line$"
+  "Checks that `mode-line-format' contains `mivi-mode-line'."
+  (lambda (not)
+    (if (string= not "")
+        (should (memq 'mivi-mode-line mode-line-format))
+      (should (not (memq 'mivi-mode-line mode-line-format))))))
