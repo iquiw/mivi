@@ -1062,11 +1062,9 @@
   (let ((plist (list :prefix current-prefix-arg
                      :command this-command)))
     (while args
-      (pcase args
-        (`(,prop ,val . ,rest)
-         (setq plist (plist-put plist prop val))
-         (setq args rest))
-        (_ (setq args nil))))
+      (pcase-let ((`(,prop ,val . ,rest) args))
+        (setq plist (plist-put plist prop val))
+        (setq args rest)))
     (setq mivi--last-command plist)))
 
 (defun mivi--switch-state (state)
