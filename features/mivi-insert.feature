@@ -196,8 +196,14 @@ Feature Insert
     Given the buffer is empty
     When I insert:
     """
-    foo bar-baz
+    foo bar-baz "<>"
     """
     When I type "i"
     And I press "C-w"
-    Then I should see pattern "bar-$"
+    Then I should see pattern "^foo bar-baz $"
+
+    When I press "C-w"
+    Then I should see pattern "^foo bar-$"
+
+    When I press "C-w"
+    Then I should see pattern "^foo bar$"
