@@ -1178,22 +1178,13 @@
 (defun mivi-mode-off ()
   (mivi-mode -1))
 
-(defvar mivi-global-mode nil)
-
-(defun mivi-global-mode-set (state)
-  (if state
-      (progn
-        (setq emulation-mode-map-alists
-              (cons mivi-mode-map-alist emulation-mode-map-alists)))
-    (setq emulation-mode-map-alists
-          (delete 'mivi-mode-map-alist emulation-mode-map-alists)))
-  (setq mivi-global-mode state))
-
-(define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on
-  :variable (mivi-global-mode . mivi-global-mode-set))
+(define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on)
 
 (defun mivi-setup ()
   "Setup mivi initial configurations and enable `mivi-global-mode'."
+
+  (setq emulation-mode-map-alists
+        (cons mivi-mode-map-alist emulation-mode-map-alists))
 
   (when mivi-override-universal-argument-map
     (define-key universal-argument-map (kbd "C-u") nil))
