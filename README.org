@@ -1,0 +1,33 @@
+#+TITLE: Minimal Vi minor mode
+#+MACRO: kbd @@html:<kbd>@@$1@@html:</kbd>@@
+
+[[https://travis-ci.org/iquiw/mivi.svg?branch=dawn][file:https://travis-ci.org/iquiw/mivi]] [[https://coveralls.io/github/iquiw/mivi?branch=dawn][file:https://coveralls.io/repos/github/iquiw/mivi/badge.svg?branch=dawn]]
+
+* About
+  MiVi is Minimal Vi minor mode, which provides basic Vi-like editing
+  layer on Emacs.
+  Its behavior is based on /nvi/, while there are some intentional
+  differences for convenience of editing or simplicity of
+  implementation.
+
+* Setup
+** Depends
+   - undo-tree
+
+** Configuration
+  #+BEGIN_SRC emacs-lisp
+(use-package mivi
+  :config
+  (mivi-setup))
+  #+END_SRC
+
+* Feature
+** Design Choice
+   - {{{kbd(h)}}}, {{{kbd(l)}}} across lines.
+   - {{{kbd($)}}} acts like {{{kbd(C-e)}}} in Emacs.
+
+** Not Implemented
+   - All ex commands {{{kbd(:)}}}.
+   - Shift commands {{{kbd(<)}}}, {{{kbd(>)}}}.
+   - Buffer (in Vi-context) related functions.
+   - More...
