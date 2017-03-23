@@ -1064,6 +1064,7 @@
         (progn
           (when wrapped
             (message "Search wrapped"))
+          (push-mark origin t)
           (goto-char (match-beginning 0)))
       (goto-char origin))))
 

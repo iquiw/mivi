@@ -637,6 +637,29 @@ Feature: Motion
     And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
+  Scenario: search and pop mark
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+     23
+      456
+       7890
+    """
+    And I start an action chain
+    And I type "?^ *2"
+    And I press "RET"
+    And I execute the action chain
+    And I start an action chain
+    And I type "/6$"
+    And I press "RET"
+    And I execute the action chain
+    And I call "pop-to-mark-command"
+    Then the cursor should be at cell (2, 0)
+
+    When I call "pop-to-mark-command"
+    Then the cursor should be at cell (4, 7)
+
   Scenario: next line at bot
     Given the buffer is empty
     When I insert:
