@@ -21,6 +21,8 @@ Setup
 
 ### Configuration ###
 
+With [use-package](https://github.com/jwiegley/use-package),
+
 ``` emacs-lisp
 (use-package mivi
   :config
@@ -33,6 +35,8 @@ Feature
 ### Design Choice ###
 
 * <kbd>h</kbd>, <kbd>l</kbd> across lines.
+* <kbd>u</kbd> acts like *nvi*, that is, it undo and redo alternately.
+  To repeat undo, press <kbd>.</kbd> after <kbd>u</kbd>.
 * <kbd>$</kbd> acts like <kbd>C-e</kbd> in Emacs.
 
 ### Not Implemented ###
