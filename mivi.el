@@ -186,14 +186,15 @@
          (defalias new-fn
            (lambda ()
              (interactive)
-             (unwind-protect
-                 (let* (,@pre-bindings)
-                   (call-interactively orig-fn)
-                   ,@edit-body)
-               (mivi--switch-state ,new-state)
-               (setq this-command new-fn)
-               ,(when (memq name '(change delete))
-                  `(mivi--store-command :category (quote ,name))))))))))
+             (let ((switch t))
+               (unwind-protect
+                   (let* (,@pre-bindings)
+                     (call-interactively orig-fn)
+                     ,@edit-body)
+                 (mivi--switch-state (if switch ,new-state 'mivi-command-state))
+                 (setq this-command new-fn)
+                 ,(when (memq name '(change delete))
+                    `(mivi--store-command :category (quote ,name)))))))))))
 
 (defconst mivi--motion-0-keys
   '("$" "(" ")" "/" "0" "?" "B" "F" "N" "T" "W" "^" "`" "b" "h" "l" "n" "w"
@@ -221,7 +222,8 @@
            ((< beg p)
             (kill-region beg (1+ p)))
            ((> beg p)
-            (kill-region beg p))))))
+            (kill-region beg p))
+           (t (setq switch nil))))))
 
     (dolist (key mivi--motion-2-keys)
       (mivi--derive-key change map 'mivi-insert-state key

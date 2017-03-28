@@ -71,6 +71,16 @@ Feature: Change
     Then I should see pattern "^   12$"
     And the mivi state should be "insert"
 
+  Scenario: change find unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "cfx"
+    Then the mivi state should be "command"
+
   Scenario: change goto char
     Given the buffer is empty
     When I insert:
