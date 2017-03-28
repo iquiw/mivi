@@ -81,6 +81,15 @@ Feature: Change
     And I type "cfx"
     Then the mivi state should be "command"
 
+  Scenario: change Find unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "cFx"
+    Then the mivi state should be "command"
+
   Scenario: change goto char
     Given the buffer is empty
     When I insert:

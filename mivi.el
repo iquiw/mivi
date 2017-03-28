@@ -166,6 +166,12 @@
     (define-key map [escape] #'mivi-command)
     map))
 
+(defconst mivi--change-cancelable-commands
+  '(mivi-find
+    mivi-Find
+    mivi-goto-char
+    mivi-goto-char-backward))
+
 (defconst mivi--non-repeatable-commands
   '(mivi-change-goto-mark
     mivi-change-goto-mark-line
@@ -211,7 +217,9 @@
       (mivi--derive-key change map 'mivi-insert-state key
                         ((beg (point)) (mivi--stop-at-space t))
         (let ((p (point)))
-          (when (/= beg p)
+          (if (and (= beg p)
+                   (memq orig-fn mivi--change-cancelable-commands))
+              (setq switch nil)
             (kill-region beg p)))))
 
     (dolist (key mivi--motion-1-keys)
@@ -223,7 +231,8 @@
             (kill-region beg (1+ p)))
            ((> beg p)
             (kill-region beg p))
-           (t (setq switch nil))))))
+           ((memq orig-fn mivi--change-cancelable-commands)
+            (setq switch nil))))))
 
     (dolist (key mivi--motion-2-keys)
       (mivi--derive-key change map 'mivi-insert-state key
