@@ -108,6 +108,25 @@ Feature: Change
     Then I should see pattern "^   123$"
     And the mivi state should be "insert"
 
+  Scenario: change goto char unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "ctx"
+    Then the mivi state should be "command"
+
+  Scenario: change goto char backward unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "cTx"
+    Then the mivi state should be "command"
+
   Scenario: change goto line
     Given the buffer is empty
     When I insert:
