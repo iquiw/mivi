@@ -506,7 +506,8 @@
 
 (defun mivi-goto-pair ()
   (interactive)
-  (let* ((c (and (eolp) (char-before)))
+  (let* ((origin (point))
+         (c (and (eolp) (char-before)))
          (syn (and c (char-syntax c))))
     (unless (equal syn ?\))
       (skip-syntax-forward "^()")
@@ -517,7 +518,8 @@
            (backward-char))
       (?\) (unless (eolp)
              (forward-char))
-           (backward-sexp)))))
+           (backward-sexp))
+      (_ (goto-char origin)))))
 
 (defun mivi-next-line ()
   (interactive)

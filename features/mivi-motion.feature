@@ -385,6 +385,16 @@ Feature: Motion
     And I type "%"
     Then the cursor should be at cell (1, 0)
 
+  Scenario: goto pair unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    """
+    And I go to beginning of buffer
+    And I type "%"
+    Then the cursor should be at cell (1, 0)
+
   Scenario: search
     Given the buffer is empty
     When I insert:
