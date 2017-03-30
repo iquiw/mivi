@@ -449,6 +449,15 @@ Feature: Change
     Then the buffer should be empty
     And the mivi state should be "insert"
 
+  Scenario: change goto pair unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar
+    """
+    And I type "c%"
+    And the mivi state should be "command"
+
   Scenario: change search
     Given the buffer is empty
     When I insert:

@@ -170,7 +170,8 @@
   '(mivi-find
     mivi-Find
     mivi-goto-char
-    mivi-goto-char-backward))
+    mivi-goto-char-backward
+    mivi-goto-pair))
 
 (defconst mivi--non-repeatable-commands
   '(mivi-change-goto-mark
@@ -242,7 +243,9 @@
            ((< beg p)
             (kill-region beg (1+ p)))
            ((> beg p)
-            (kill-region (if eol beg (1+ beg)) p))))))
+            (kill-region (if eol beg (1+ beg)) p))
+           ((memq orig-fn mivi--change-cancelable-commands)
+            (setq switch nil))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc)))
