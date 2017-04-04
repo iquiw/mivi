@@ -179,10 +179,10 @@
     mivi-delete-goto-mark
     mivi-delete-goto-mark-line))
 
-(defmacro mivi--derive-key (name map key pre-bindings &rest edit-body)
+(defmacro mivi--derive-key (state-type map key pre-bindings &rest edit-body)
   (declare (debug (form form form form body))
            (indent 4))
-  (let ((prefix (concat "mivi-" (symbol-name name) "-")))
+  (let ((prefix (concat "mivi-" (symbol-name state-type) "-")))
     `(let* ((orig-fn (lookup-key mivi-motion-map ,key))
             (orig-name (symbol-name orig-fn))
             (new-fn (intern (concat ,prefix
@@ -201,8 +201,8 @@
                        ,@edit-body))
                  (mivi--switch-state (or new-state 'mivi-command-state))
                  (setq this-command new-fn)
-                 ,(when (memq name '(change delete))
-                    `(mivi--store-command :category (quote ,name)))))))))))
+                 ,(when (memq state-type '(change delete))
+                    `(mivi--store-command :category (quote ,state-type)))))))))))
 
 (defconst mivi--motion-0-keys
   '("$" "(" ")" "/" "0" "?" "B" "F" "N" "T" "W" "^" "`" "b" "h" "l" "n" "w"
