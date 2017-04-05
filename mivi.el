@@ -1124,7 +1124,8 @@
 (put 'mivi-mode-line 'risky-local-variable t)
 
 (defface mivi-mode-line
-  '((((class color) (min-colors 89)) (:foreground "black" :background "#ffdd00"))
+  '((((class color) (min-colors 89))
+     (:foreground "black" :background "#ffdd00"))
     (t :foreground "black" :background "yellow"))
   "Mode line face for MiVi.")
 
