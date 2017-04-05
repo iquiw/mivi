@@ -179,9 +179,9 @@
     mivi-delete-goto-mark
     mivi-delete-goto-mark-line))
 
-(defmacro mivi--derive-key (state-type map key pre-bindings &rest edit-body)
+(defmacro mivi--derive-key (state-type key pre-bindings &rest edit-body)
   (declare (debug (form form form form body))
-           (indent 4))
+           (indent 3))
   (let ((prefix (concat "mivi-" (symbol-name state-type) "-")))
     `(let* ((orig-fn (lookup-key mivi-motion-map ,key))
             (orig-name (symbol-name orig-fn))
@@ -189,27 +189,26 @@
                                     (if (string-match-p "^mivi-" orig-name)
                                         (substring orig-name 5)
                                       orig-name)))))
-       (define-key ,map ,key
-         (defalias new-fn
-           (lambda ()
-             (interactive)
-             (let (new-state (beg (point)))
-               (unwind-protect
-                   (let* (,@pre-bindings)
-                     (call-interactively orig-fn)
-                     (let ((end (point)))
-                       ,@edit-body
-                       ,(cond
-                         ((eq state-type 'change)
-                          `(unless (and (= beg end)
-                                        (memq orig-fn mivi--change-cancelable-commands))
-                             (setq new-state 'mivi-insert-state)))
-                         ((eq state-type 'copy)
-                          `(goto-char (min beg end))))))
-                 (mivi--switch-state (or new-state 'mivi-command-state))
-                 (setq this-command new-fn)
-                 ,(when (memq state-type '(change delete))
-                    `(mivi--store-command :category (quote ,state-type)))))))))))
+       (defalias new-fn
+         (lambda ()
+           (interactive)
+           (let (new-state (beg (point)))
+             (unwind-protect
+                 (let* (,@pre-bindings)
+                   (call-interactively orig-fn)
+                   (let ((end (point)))
+                     ,@edit-body
+                     ,(cond
+                       ((eq state-type 'change)
+                        `(unless (and (= beg end)
+                                      (memq orig-fn mivi--change-cancelable-commands))
+                           (setq new-state 'mivi-insert-state)))
+                       ((eq state-type 'copy)
+                        `(goto-char (min beg end))))))
+               (mivi--switch-state (or new-state 'mivi-command-state))
+               (setq this-command new-fn)
+               ,(when (memq state-type '(change delete))
+                  `(mivi--store-command :category (quote ,state-type))))))))))
 
 (defconst mivi--motion-0-keys
   '("$" "(" ")" "/" "0" "?" "B" "F" "N" "T" "W" "^" "`" "b" "h" "l" "n" "w"
@@ -223,38 +222,42 @@
 (defconst mivi-change-map
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
-      (mivi--derive-key change map key ((mivi--stop-at-space t))
-        (when (/= beg end)
-          (kill-region beg end))))
+      (define-key map key
+        (mivi--derive-key change key ((mivi--stop-at-space t))
+          (when (/= beg end)
+            (kill-region beg end)))))
 
     (dolist (key mivi--motion-1-keys)
-      (mivi--derive-key change map key ()
-        (cond
-         ((< beg end)
-          (kill-region beg (1+ end)))
-         ((> beg end)
-          (kill-region beg end)))))
+      (define-key map key
+        (mivi--derive-key change key ()
+          (cond
+           ((< beg end)
+            (kill-region beg (1+ end)))
+           ((> beg end)
+            (kill-region beg end))))))
 
     (dolist (key mivi--motion-2-keys)
-      (mivi--derive-key change map key ((eol (eolp)))
-        (cond
-         ((< beg end)
-          (kill-region beg (1+ end)))
-         ((> beg end)
-          (kill-region (if eol beg (1+ beg)) end)))))
+      (define-key map key
+        (mivi--derive-key change key ((eol (eolp)))
+          (cond
+           ((< beg end)
+            (kill-region beg (1+ end)))
+           ((> beg end)
+            (kill-region (if eol beg (1+ beg)) end))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc)))
-        (mivi--derive-key change map key
-                          ((beg (save-excursion (forward-line 0) (point))))
-          (forward-line 0)
-          (setq end (point))
-          (let* ((pmin (min beg end))
-                 (pmax (max beg end)))
-            (goto-char pmax)
-            (forward-line)
-            (kill-region pmin (if (eobp) (point) (1- (point))))
-            (goto-char pmin)))))
+        (define-key map key
+          (mivi--derive-key change key
+                            ((beg (save-excursion (forward-line 0) (point))))
+            (forward-line 0)
+            (setq end (point))
+            (let* ((pmin (min beg end))
+                   (pmax (max beg end)))
+              (goto-char pmax)
+              (forward-line)
+              (kill-region pmin (if (eobp) (point) (1- (point))))
+              (goto-char pmin))))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
@@ -269,39 +272,43 @@
 (defconst mivi-copy-map
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
-      (mivi--derive-key copy map key ()
-        (when (/= beg end)
-          (mivi--copy-region beg end))))
+      (define-key map key
+        (mivi--derive-key copy key ()
+          (when (/= beg end)
+            (mivi--copy-region beg end)))))
 
     (dolist (key mivi--motion-1-keys)
-      (mivi--derive-key copy map key ()
-        (cond
-         ((< beg end)
-          (mivi--copy-region beg (1+ end)))
-         ((> beg end)
-          (mivi--copy-region beg end)))))
+      (define-key map key
+        (mivi--derive-key copy key ()
+          (cond
+           ((< beg end)
+            (mivi--copy-region beg (1+ end)))
+           ((> beg end)
+            (mivi--copy-region beg end))))))
 
     (dolist (key mivi--motion-2-keys)
-      (mivi--derive-key copy map key ((eol (eolp)))
-        (cond
-         ((< beg end)
-          (mivi--copy-region beg (1+ end)))
-         ((> beg end)
-          (mivi--copy-region (if eol beg (1+ beg)) end)))))
+      (define-key map key
+        (mivi--derive-key copy key ((eol (eolp)))
+          (cond
+           ((< beg end)
+            (mivi--copy-region beg (1+ end)))
+           ((> beg end)
+            (mivi--copy-region (if eol beg (1+ beg)) end))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc)))
-        (mivi--derive-key copy map key ()
-          (let* ((p0 (progn (forward-line 0) (point)))
-                 (p1 (save-excursion
-                       (goto-char beg)
-                       (forward-line 0)
-                       (point)))
-                 (pmin (min p0 p1))
-                 (pmax (max p0 p1)))
-            (goto-char pmax)
-            (forward-line)
-            (mivi--copy-region pmin (point))))))
+        (define-key map key
+          (mivi--derive-key copy key ()
+            (let* ((p0 (progn (forward-line 0) (point)))
+                   (p1 (save-excursion
+                         (goto-char beg)
+                         (forward-line 0)
+                         (point)))
+                   (pmin (min p0 p1))
+                   (pmax (max p0 p1)))
+              (goto-char pmax)
+              (forward-line)
+              (mivi--copy-region pmin (point)))))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
@@ -316,44 +323,48 @@
 (defconst mivi-delete-map
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
-      (mivi--derive-key delete map key ((mivi--stop-at-eol t))
-        (when (/= beg end)
-          (kill-region beg end))))
+      (define-key map key
+        (mivi--derive-key delete key ((mivi--stop-at-eol t))
+          (when (/= beg end)
+            (kill-region beg end)))))
 
     (dolist (key mivi--motion-1-keys)
-      (mivi--derive-key delete map key ()
-        (cond
-         ((< beg end)
-          (kill-region beg (1+ end)))
-         ((> beg end)
-          (kill-region beg end)))))
+      (define-key map key
+        (mivi--derive-key delete key ()
+          (cond
+           ((< beg end)
+            (kill-region beg (1+ end)))
+           ((> beg end)
+            (kill-region beg end))))))
 
     (dolist (key mivi--motion-2-keys)
-      (mivi--derive-key delete map key ((eol (eolp)))
-        (cond
-         ((< beg end)
-          (kill-region beg (1+ end)))
-         ((> beg end)
-          (kill-region (if eol beg (1+ beg)) end)))))
+      (define-key map key
+        (mivi--derive-key delete key ((eol (eolp)))
+          (cond
+           ((< beg end)
+            (kill-region beg (1+ end)))
+           ((> beg end)
+            (kill-region (if eol beg (1+ beg)) end))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc))
             (preserve-column (cdr kpc)))
-        (mivi--derive-key delete map key
-                          ((column (current-column))
-                           (beg (progn (forward-line 0) (point))))
-          (forward-line 0)
-          (setq end (point))
-          (let* ((pmin (min beg end))
-                 (pmax (max beg end)))
-            (goto-char pmax)
-            (forward-line)
-            (kill-region pmin (point))
-            (when (eobp)
-              (goto-char (1- pmin)))
-            (if preserve-column
-                (move-to-column column)
-              (back-to-indentation))))))
+        (define-key map key
+          (mivi--derive-key delete key
+                            ((column (current-column))
+                             (beg (progn (forward-line 0) (point))))
+            (forward-line 0)
+            (setq end (point))
+            (let* ((pmin (min beg end))
+                   (pmax (max beg end)))
+              (goto-char pmax)
+              (forward-line)
+              (kill-region pmin (point))
+              (when (eobp)
+                (goto-char (1- pmin)))
+              (if preserve-column
+                  (move-to-column column)
+                (back-to-indentation)))))))
 
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
