@@ -179,6 +179,9 @@ Feature: Motion
     When I go to end of buffer
     And I type "f@"
     Then the cursor should be at cell (4, 11)
+    When I go to line "2"
+    And I type "fz"
+    Then the cursor should be at cell (2, 0)
 
   Scenario: Find
     When I go to end of buffer
