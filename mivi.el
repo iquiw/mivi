@@ -196,16 +196,34 @@
        (defalias new-fn
          (lambda ()
            (interactive)
-           (let (new-state (beg ,(if (and (not (eq state-type 'copy))
-                                          (eq motion-type 'motion-line))
-                                     `(save-excursion
-                                        (forward-line 0) (point))
-                                   `(point))))
+           (let (new-state
+                 (beg ,(if (and (not (eq state-type 'copy))
+                                (eq motion-type 'motion-line))
+                           `(save-excursion
+                              (forward-line 0) (point))
+                         `(point)))
+                 (region-func ,(if (eq state-type 'copy)
+                                   ''mivi--copy-region
+                                 ''kill-region)))
              (unwind-protect
                  (let* (,@pre-bindings)
                    (call-interactively orig-fn)
                    (let ((end (point)))
-                     ,@edit-body
+                     ,@(pcase motion-type
+                         ('motion-0 `((when (/= beg end)
+                                        (funcall region-func beg end))))
+                         ('motion-1 `((cond
+                                       ((< beg end)
+                                        (funcall region-func beg (1+ end)))
+                                       ((> beg end)
+                                        (funcall region-func beg end)))))
+                         ('motion-2 `((cond
+                                       ((< beg end)
+                                        (funcall region-func beg (1+ end)))
+                                       ((> beg end)
+                                        (funcall region-func
+                                                 (if eol beg (1+ beg)) end)))))
+                         (_ edit-body))
                      ,(cond
                        ((eq state-type 'change)
                         `(unless (and (= beg end)
@@ -232,27 +250,15 @@
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
       (define-key map key
-        (mivi--derive-key change motion-0 key ((mivi--stop-at-space t))
-          (when (/= beg end)
-            (kill-region beg end)))))
+        (mivi--derive-key change motion-0 key ((mivi--stop-at-space t)))))
 
     (dolist (key mivi--motion-1-keys)
       (define-key map key
-        (mivi--derive-key change motion-1 key ()
-          (cond
-           ((< beg end)
-            (kill-region beg (1+ end)))
-           ((> beg end)
-            (kill-region beg end))))))
+        (mivi--derive-key change motion-1 key ())))
 
     (dolist (key mivi--motion-2-keys)
       (define-key map key
-        (mivi--derive-key change motion-2 key ((eol (eolp)))
-          (cond
-           ((< beg end)
-            (kill-region beg (1+ end)))
-           ((> beg end)
-            (kill-region (if eol beg (1+ beg)) end))))))
+        (mivi--derive-key change motion-2 key ((eol (eolp))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc)))
@@ -281,27 +287,15 @@
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
       (define-key map key
-        (mivi--derive-key copy motion-0 key ()
-          (when (/= beg end)
-            (mivi--copy-region beg end)))))
+        (mivi--derive-key copy motion-0 key ())))
 
     (dolist (key mivi--motion-1-keys)
       (define-key map key
-        (mivi--derive-key copy motion-1 key ()
-          (cond
-           ((< beg end)
-            (mivi--copy-region beg (1+ end)))
-           ((> beg end)
-            (mivi--copy-region beg end))))))
+        (mivi--derive-key copy motion-1 key ())))
 
     (dolist (key mivi--motion-2-keys)
       (define-key map key
-        (mivi--derive-key copy motion-2 key ((eol (eolp)))
-          (cond
-           ((< beg end)
-            (mivi--copy-region beg (1+ end)))
-           ((> beg end)
-            (mivi--copy-region (if eol beg (1+ beg)) end))))))
+        (mivi--derive-key copy motion-2 key ((eol (eolp))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc)))
@@ -332,27 +326,15 @@
   (let ((map (make-sparse-keymap)))
     (dolist (key mivi--motion-0-keys)
       (define-key map key
-        (mivi--derive-key delete motion-0 key ((mivi--stop-at-eol t))
-          (when (/= beg end)
-            (kill-region beg end)))))
+        (mivi--derive-key delete motion-0 key ((mivi--stop-at-eol t)))))
 
     (dolist (key mivi--motion-1-keys)
       (define-key map key
-        (mivi--derive-key delete motion-1 key ()
-          (cond
-           ((< beg end)
-            (kill-region beg (1+ end)))
-           ((> beg end)
-            (kill-region beg end))))))
+        (mivi--derive-key delete motion-1 key () )))
 
     (dolist (key mivi--motion-2-keys)
       (define-key map key
-        (mivi--derive-key delete motion-2 key ((eol (eolp)))
-          (cond
-           ((< beg end)
-            (kill-region beg (1+ end)))
-           ((> beg end)
-            (kill-region (if eol beg (1+ beg)) end))))))
+        (mivi--derive-key delete motion-2 key ((eol (eolp))))))
 
     (dolist (kpc mivi--motion-line-keys)
       (let ((key (car kpc))
