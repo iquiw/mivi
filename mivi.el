@@ -202,9 +202,11 @@
                            `(save-excursion
                               (forward-line 0) (point))
                          `(point)))
-                 (region-func ,(if (eq state-type 'copy)
-                                   ''mivi--copy-region
-                                 ''kill-region)))
+                 .
+                 ,(unless (eq motion-type 'motion-line)
+                    `((region-func ,(if (eq state-type 'copy)
+                                        ''mivi--copy-region
+                                      ''kill-region)))))
              (unwind-protect
                  (let* (,@pre-bindings)
                    (call-interactively orig-fn)
@@ -224,14 +226,14 @@
                                         (funcall region-func
                                                  (if eol beg (1+ beg)) end)))))
                          (_ edit-body))
-                     ,(cond
-                       ((eq state-type 'change)
-                        `(unless (and (= beg end)
-                                      (memq orig-fn
-                                            mivi--change-cancelable-commands))
-                           (setq new-state 'mivi-insert-state)))
-                       ((eq state-type 'copy)
-                        `(goto-char (min beg end))))))
+                     ,(pcase state-type
+                        ('change
+                         `(unless (and (= beg end)
+                                       (memq orig-fn
+                                             mivi--change-cancelable-commands))
+                            (setq new-state 'mivi-insert-state)))
+                        ('copy
+                         `(goto-char (min beg end))))))
                (mivi--switch-state (or new-state 'mivi-command-state))
                (setq this-command new-fn)
                ,(unless (eq state-type 'copy)
