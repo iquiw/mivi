@@ -7,16 +7,16 @@ Minimal Vi minor mode
 About
 -----
 
-MiVi is Minimal Vi minor mode, which provides basic Vi-like editing
-layer on Emacs. Its behavior is based on *nvi*, while there are some
-intentional differences for convenience of editing or simplicity of
-implementation.
+MiVi is Minimal Vi minor mode, which provides basic Vi-like editing layer on
+Emacs. Its behavior is based on *nvi*, while there are some intentional
+differences for convenience of editing or simplicity of implementation.
 
 Setup
 -----
 
 ### Depends ###
 
+* Emacs 25
 * undo-tree
 
 ### Configuration ###
