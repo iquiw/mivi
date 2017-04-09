@@ -956,27 +956,6 @@
               (mivi--current-search-string (car mivi--last-search)))
           (call-interactively command)))))))
 
-(defun mivi-undo ()
-  (interactive)
-  (if (eq mivi--undo-direction 'undo)
-      (progn
-        (undo-tree-redo)
-        (setq mivi--undo-direction 'redo))
-    (undo-tree-undo)
-    (setq mivi--undo-direction 'undo)))
-
-(defun mivi-updown-case (&optional arg)
-  (interactive "p")
-  (dotimes (_ arg)
-    (let ((p (point))
-          (case-fold-search nil))
-      (cond
-       ((looking-at-p "[[:lower:]]")
-        (upcase-region p (1+ p)))
-       ((looking-at-p "[[:upper:]]")
-        (downcase-region p (1+ p))))
-      (forward-char))))
-
 (defun mivi-paste (&optional arg)
   (interactive "p")
   (cond
@@ -1006,6 +985,27 @@
         (insert-char c arg)))
     (setq mivi--last-replace-char c)
     (mivi--store-command)))
+
+(defun mivi-undo ()
+  (interactive)
+  (if (eq mivi--undo-direction 'undo)
+      (progn
+        (undo-tree-redo)
+        (setq mivi--undo-direction 'redo))
+    (undo-tree-undo)
+    (setq mivi--undo-direction 'undo)))
+
+(defun mivi-updown-case (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (let ((p (point))
+          (case-fold-search nil))
+      (cond
+       ((looking-at-p "[[:lower:]]")
+        (upcase-region p (1+ p)))
+       ((looking-at-p "[[:upper:]]")
+        (downcase-region p (1+ p))))
+      (forward-char))))
 
 ;; Internal functions
 (defun mivi--blankline-p (n)
