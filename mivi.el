@@ -171,7 +171,11 @@
     mivi-Find
     mivi-goto-char
     mivi-goto-char-backward
-    mivi-goto-pair))
+    mivi-goto-pair
+    mivi-search
+    mivi-search-backward
+    mivi-search-next
+    mivi-search-Next))
 
 (defconst mivi--non-repeatable-commands
   '(mivi-change-goto-mark

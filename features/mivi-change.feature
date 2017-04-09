@@ -565,6 +565,31 @@ Feature: Change
     Then I should see pattern "^foo baz$"
     And the mivi state should be "insert"
 
+  Scenario: change search unmatchd
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I type "c/qux"
+    And I press "RET"
+    And I execute the action chain
+    Then the mivi state should be "command"
+
+    When I type "cn"
+    Then the mivi state should be "command"
+
+    When I type "cN"
+    Then the mivi state should be "command"
+
+    When I start an action chain
+    And I type "c?qux"
+    And I press "RET"
+    And I execute the action chain
+    Then the mivi state should be "command"
+
   Scenario: change next line at bot
     Given the buffer is empty
     When I insert:
