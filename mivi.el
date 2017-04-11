@@ -166,17 +166,6 @@
     (define-key map [escape] #'mivi-command)
     map))
 
-(defconst mivi--change-cancelable-commands
-  '(mivi-find
-    mivi-Find
-    mivi-goto-char
-    mivi-goto-char-backward
-    mivi-goto-pair
-    mivi-search
-    mivi-search-backward
-    mivi-search-next
-    mivi-search-Next))
-
 (defconst mivi--non-repeatable-commands
   '(mivi-change-goto-mark
     mivi-change-goto-mark-line
@@ -230,14 +219,14 @@
                                         (funcall region-func
                                                  (if eol beg (1+ beg)) end)))))
                          (_ edit-body))
-                     ,(pcase state-type
-                        ('change
-                         `(unless (and (= beg end)
-                                       (memq orig-fn
-                                             mivi--change-cancelable-commands))
-                            (setq new-state 'mivi-insert-state)))
-                        ('copy
-                         `(goto-char (min beg end))))))
+                     ,(cond
+                       ((eq state-type 'change)
+                        (if (eq motion-type 'motion-line)
+                            `(setq new-state 'mivi-insert-state)
+                          `(unless (= beg end)
+                             (setq new-state 'mivi-insert-state))))
+                       ((eq state-type 'copy)
+                        `(goto-char (min beg end))))))
                (mivi--switch-state (or new-state 'mivi-command-state))
                (setq this-command new-fn)
                ,(unless (eq state-type 'copy)
