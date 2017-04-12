@@ -28,6 +28,9 @@
 (defcustom mivi-shift-width 2
   "Shiftwidth by which backward indent moves the current indentation.")
 
+(defcustom mivi-tty-escape-timeout 0.2
+  "Timeout to wait for subsequent input after ESC key on TTY.")
+
 (defvar mivi--current-find-char nil)
 (defvar mivi--current-replace-char nil)
 (defvar mivi--current-search-string nil)
@@ -975,6 +978,27 @@
     (setq mivi--last-replace-char c)
     (mivi--store-command)))
 
+;;
+;; The following escape handling code
+;; (`mivi--tty-escape-setup', `mivi--tty-escape-filter')
+;; is mostly derived from viper.el.
+;;
+(defun mivi--tty-escape-setup ()
+  (let ((esc-binding (catch 'found
+                       (map-keymap
+                        (lambda (k b) (if (equal ?\e k) (throw 'found b)))
+                        input-decode-map))))
+    (define-key input-decode-map
+      [?\e] `(menu-item "" ,esc-binding :filter ,#'mivi--tty-escape-filter))))
+
+(defun mivi--tty-escape-filter (map)
+  (if (and mivi-mode
+           (not mivi-command-state)
+           (equal (this-single-command-keys) [?\e])
+           (sit-for mivi-tty-escape-timeout))
+      [escape]
+    map))
+
 (defun mivi-undo ()
   (interactive)
   (if (eq mivi--undo-direction 'undo)
@@ -1188,6 +1212,10 @@
 
   (when mivi-override-universal-argument-map
     (define-key universal-argument-map (kbd "C-u") nil))
+
+  (if (memq (terminal-live-p (frame-terminal)) '(t pc))
+      (add-hook 'tty-setup-hook #'mivi--tty-escape-setup)
+    (define-key input-decode-map [?\e] [escape]))
 
   (with-eval-after-load 'eldoc
     (eldoc-add-command
