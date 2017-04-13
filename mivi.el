@@ -984,20 +984,15 @@
 ;; is mostly derived from viper.el.
 ;;
 (defun mivi--tty-escape-setup ()
+  "Setup tty ESC to work as `escape'.
+
+Derived from `viper-catch-tty-ESC'."
   (let ((esc-binding (catch 'found
                        (map-keymap
                         (lambda (k b) (if (equal ?\e k) (throw 'found b)))
                         input-decode-map))))
     (define-key input-decode-map
       [?\e] `(menu-item "" ,esc-binding :filter ,#'mivi--tty-escape-filter))))
-
-(defun mivi--tty-escape-filter (map)
-  (if (and mivi-mode
-           (not mivi-command-state)
-           (equal (this-single-command-keys) [?\e])
-           (sit-for mivi-tty-escape-timeout))
-      [escape]
-    map))
 
 (defun mivi-undo ()
   (interactive)
@@ -1188,6 +1183,19 @@
 (defun mivi--after-change-function (_beg _end _len)
   (unless undo-in-progress
     (setq mivi--undo-direction 'redo)))
+
+(defun mivi--tty-escape-filter (map)
+  "Filter MAP to convert single ESC to `escape' in `mivi-mode'.
+It returns MAP as is if it is in `mivi-command-state' or
+`mivi-tty-escape-timeout' passes.
+
+Derived from `viper--tty-ESC-filter'."
+  (if (and mivi-mode
+           (not mivi-command-state)
+           (equal (this-single-command-keys) [?\e])
+           (sit-for mivi-tty-escape-timeout))
+      [escape]
+    map))
 
 (defun mivi-mode-on ()
   (when (and (not (minibufferp))
