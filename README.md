@@ -46,3 +46,7 @@ Feature
 * Buffer (in Vi-context) related functions.
 * More...
 
+License
+-------
+
+Licensed under the GPL 3+ license.
