@@ -1225,6 +1225,7 @@ Derived from `viper--tty-ESC-filter'."
 
 (define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on)
 
+;;;###autoload
 (defun mivi-setup ()
   "Setup mivi initial configurations and enable `mivi-global-mode'."
 
