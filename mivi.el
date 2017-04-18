@@ -44,6 +44,19 @@
 (defcustom mivi-tty-escape-timeout 0.2
   "Timeout to wait for subsequent input after ESC key on TTY.")
 
+(defface mivi-search-highlight
+  '((((class color) (min-colors 89) (background light))
+     (:background "#c5c56a"))
+    (((class color) (min-colors 89) (background dark))
+     (:background "#69821b")))
+  "Search highlight face.")
+
+(defface mivi-mode-line
+  '((((class color) (min-colors 89))
+     (:foreground "black" :background "#ffdd00"))
+    (t :foreground "black" :background "yellow"))
+  "Mode line face for MiVi.")
+
 (defvar mivi--current-find-char nil)
 (defvar mivi--current-replace-char nil)
 (defvar mivi--current-search-string nil)
@@ -51,6 +64,7 @@
 (defvar mivi--last-find nil)
 (defvar mivi--last-replace-char nil)
 (defvar mivi--last-search nil)
+(defvar mivi--search-overlay nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
 (defvar mivi--undo-repeating nil)
@@ -604,7 +618,8 @@
                 (read-regexp "/" (car mivi--last-search)))))
     (unless (string= re "")
       (mivi--search-internal re arg 1)
-      (setq mivi--last-search (cons re 1)))))
+      (setq mivi--last-search (cons re 1))))
+  (setq this-command 'mivi-search))
 
 (defun mivi-search-backward (&optional arg)
   (interactive "p")
@@ -612,7 +627,8 @@
                 (read-regexp "?" (car mivi--last-search)))))
     (unless (string= re "")
       (mivi--search-internal re arg -1)
-      (setq mivi--last-search (cons re -1)))))
+      (setq mivi--last-search (cons re -1))))
+  (setq this-command 'mivi-search-backward))
 
 (defun mivi-search-current-word ()
   (interactive)
@@ -1086,6 +1102,13 @@ Derived from `viper-catch-tty-ESC'."
           (when wrapped
             (message "Search wrapped"))
           (push-mark origin t)
+          (if mivi--search-overlay
+              (move-overlay mivi--search-overlay
+                            (match-beginning 0) (match-end 0)
+                            (current-buffer))
+            (setq mivi--search-overlay
+                  (make-overlay (match-beginning 0) (match-end 0)))
+            (overlay-put mivi--search-overlay 'face 'mivi-search-highlight))
           (goto-char (match-beginning 0)))
       (goto-char origin))))
 
@@ -1132,12 +1155,6 @@ Derived from `viper-catch-tty-ESC'."
 (defvar-local mivi-mode-line nil)
 (put 'mivi-mode-line 'risky-local-variable t)
 
-(defface mivi-mode-line
-  '((((class color) (min-colors 89))
-     (:foreground "black" :background "#ffdd00"))
-    (t :foreground "black" :background "yellow"))
-  "Mode line face for MiVi.")
-
 (defun mivi--mode-line-update ()
   (setq mivi-mode-line
         `(mivi-mode
@@ -1180,10 +1197,12 @@ Derived from `viper-catch-tty-ESC'."
   (if mivi-mode
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
+        (add-hook 'post-command-hook #'mivi--post-command-function nil t)
         (mivi--mode-line-insert)
         (unless (mivi--current-state)
           (mivi--switch-state 'mivi-command-state)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
+    (remove-hook 'post-command-hook #'mivi--post-command-function t)
     (mivi--mode-line-remove)
     (setq cursor-type (default-value 'cursor-type))
     (mapc #'kill-local-variable
@@ -1196,6 +1215,15 @@ Derived from `viper-catch-tty-ESC'."
 (defun mivi--after-change-function (_beg _end _len)
   (unless undo-in-progress
     (setq mivi--undo-direction 'redo)))
+
+(defun mivi--post-command-function ()
+  (when (and mivi--search-overlay
+             (not (memq this-command '(mivi-search
+                                       mivi-search-backward
+                                       mivi-search-current-word
+                                       mivi-search-next
+                                       mivi-search-Next))))
+    (delete-overlay mivi--search-overlay)))
 
 (defun mivi--tty-escape-filter (map)
   "Filter MAP to convert single ESC to `escape' in `mivi-mode'.
