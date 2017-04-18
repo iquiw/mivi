@@ -46,9 +46,9 @@
 
 (defface mivi-search-highlight
   '((((class color) (min-colors 89) (background light))
-     (:background "#c5c56a"))
+     (:background "#d6e9ca"))
     (((class color) (min-colors 89) (background dark))
-     (:background "#69821b")))
+     (:background "#2f5d50")))
   "Search highlight face.")
 
 (defface mivi-mode-line
