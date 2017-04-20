@@ -5,7 +5,7 @@
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
 ;; Version:   0.0.0
-;; Package-Requires: ((undo-tree "0.6.5") (emacs "25"))
+;; Package-Requires: ((seq "2.19") (undo-tree "0.6.5") (emacs "25"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 ;;; Commentary:
 ;;; Code:
 
+(require 'seq)
 (require 'undo-tree)
 
 (defgroup mivi nil "Minimal Vi mode."
@@ -1053,12 +1054,6 @@ Derived from `viper-catch-tty-ESC'."
 (defun mivi--copy-region (beg end)
   (kill-new (buffer-substring beg end)))
 
-(defun mivi--current-state ()
-  (catch 'result
-    (dolist (s mivi--states)
-      (when (symbol-value s)
-        (throw 'result s)))))
-
 (defun mivi--find-internal (ch till? count)
   (let ((case-fold-search nil)
         (sign (if (> count 0) 1 -1))
@@ -1199,7 +1194,7 @@ Derived from `viper-catch-tty-ESC'."
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
         (add-hook 'post-command-hook #'mivi--post-command-function nil t)
         (mivi--mode-line-insert)
-        (unless (mivi--current-state)
+        (unless (seq-some #'symbol-value mivi--states)
           (mivi--switch-state 'mivi-command-state)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
     (remove-hook 'post-command-hook #'mivi--post-command-function t)
