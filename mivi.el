@@ -1237,10 +1237,7 @@ Derived from `viper--tty-ESC-filter'."
   (when (and (not (minibufferp))
              (not (eq (aref (buffer-name) 0) ?\s))
              (or (member major-mode mivi-enabled-major-modes)
-                 (catch 'break
-                   (dolist (mode mivi-enabled-derived-modes)
-                     (when (derived-mode-p mode)
-                       (throw 'break t))))))
+                 (seq-some #'derived-mode-p mivi-enabled-derived-modes)))
     (mivi-mode 1)))
 
 (defun mivi-mode-off ()
