@@ -21,6 +21,25 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;;; `mivi-mode' provides basic Vi-like editing layer.
+
+;;; To setup it, write the following in your init file:
+;;;
+;;; (mivi-setup)
+;;;
+
+;;; In default, `mivi-mode' is enabled on `fundamental-mode' or any derived mode
+;;; of `conf-mode', `prog-mode' and `text-mode'.
+;;; To enable `mivi-mode' in a major-mode:
+;;;
+;;; (add-to-list 'mivi-enabled-major-modes 'some-mode)
+;;;
+;;; To enable `mivi-mode' in any mode derived a major-mode:
+;;;
+;;; (add-to-list 'mivi-enabled-derived-modes 'some-mode)
+;;;
+
 ;;; Code:
 
 (require 'seq)
@@ -993,7 +1012,7 @@
 (defun mivi-Paste (&optional arg)
   (interactive "p")
   (when (string-match-p "\n$" (current-kill 0))
-   (forward-line 0))
+    (forward-line 0))
   (save-excursion
     (dotimes (_ arg)
       (yank))))
