@@ -18,6 +18,7 @@ Setup
 
 * Emacs 25
 * undo-tree
+* seq
 
 ### Configuration ###
 
