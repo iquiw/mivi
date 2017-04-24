@@ -30,6 +30,20 @@ With [use-package](https://github.com/jwiegley/use-package),
   (mivi-setup))
 ```
 
+In default, `mivi-mode` is enabled on `fundamental-mode` or any derived mode
+of `conf-mode`, `prog-mode` and `text-mode`.
+To enable `mivi-mode` in a major-mode:
+
+``` emacs-lisp
+(add-to-list 'mivi-enabled-major-modes 'some-mode)
+```
+
+To enable `mivi-mode` in any mode derived a major-mode:
+
+``` emacs-lisp
+(add-to-list 'mivi-enabled-derived-modes 'some-mode)
+```
+
 Feature
 -------
 
