@@ -53,6 +53,7 @@ Feature
 * <kbd>u</kbd> acts like *nvi*, that is, it undo and redo alternately.
   To repeat undo, press <kbd>.</kbd> after <kbd>u</kbd>.
 * <kbd>$</kbd> acts like <kbd>C-e</kbd> in Emacs.
+* Change <kbd>c</kbd> acts as delete and insert, not as overwrite like *nvi*.
 
 ### Not Implemented ###
 
