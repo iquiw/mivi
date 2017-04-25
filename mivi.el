@@ -227,6 +227,12 @@
                             key
                             pre-bindings
                             &rest edit-body)
+  "Macro to derive motion key into STATE-TYPE command key.
+STATE-TYPE is one of change, copy or delete.
+MOTION-TYPE is one of motion-0, motion-1, motion-2 or motion-line.
+KEY is keycode to be derived.
+PRE-BINDINGS is any binding form that is bound before the motion.
+EDIT-BODY is body form to be called after the motion."
   (declare (debug (form form form form body))
            (indent 3))
   (let ((prefix (concat "mivi-" (symbol-name state-type) "-")))
