@@ -415,9 +415,6 @@ EDIT-BODY is body form to be called after the motion."
     (define-key map [return] 'mivi-delete-next-line)
     map))
 
-(defun mivi-nil ()
-  (interactive))
-
 ;; Motion commands
 (defun mivi-backward-word (&optional arg)
   (interactive "p")
