@@ -1256,6 +1256,7 @@ Derived from `viper--tty-ESC-filter'."
     map))
 
 (defun mivi-mode-on ()
+  "Turn on mivi-mode in the current buffer if conditions are satisfied."
   (when (and (not (minibufferp))
              (not (eq (aref (buffer-name) 0) ?\s))
              (or (member major-mode mivi-enabled-major-modes)
@@ -1263,6 +1264,7 @@ Derived from `viper--tty-ESC-filter'."
     (mivi-mode 1)))
 
 (defun mivi-mode-off ()
+  "Turn off mivi-mode in the current buffer."
   (mivi-mode -1))
 
 (define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on)
