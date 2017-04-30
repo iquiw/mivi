@@ -1230,10 +1230,12 @@ Derived from `viper-catch-tty-ESC'."
             mivi-insert-state))))
 
 (defun mivi--after-change-function (_beg _end _len)
+  "Reset undo direction unless undo is in progress after change."
   (unless undo-in-progress
     (setq mivi--undo-direction 'redo)))
 
 (defun mivi--post-command-function ()
+  "Cleanup search overlay after non-search commands."
   (when (and mivi--search-overlay
              (not (memq this-command '(mivi-search
                                        mivi-search-backward
