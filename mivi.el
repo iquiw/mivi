@@ -44,6 +44,8 @@
 
 (require 'seq)
 (require 'undo-tree)
+(require 'mivi-common)
+(require 'mivi-ex)
 
 (defgroup mivi nil "Minimal Vi mode."
   :group 'emulations
@@ -100,8 +102,6 @@
 
 (defvar-local mivi--insert-beginning (make-marker))
 (defvar-local mivi--insert-end (make-marker))
-
-(defvar-local mivi--mark-slots (make-hash-table :test 'eq))
 
 (defconst mivi--blank-chars "[:blank:]\r")
 (defconst mivi--blanknl-chars (concat mivi--blank-chars "\n"))
@@ -174,6 +174,8 @@
 (defconst mivi-command-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map mivi-motion-map)
+    (define-key map "." #'mivi-repeat)
+    (define-key map ":" #'mivi-ex)
     (define-key map "A" #'mivi-Append)
     (define-key map "C" 'mivi-change-end-of-line)
     (define-key map "D" 'mivi-delete-end-of-line)
@@ -198,7 +200,6 @@
     (define-key map "x" #'mivi-kill-char)
     (define-key map "y" #'mivi-copy)
     (define-key map "~" #'mivi-updown-case)
-    (define-key map "." #'mivi-repeat)
     (define-key map (kbd "C-e") #'scroll-up-line)
     (define-key map (kbd "C-y") #'scroll-down-line)
     (define-key map (kbd "C-d") #'mivi-scroll-up)

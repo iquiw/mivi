@@ -9,16 +9,20 @@
 (defvar mivi-root-path
   (f-parent mivi-features-path))
 
+(defvar mivi-ert-result)
+
 (add-to-list 'load-path mivi-root-path)
 
 (require 'undercover)
-(undercover "mivi.el")
+(undercover "mivi*.el")
 
 (require 'mivi)
 (require 'espuds)
 (require 'ert)
 
 (Setup
+ (setq debug-on-error nil)
+ (load (expand-file-name "tests/mivi-tests.el" mivi-root-path) nil t)
  (mivi-setup))
 
 (Before
