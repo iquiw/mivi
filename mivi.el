@@ -1173,6 +1173,7 @@ Derived from `viper-catch-tty-ESC'."
 (put 'mivi-mode-line 'risky-local-variable t)
 
 (defun mivi--mode-line-update ()
+  "Update MiVi mode line indicator according to the current sate."
   (setq mivi-mode-line
         `(mivi-mode
           (" "
@@ -1194,6 +1195,7 @@ Derived from `viper-catch-tty-ESC'."
   (force-mode-line-update))
 
 (defun mivi--mode-line-insert ()
+  "Insert MiVi mode line indicator after `mode-line-mule-info'."
   (when (listp mode-line-format)
     (setq mode-line-format
           (let (l)
@@ -1204,6 +1206,7 @@ Derived from `viper-catch-tty-ESC'."
                 (push 'mivi-mode-line l)))))))
 
 (defun mivi--mode-line-remove ()
+  "Remove MiVi mode line indicator."
   (when (listp mode-line-format)
     (setq mode-line-format
           (delete 'mivi-mode-line mode-line-format))))
