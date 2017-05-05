@@ -1130,6 +1130,15 @@ Derived from `viper-catch-tty-ESC'."
       (goto-char origin))))
 
 (defun mivi--store-command (&rest args)
+  "Store the current command for `mivi-repeat'.
+The stored command is a plist with the following properties:
+
+  :command	command symbol, default to `this-command'.
+  :prefix	prefix argument, default to `current-prefix-arg'.
+  :category	command category, 'insert, 'change, 'delete, default to nil.
+  :content	inserted content, default to nil.
+
+With ARGS, the above default values can be overwritten."
   (let ((plist (list :prefix current-prefix-arg
                      :command this-command)))
     (while args
@@ -1139,6 +1148,9 @@ Derived from `viper-catch-tty-ESC'."
     (setq mivi--last-command plist)))
 
 (defun mivi--switch-state (state)
+  "Switch MiVi state to STATE.
+It also changes cursor type, sets markers in inserted region
+and updates MiVi mode line."
   (let (new-cursor-type)
     (cond
      ((eq state 'mivi-replace-state)
