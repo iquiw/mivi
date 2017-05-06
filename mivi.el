@@ -417,6 +417,8 @@ EDIT-BODY is body form to be called after the motion."
 
 ;; Motion commands
 (defun mivi-backward-word (&optional arg)
+  "Move backward to beginning of word.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (_ arg)
     (skip-chars-backward mivi--blanknl-chars)
@@ -425,6 +427,8 @@ EDIT-BODY is body form to be called after the motion."
       (skip-chars-backward mivi--non-blanknlword-chars))))
 
 (defun mivi-Backward-word (&optional arg)
+  "Move backward until encountering non-blank character.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (_ arg)
     (skip-chars-backward mivi--blanknl-chars)
