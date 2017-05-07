@@ -435,6 +435,8 @@ With ARG, repeat the specified count."
     (skip-chars-backward mivi--non-blanknl-chars)))
 
 (defun mivi-end-of-word (&optional arg)
+  "Move forward to end of word.
+With ARG, repeat the specified count."
   (interactive "p")
   (forward-char)
   (let ((p (point)))
@@ -447,6 +449,8 @@ With ARG, repeat the specified count."
       (backward-char))))
 
 (defun mivi-End-of-word (&optional arg)
+  "Move forward until encountering non-blank character.
+With ARG, repeat the specified count."
   (interactive "p")
   (forward-char)
   (let ((p (point)))
