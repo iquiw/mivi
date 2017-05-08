@@ -461,12 +461,16 @@ With ARG, repeat the specified count."
       (backward-char))))
 
 (defun mivi-find (&optional arg)
+  "Find forward a character from user input at the current line.
+With ARG, repeat the specified count."
   (interactive "p")
   (let ((ch (or mivi--current-find-char (read-char "f-"))))
     (mivi--find-internal ch nil arg)
     (setq mivi--last-find (list ch 1 nil))))
 
 (defun mivi-Find (&optional arg)
+  "Find backward a charcter from user input at the current line.
+With ARG, repeat the specified count."
   (interactive "p")
   (let ((ch (or mivi--current-find-char (read-char "F-"))))
     (mivi--find-internal ch nil (- arg))
