@@ -417,7 +417,7 @@ EDIT-BODY is body form to be called after the motion."
 
 ;; Motion commands
 (defun mivi-backward-word (&optional arg)
-  "Move backward to beginning of word.
+  "Move backward to the beginning of word.
 With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (_ arg)
@@ -435,7 +435,7 @@ With ARG, repeat the specified count."
     (skip-chars-backward mivi--non-blanknl-chars)))
 
 (defun mivi-end-of-word (&optional arg)
-  "Move forward to end of word.
+  "Move forward to the end of word.
 With ARG, repeat the specified count."
   (interactive "p")
   (forward-char)
@@ -477,6 +477,8 @@ With ARG, repeat the specified count."
     (setq mivi--last-find (list ch -1 nil))))
 
 (defun mivi-forward-word (&optional arg)
+  "Move forward to the beginning of the next word.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (i arg)
     (let ((skipped t))
@@ -496,6 +498,8 @@ With ARG, repeat the specified count."
         (skip-chars-forward mivi--blanknl-chars))))))
 
 (defun mivi-forward-Word (&optional arg)
+  "Move forward to the next non-blank character following blank characters.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (i arg)
     (let ((skipped (> (skip-chars-forward mivi--non-blanknl-chars) 0)))
