@@ -80,6 +80,7 @@
 (defvar mivi--current-find-char nil)
 (defvar mivi--current-replace-char nil)
 (defvar mivi--current-search-string nil)
+(defvar mivi--unmatch-throw-error nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
 (defvar mivi--last-replace-char nil)
@@ -257,32 +258,33 @@ EDIT-BODY is body form to be called after the motion."
                                         ''mivi--copy-region
                                       ''kill-region)))))
              (unwind-protect
-                 (let* (,@pre-bindings)
-                   (call-interactively orig-fn)
-                   (let ((end (point)))
-                     ,@(pcase motion-type
-                         ('motion-0 `((when (/= beg end)
-                                        (funcall region-func beg end))))
-                         ('motion-1 `((cond
-                                       ((< beg end)
-                                        (funcall region-func beg (1+ end)))
-                                       ((> beg end)
-                                        (funcall region-func beg end)))))
-                         ('motion-2 `((cond
-                                       ((< beg end)
-                                        (funcall region-func beg (1+ end)))
-                                       ((> beg end)
-                                        (funcall region-func
-                                                 (if eol beg (1+ beg)) end)))))
-                         (_ edit-body))
-                     ,(cond
-                       ((eq state-type 'change)
-                        (if (eq motion-type 'motion-line)
-                            `(setq new-state 'mivi-insert-state)
-                          `(unless (= beg end)
-                             (setq new-state 'mivi-insert-state))))
-                       ((eq state-type 'copy)
-                        `(goto-char (min beg end))))))
+                 (condition-case nil
+                     (let* ((mivi--unmatch-throw-error t)
+                            ,@pre-bindings)
+                       (call-interactively orig-fn)
+                       (let ((end (point)))
+                         ,@(pcase motion-type
+                             ('motion-0 `((when (/= beg end)
+                                            (funcall region-func beg end))))
+                             ('motion-1 `((cond
+                                           ((< beg end)
+                                            (funcall region-func beg (1+ end)))
+                                           ((> beg end)
+                                            (funcall region-func beg end)))))
+                             ('motion-2 `((cond
+                                           ((< beg end)
+                                            (funcall region-func beg (1+ end)))
+                                           ((> beg end)
+                                            (funcall region-func
+                                                     (if eol beg (1+ beg))
+                                                     end)))))
+                             (_ edit-body))
+                         ,(cond
+                           ((eq state-type 'change)
+                            `(setq new-state 'mivi-insert-state))
+                           ((eq state-type 'copy)
+                            `(goto-char (min beg end))))))
+                     (user-error nil))
                (mivi--switch-state (or new-state 'mivi-command-state))
                (setq this-command new-fn)
                ,(unless (eq state-type 'copy)
@@ -563,7 +565,9 @@ With ARG, repeat the specified count."
       (?\) (unless (eolp)
              (forward-char))
            (backward-sexp))
-      (_ (goto-char origin)))))
+      (_ (goto-char origin)
+         (when mivi--unmatch-throw-error
+           (user-error "No matching pair found"))))))
 
 (defun mivi-next-line ()
   (interactive)
@@ -656,18 +660,20 @@ With ARG, repeat the specified count."
   (let ((re (or mivi--current-search-string
                 (read-regexp "/" (car mivi--last-search)))))
     (unless (string= re "")
-      (mivi--search-internal re arg 1)
-      (setq mivi--last-search (cons re 1))))
-  (setq this-command 'mivi-search))
+      (unwind-protect
+          (mivi--search-internal re arg 1)
+        (setq mivi--last-search (cons re 1))
+        (setq this-command 'mivi-search)))))
 
 (defun mivi-search-backward (&optional arg)
   (interactive "p")
   (let ((re (or mivi--current-search-string
                 (read-regexp "?" (car mivi--last-search)))))
     (unless (string= re "")
-      (mivi--search-internal re arg -1)
-      (setq mivi--last-search (cons re -1))))
-  (setq this-command 'mivi-search-backward))
+      (unwind-protect
+          (mivi--search-internal re arg -1)
+        (setq mivi--last-search (cons re -1))
+        (setq this-command 'mivi-search-backward)))))
 
 (defun mivi-search-current-word ()
   (interactive)
@@ -1100,9 +1106,11 @@ Derived from `viper-catch-tty-ESC'."
     (when (/= (point) limit)
       (when move?
         (forward-char sign))
-      (when (search-forward (char-to-string ch) limit t count)
-        (when till?
-          (forward-char (- sign))))
+      (if (search-forward (char-to-string ch) limit t count)
+          (when till?
+            (forward-char (- sign)))
+        (when mivi--unmatch-throw-error
+          (user-error "`%s' not found" (char-to-string ch))))
       (when move?
         (forward-char (- sign))))))
 
@@ -1143,7 +1151,9 @@ Derived from `viper-catch-tty-ESC'."
                   (make-overlay (match-beginning 0) (match-end 0)))
             (overlay-put mivi--search-overlay 'face 'mivi-search-highlight))
           (goto-char (match-beginning 0)))
-      (goto-char origin))))
+      (goto-char origin)
+      (when mivi--unmatch-throw-error
+        (user-error "Pattern not found")))))
 
 (defun mivi--store-command (&rest args)
   "Store the current command for `mivi-repeat'.
