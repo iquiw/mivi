@@ -531,6 +531,7 @@ With ARG, repeat the specified count."
     (setq mivi--last-find (list ch -1 t))))
 
 (defun mivi-goto-line (&optional arg)
+  "Go to the line specified by ARG, default to the last line."
   (interactive "P")
   (let ((n (mivi--numeric-or-default arg 0)))
     (if (> n 0)
