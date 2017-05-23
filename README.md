@@ -57,7 +57,8 @@ Feature
 
 ### Not Implemented ###
 
-* All ex commands <kbd>:</kbd>.
+* All ex commands <kbd>:</kbd> except for the following commands.
+    * <kbd>d</kbd>
 * Shift commands <kbd>&lt;</kbd>, <kbd>&gt;</kbd>.
 * Buffer (in Vi-context) related functions.
 * More...
