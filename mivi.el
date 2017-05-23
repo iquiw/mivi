@@ -545,13 +545,13 @@ With ARG, repeat the specified count."
 
 (defun mivi-goto-mark (ch)
   (interactive "c")
-  (let ((p (gethash ch mivi--mark-slots)))
+  (let ((p (mivi--get-mark ch)))
     (when p
       (goto-char p))))
 
 (defun mivi-goto-mark-line (ch)
   (interactive "c")
-  (let ((p (gethash ch mivi--mark-slots)))
+  (let ((p (mivi--get-mark ch)))
     (when p
       (goto-char p)
       (back-to-indentation))))
@@ -968,7 +968,7 @@ With ARG, repeat the specified count."
 
 (defun mivi-mark (ch)
   (interactive "c")
-  (puthash ch (point) mivi--mark-slots))
+  (mivi--put-mark ch))
 
 (defun mivi-repeat (&optional arg)
   (interactive "P")

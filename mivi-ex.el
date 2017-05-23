@@ -64,7 +64,7 @@ It returns cons of line number and rest of string."
       (setq str (substring str 1)))
      ((string-match "^'\\(.\\)" str)
       (let* ((c (string-to-char (match-string 1 str)))
-             (p (gethash c mivi--mark-slots)))
+             (p (mivi--get-mark c)))
         (setq str (substring str 2))
         (if p
             (setq num (save-excursion
