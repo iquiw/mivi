@@ -1262,6 +1262,7 @@ and updates MiVi mode line."
       (progn
         (add-hook 'after-change-functions #'mivi--after-change-function nil t)
         (add-hook 'post-command-hook #'mivi--post-command-function nil t)
+        (mivi--init-marks)
         (mivi--mode-line-insert)
         (unless (seq-some #'symbol-value mivi--states)
           (mivi--switch-state 'mivi-command-state)))

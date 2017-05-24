@@ -54,6 +54,11 @@
     (goto-line 4)
     (should (equal '(4 . "s/foo/bar/") (mivi-ex--parse-linespec "s/foo/bar/")))))
 
+(ert-deftest mivi-ex--parse-linespec-for-unset-mark ()
+  (with-temp-buffer
+    (mivi-mode 1)
+    (should-error (mivi-ex--parse-linespec "'a,.") :type 'user-error)))
+
 (ert-deftest mivi-ex--parse-command-without-line-range ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
