@@ -30,6 +30,17 @@
   (lambda ()
     (mivi-mode-off)))
 
+(When "^I run ert tests$"
+  "Run ert tests."
+  (lambda ()
+    (setq mivi--ert-result (ert-run-tests-batch))))
+
+(When "^I insert numbers per line to \"\\([0-9]+\\)\""
+  "Insert number per line from 1 to MAX."
+  (lambda (max)
+    (dotimes (n (string-to-number max))
+      (insert (format "%s\n" (1+ n))))))
+
 (Then "^the cursor should be at cell (\\([0-9]+\\), *\\([0-9]+\\))$"
   "Checks that the cursor is at a specific (LINE, COLUMN)."
   (lambda (line column)
@@ -122,3 +133,8 @@
     (if (string= not "")
         (should (memq 'mivi-mode-line mode-line-format))
       (should (not (memq 'mivi-mode-line mode-line-format))))))
+
+(Then "^All ert tests should pass$"
+  "Checks whether there is no unexpected failure."
+  (lambda ()
+    (should (= (ert--stats-failed-expected mivi--ert-result) 0))))
