@@ -46,7 +46,7 @@ It returns plist of :command, :arg and :range."
         (`(,num . ,rest)
          (setq end num)
          (setq str rest))))
-    (if (string-match "\\([a-z]+\\)\\(.*\\)" str)
+    (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
               :arg (match-string 2 str)
               :range (cons beg (or end beg))))))

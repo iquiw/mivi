@@ -79,3 +79,9 @@
     (insert "1\n2\n3\n4\n5\n")
     (should (equal '(:command "foo" :arg "$" :range (5 . 6))
                    (mivi-ex--parse-command "-,.foo$")))))
+
+(ert-deftest mivi-ex--parse-command-with-spaces-skipped ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (should (equal '(:command "d" :arg "3" :range (6 . 6))
+                   (mivi-ex--parse-command "d 3")))))
