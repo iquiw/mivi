@@ -22,23 +22,23 @@
 
 ;;; Commentary:
 
-;;; `mivi-mode' provides basic Vi-like editing layer.
+;; `mivi-mode' provides basic Vi-like editing layer.
 
-;;; To setup it, write the following in your init file:
-;;;
-;;; (mivi-setup)
-;;;
+;; To setup it, write the following in your init file:
+;;
+;; (mivi-setup)
+;;
 
-;;; In default, `mivi-mode' is enabled on `fundamental-mode' or any derived mode
-;;; of `conf-mode', `prog-mode' and `text-mode'.
-;;; To enable `mivi-mode' in a major-mode:
-;;;
-;;; (add-to-list 'mivi-enabled-major-modes 'some-mode)
-;;;
-;;; To enable `mivi-mode' in any mode derived a major-mode:
-;;;
-;;; (add-to-list 'mivi-enabled-derived-modes 'some-mode)
-;;;
+;; In default, `mivi-mode' is enabled on `fundamental-mode' or any derived mode
+;; of `conf-mode', `prog-mode' and `text-mode'.
+;; To enable `mivi-mode' in a major-mode:
+;;
+;; (add-to-list 'mivi-enabled-major-modes 'some-mode)
+;;
+;; To enable `mivi-mode' in any mode derived a major-mode:
+;;
+;; (add-to-list 'mivi-enabled-derived-modes 'some-mode)
+;;
 
 ;;; Code:
 
