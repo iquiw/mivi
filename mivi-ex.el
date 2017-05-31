@@ -39,6 +39,7 @@
                            nil 'mivi-ex--history default))
          (cmdspec (mivi-ex--parse-command str)))
     (pcase (plist-get cmdspec :command)
+      ('nil (mivi-ex--goto-line (cdr (plist-get cmdspec :range))))
       ("d" (mivi-ex--delete (plist-get cmdspec :range))))))
 
 (defun mivi-ex--delete (range)
@@ -73,7 +74,8 @@ It returns plist of :command, :arg and :range."
     (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
               :arg (match-string 2 str)
-              :range (cons beg (or end beg))))))
+              :range (cons beg (or end beg)))
+      (list :range (cons beg (or end beg))))))
 
 (defun mivi-ex--parse-linespec (str)
   "Parse ex line number spec provided as STR.

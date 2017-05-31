@@ -7,6 +7,18 @@ Feature: Ex command
     When I run ert tests
     Then All ert tests should pass
 
+  Scenario: go to the specified line
+    Given the buffer is empty
+    When I insert numbers per line to "10"
+    And I type ":5"
+    Then the current line should be "5"
+
+  Scenario: go to end of the specified line range
+    Given the buffer is empty
+    When I insert numbers per line to "10"
+    And I type ":5,9"
+    Then the current line should be "9"
+
   Scenario: delete the current line
     Given the buffer is empty
     When I insert numbers per line to "10"
