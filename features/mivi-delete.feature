@@ -520,16 +520,10 @@ Feature: Delete
     baz bar foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "d/bar"
-    And I press "RET"
-    And I execute the action chain
     Then I should see pattern "^bar baz$"
 
-    When I start an action chain
     And I type "2d/baz"
-    And I press "RET"
-    And I execute the action chain
     Then I should see pattern "^baz bar foo$"
 
   Scenario: delete search current word
@@ -552,11 +546,8 @@ Feature: Delete
     baz bar foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/bar"
-    And I press "RET"
     And I type "dn"
-    And I execute the action chain
     Then I should see pattern "^foo bar foo$"
 
   Scenario: delete search backward next
@@ -566,11 +557,8 @@ Feature: Delete
     foo bar baz
     baz bar foo
     """
-    When I start an action chain
     And I type "?ba."
-    And I press "RET"
     And I type "dn"
-    And I execute the action chain
     Then I should see:
     """
     foo bar baz
@@ -584,10 +572,7 @@ Feature: Delete
     foo bar baz qux quux
     """
     When I go to word "qux"
-    When I start an action chain
     And I type "d?bar"
-    And I press "RET"
-    And I execute the action chain
     Then I should see pattern "^foo qux quux$"
 
   Scenario: delete search Next
@@ -598,19 +583,13 @@ Feature: Delete
     qux quux foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "2/qu+x"
-    And I press "RET"
     And I type "dN"
-    And I execute the action chain
     Then I should see pattern "^quux foo$"
 
     When I go to end of buffer
-    And I start an action chain
     And I type "2?ba."
-    And I press "RET"
     And I type "dN"
-    And I execute the action chain
     Then I should see pattern "^foo baz$"
 
   Scenario: delete next line at bot

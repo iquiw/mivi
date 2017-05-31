@@ -408,52 +408,31 @@ Feature: Motion
     foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/bar"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (2, 2)
 
     When I go to beginning of buffer
-    And I start an action chain
     And I type "2/^ *ba."
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
     When I go to beginning of buffer
-    And I start an action chain
     And I type "/fo+"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (4, 0)
 
-    And I start an action chain
     And I type "/notmatch"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (4, 0)
 
-    And I start an action chain
     And I type "/FOO"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (4, 0)
 
   Scenario: wrapped search
     When I go to end of buffer
-    And I start an action chain
     And I type "/foo"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (1, 0)
     And I should see message "Search wrapped"
 
     When I go to cell (2, 3)
-    And I start an action chain
     And I type "/bar"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (2, 2)
     And I should see message "Search wrapped"
 
@@ -508,10 +487,7 @@ Feature: Motion
     qux
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/foo"
-    And I press "RET"
-    And I execute the action chain
     And I type "n"
     Then the cursor should be at cell (3, 1)
 
@@ -521,32 +497,20 @@ Feature: Motion
 
   Scenario: search backward
     When I go to end of buffer
-    And I start an action chain
     And I type "?foo"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (3, 4)
 
-    When I start an action chain
     And I type "2?foo"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (1, 1)
 
-    When I start an action chain
     And I type "?baz"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (2, 0)
     And I should see message "Search wrapped"
 
   Scenario: search backward next
     When I go to end of buffer
-    And I start an action chain
     And I type "?foo"
-    And I press "RET"
     And I type "n"
-    And I execute the action chain
     Then the cursor should be at cell (3, 1)
 
     When I type "n"
@@ -554,11 +518,8 @@ Feature: Motion
 
   Scenario: search Next
     When I go to beginning of buffer
-    And I start an action chain
     And I type "2/foo"
-    And I press "RET"
     And I type "N"
-    And I execute the action chain
     Then the cursor should be at cell (1, 1)
 
     When I type "2N"
@@ -567,11 +528,8 @@ Feature: Motion
 
   Scenario: search backward Next
     When I go to end of buffer
-    And I start an action chain
     And I type "2? ."
-    And I press "RET"
     And I type "N"
-    And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
     When I type "N"
@@ -589,10 +547,7 @@ Feature: Motion
     quux5
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/[a-z]\{3\}[0-9]"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (2, 2)
 
     When I type "n"
@@ -609,17 +564,11 @@ Feature: Motion
     When I insert "foo"
     And I set "mivi--last-search" to "nil"
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (1, 0)
 
     When I go to end of buffer
-    And I start an action chain
     And I type "?"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (1, 3)
 
   Scenario: search (backward) history
@@ -633,21 +582,13 @@ Feature: Motion
     5
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/[24]"
-    And I press "RET"
     And I type "/"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (4, 0)
 
     When I go to end of buffer
-    And I start an action chain
     And I type "?[135]"
-    And I press "RET"
     And I type "?"
-    And I press "RET"
-    And I execute the action chain
     Then the cursor should be at cell (3, 0)
 
   Scenario: search and pop mark
@@ -659,14 +600,8 @@ Feature: Motion
       456
        7890
     """
-    And I start an action chain
     And I type "?^ *2"
-    And I press "RET"
-    And I execute the action chain
-    And I start an action chain
     And I type "/6$"
-    And I press "RET"
-    And I execute the action chain
     And I call "pop-to-mark-command"
     Then the cursor should be at cell (2, 0)
 

@@ -595,17 +595,11 @@ Feature: Copy
     baz bar foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "y/bar"
-    And I press "RET"
-    And I execute the action chain
     Then the current kill-ring should be "foo "
     And the mivi state should be "command"
 
-    When I start an action chain
     And I type "2y/baz"
-    And I press "RET"
-    And I execute the action chain
     Then the current kill-ring should be:
     """
     foo bar baz
@@ -639,11 +633,8 @@ Feature: Copy
     foo bar baz bar foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/bar"
-    And I press "RET"
     And I type "yn"
-    And I execute the action chain
     Then the current kill-ring should be "bar baz "
     And the mivi state should be "command"
 
@@ -653,11 +644,8 @@ Feature: Copy
     """
     foo bar baz bar foo
     """
-    When I start an action chain
     And I type "?ba."
-    And I press "RET"
     And I type "yn"
-    And I execute the action chain
     Then the current kill-ring should be "baz "
     And the mivi state should be "command"
 
@@ -668,10 +656,7 @@ Feature: Copy
     foo bar baz qux quux
     """
     When I go to word "qux"
-    When I start an action chain
     And I type "y?bar"
-    And I press "RET"
-    And I execute the action chain
     Then the current kill-ring should be "bar baz "
     And the mivi state should be "command"
 
@@ -683,20 +668,14 @@ Feature: Copy
     qux quux foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "2/qu+x"
-    And I press "RET"
     And I type "yN"
-    And I execute the action chain
     Then the current kill-ring should be "qux "
     And the mivi state should be "command"
 
     When I go to end of buffer
-    And I start an action chain
     And I type "2?ba."
-    And I press "RET"
     And I type "yN"
-    And I execute the action chain
     Then the current kill-ring should be "bar "
     And the mivi state should be "command"
 

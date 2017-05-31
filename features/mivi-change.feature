@@ -471,18 +471,12 @@ Feature: Change
     baz bar foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "c/bar"
-    And I press "RET"
-    And I execute the action chain
     Then I should see pattern "^bar baz$"
     And the mivi state should be "insert"
 
-    When I start an action chain
     And I press "<escape>"
     And I type "2c/baz"
-    And I press "RET"
-    And I execute the action chain
     Then I should see pattern "^baz bar foo$"
     And the mivi state should be "insert"
 
@@ -508,11 +502,8 @@ Feature: Change
     foo bar baz bar foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "/bar"
-    And I press "RET"
     And I type "cn"
-    And I execute the action chain
     Then I should see pattern "^foo bar foo$"
     And the mivi state should be "insert"
 
@@ -522,11 +513,8 @@ Feature: Change
     """
     foo bar baz bar foo
     """
-    When I start an action chain
     And I type "?ba."
-    And I press "RET"
     And I type "cn"
-    And I execute the action chain
     Then I should see pattern "^foo bar bar foo$"
     And the mivi state should be "insert"
 
@@ -537,10 +525,7 @@ Feature: Change
     foo bar baz qux quux
     """
     When I go to word "qux"
-    When I start an action chain
     And I type "c?bar"
-    And I press "RET"
-    And I execute the action chain
     Then I should see pattern "^foo qux quux$"
     And the mivi state should be "insert"
 
@@ -552,21 +537,15 @@ Feature: Change
     qux quux foo
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "2/qu+x"
-    And I press "RET"
     And I type "cN"
-    And I execute the action chain
     Then I should see pattern "^quux foo$"
     And the mivi state should be "insert"
 
     When I go to end of buffer
-    And I start an action chain
     And I press "<escape>"
     And I type "2?ba."
-    And I press "RET"
     And I type "cN"
-    And I execute the action chain
     Then I should see pattern "^foo baz$"
     And the mivi state should be "insert"
 
@@ -577,10 +556,7 @@ Feature: Change
     foo bar baz
     """
     And I go to beginning of buffer
-    And I start an action chain
     And I type "c/qux"
-    And I press "RET"
-    And I execute the action chain
     Then the mivi state should be "command"
 
     When I type "cn"
@@ -589,10 +565,7 @@ Feature: Change
     When I type "cN"
     Then the mivi state should be "command"
 
-    When I start an action chain
     And I type "c?qux"
-    And I press "RET"
-    And I execute the action chain
     Then the mivi state should be "command"
 
   Scenario: change next line at bot
