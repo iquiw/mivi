@@ -544,12 +544,14 @@ With ARG, repeat the specified count."
   (back-to-indentation))
 
 (defun mivi-goto-mark (ch)
+  "Go to the point marked by CH."
   (interactive "c")
   (let ((p (mivi--get-mark ch)))
     (when p
       (goto-char p))))
 
 (defun mivi-goto-mark-line (ch)
+  "Go to the line marked by CH."
   (interactive "c")
   (let ((p (mivi--get-mark ch)))
     (when p
@@ -557,6 +559,16 @@ With ARG, repeat the specified count."
       (back-to-indentation))))
 
 (defun mivi-goto-pair ()
+  "Go to the point at corresponding pair character.
+
+If the current point is a pair character, go to the corresponding pair
+character.
+
+If the current point at end of line following a pair character, go to
+the corresponding pair character.
+
+Otherwise, find the next pair character and go to the corresponding
+pair character."
   (interactive)
   (let* ((origin (point))
          (c (and (eolp) (char-before)))
