@@ -58,7 +58,7 @@
   "Enable mivi in the specified major modes.")
 
 (defcustom mivi-override-universal-argument-map t
-  "Whether to disable \\C-u binding in `universal-argument-map'.")
+  "Whether to disable Ctrl+u binding in `universal-argument-map'.")
 
 (defcustom mivi-shift-width 2
   "Shiftwidth by which backward indent moves the current indentation.")
