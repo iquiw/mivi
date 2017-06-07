@@ -588,6 +588,7 @@ pair character."
            (user-error "No matching pair found"))))))
 
 (defun mivi-next-line ()
+  "Move to next line with column preserved via `next-line'."
   (interactive)
   (let ((line-move-visual nil))
     (call-interactively #'next-line))
@@ -619,6 +620,7 @@ pair character."
         (goto-char (point-max))))))
 
 (defun mivi-previous-line ()
+  "Move to previous line with column preserved via `previous-line'."
   (interactive)
   (let ((line-move-visual nil))
     (call-interactively #'previous-line))
