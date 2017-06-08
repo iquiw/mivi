@@ -40,17 +40,33 @@
          (cmdspec (mivi-ex--parse-command str)))
     (pcase (plist-get cmdspec :command)
       ('nil (mivi-ex--goto-line (cdr (plist-get cmdspec :range))))
-      ("d" (mivi-ex--delete (plist-get cmdspec :range))))))
+      ("d" (mivi-ex--delete (plist-get cmdspec :range)))
+      ("s" (mivi-ex--subst (plist-get cmdspec :range)
+                           (plist-get cmdspec :arg))))))
 
 (defun mivi-ex--delete (range)
   "Delete lines within RANGE."
-  (let ((beg (save-excursion
-               (mivi-ex--goto-line (car range))
-               (point)))
-        (end (save-excursion
-               (mivi-ex--goto-line (1+ (cdr range)))
-               (point))))
-    (kill-region beg end)))
+  (let ((region (mivi-ex--range-to-region range)))
+    (kill-region (car region) (cdr region))))
+
+(defun mivi-ex--subst (range arg)
+  "Substitute lines within RANGE according to ARG."
+  (let* ((num (car range))
+         (end (cdr range))
+         (subspec (mivi-ex--parse-subst arg))
+         (regexp (plist-get subspec :regexp))
+         (replace (plist-get subspec :replace))
+         (last-replace-point (point)))
+    (mivi-ex--goto-line num)
+    (while (<= num end)
+      (let ((bol (point)))
+        (when (re-search-forward regexp (line-end-position) t)
+          (delete-region (match-beginning 0) (match-end 0))
+          (insert replace)
+          (setq last-replace-point bol)))
+      (forward-line 1)
+      (setq num (1+ num)))
+    (goto-char last-replace-point)))
 
 ;; Internal functions
 (defun mivi-ex--goto-line (num)
@@ -113,6 +129,35 @@ It returns cons of line number and rest of string."
                    1)))
       (setq str (substring str (match-end 0))))
     (cons num str)))
+
+(defun mivi-ex--parse-subst (str)
+  "Parse argument of substitute command provided by STR.
+It returns plist of :regexp, :replace and options."
+  (let* ((delim (substring str 0 1))
+         (re-sep (concat "[^\\]" delim))
+         (re-unesc (concat "\\\\" delim))
+         offset regexp (replace ""))
+    (if (string-match re-sep str)
+        (progn
+          (setq regexp (substring str 1 (1+ (match-beginning 0))))
+          (setq offset (match-end 0)))
+      (setq regexp (substring str 1)))
+    (when offset
+      (if (string-match re-sep str offset)
+          (setq replace (substring str offset (1+ (match-beginning 0))))
+        (setq replace (substring str offset))))
+    (list :regexp (replace-regexp-in-string re-unesc delim regexp)
+          :replace (replace-regexp-in-string re-unesc delim replace))))
+
+(defun mivi-ex--range-to-region (range)
+  "Convert line RANGE to region, which is cons of points."
+  (let ((beg (save-excursion
+               (mivi-ex--goto-line (car range))
+               (point)))
+        (end (save-excursion
+               (mivi-ex--goto-line (1+ (cdr range)))
+               (point))))
+    (cons beg end)))
 
 (provide 'mivi-ex)
 ;;; mivi-ex.el ends here

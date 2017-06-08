@@ -54,3 +54,16 @@ Feature: Ex command
     And I type "mb"
     And I type ":'a,'bd"
     Then I should not see pattern "[3-8]"
+
+  Scenario: substitute the current line
+    Given the buffer is empty
+    When I insert:
+    """
+    abc
+    foo bar baz
+    def
+    """
+    And I go to line "2"
+    And I type ":s/foo/qux/"
+    Then I should see "qux bar baz"
+    And the current line should be "2"

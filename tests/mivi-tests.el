@@ -87,5 +87,24 @@
                    (mivi-ex--parse-command "d 3")))))
 
 (ert-deftest mivi-ex--parse-command-with-empty-command ()
-  (with-temp-buffer
-    (should (equal '(:range (12 . 24)) (mivi-ex--parse-command "12,24")))))
+  (should (equal '(:range (12 . 24)) (mivi-ex--parse-command "12,24"))))
+
+(ert-deftest mivi-ex--parse-subst-with-1delim ()
+  (should (equal '(:regexp "foo" :replace "")
+                 (mivi-ex--parse-subst "/foo"))))
+
+(ert-deftest mivi-ex--parse-subst-with-2delim ()
+  (should (equal '(:regexp "foo" :replace "bar")
+                 (mivi-ex--parse-subst "/foo/bar"))))
+
+(ert-deftest mivi-ex--parse-subst-with-3delim ()
+  (should (equal '(:regexp "foo" :replace "bar")
+                 (mivi-ex--parse-subst "/foo/bar/"))))
+
+(ert-deftest mivi-ex--parse-subst-with-comma-delim ()
+  (should (equal '(:regexp "foo/bar" :replace "baz/")
+                 (mivi-ex--parse-subst ",foo/bar,baz/,"))))
+
+(ert-deftest mivi-ex--parse-subst-with-escape ()
+  (should (equal '(:regexp "foo/bar/baz" :replace "qux")
+                 (mivi-ex--parse-subst "/foo\\/bar\\/baz/qux/"))))
