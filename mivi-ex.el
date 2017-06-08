@@ -109,14 +109,10 @@ It returns cons of line number and rest of string."
              (p (mivi--get-mark c)))
         (setq str (substring str 2))
         (if p
-            (setq num (save-excursion
-                        (goto-char p)
-                        (line-number-at-pos)))
+            (setq num (line-number-at-pos p))
           (user-error "`%s': Marker is not set." c))))
      ((string-match-p "^\\$" str)
-      (setq num (save-excursion
-                  (goto-char (point-max))
-                  (line-number-at-pos)))
+      (setq num (line-number-at-pos (point-max)))
       (setq str (substring str 1)))
      (t (setq num (line-number-at-pos))))
 
