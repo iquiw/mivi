@@ -39,7 +39,7 @@
                            nil 'mivi-ex--history default))
          (cmdspec (mivi-ex--parse-command str)))
     (pcase (plist-get cmdspec :command)
-      ('nil (mivi-ex--goto-line (cdr (plist-get cmdspec :range))))
+      ('nil (mivi--goto-line (cdr (plist-get cmdspec :range))))
       ("d" (mivi-ex--delete (plist-get cmdspec :range)))
       ("s" (mivi-ex--subst (plist-get cmdspec :range)
                            (plist-get cmdspec :arg))))))
@@ -57,7 +57,7 @@
          (regexp (plist-get subspec :regexp))
          (replace (plist-get subspec :replace))
          (last-replace-point (point)))
-    (mivi-ex--goto-line num)
+    (mivi--goto-line num)
     (while (<= num end)
       (let ((bol (point)))
         (when (re-search-forward regexp (line-end-position) t)
@@ -69,11 +69,6 @@
     (goto-char last-replace-point)))
 
 ;; Internal functions
-(defun mivi-ex--goto-line (num)
-  "Go to line NUM."
-  (goto-char (point-min))
-  (forward-line (1- num)))
-
 (defun mivi-ex--parse-command (str)
   "Parse ex command line provided as STR.
 It returns plist of :command, :arg and :range."
@@ -148,10 +143,10 @@ It returns plist of :regexp, :replace and options."
 (defun mivi-ex--range-to-region (range)
   "Convert line RANGE to region, which is cons of points."
   (let ((beg (save-excursion
-               (mivi-ex--goto-line (car range))
+               (mivi--goto-line (car range))
                (point)))
         (end (save-excursion
-               (mivi-ex--goto-line (1+ (cdr range)))
+               (mivi--goto-line (1+ (cdr range)))
                (point))))
     (cons beg end)))
 

@@ -40,5 +40,10 @@
   "Put mark for a character CH at the current point."
   (puthash ch (point) mivi--mark-slots))
 
+(defun mivi--goto-line (num)
+  "Go to line NUM."
+  (goto-char (point-min))
+  (forward-line (1- num)))
+
 (provide 'mivi-common)
 ;;; mivi-common.el ends here
