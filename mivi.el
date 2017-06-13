@@ -595,6 +595,8 @@ pair character."
   (setq this-command #'next-line))
 
 (defun mivi-next-line-at-bot (&optional arg)
+  "Move to beginning of text in the next line.
+With ARG, go to the specified line relative to the current line."
   (interactive "p")
   (forward-line arg)
   (back-to-indentation))
@@ -627,6 +629,8 @@ pair character."
   (setq this-command #'previous-line))
 
 (defun mivi-previous-line-at-bot (&optional arg)
+  "Move to beginning of text in the previous line.
+With ARG, go to the specified line backward relative to the current line."
   (interactive "p")
   (forward-line (- arg))
   (back-to-indentation))
