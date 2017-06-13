@@ -45,5 +45,38 @@
   (goto-char (point-min))
   (forward-line (1- num)))
 
+(defsubst mivi--linepos-new (num pos)
+  "Create new linepos data from line NUM and position POS.
+At most one of argument can be nil."
+  (cons num pos))
+
+(defun mivi--linepos-line (lp &optional noresolve)
+  "Return line number of linepos LP after resolving it if necessary.
+If NORESOLVE is non-nil, it does not try resolving."
+  (if (or noresolve (car lp))
+      (car lp)
+    (mivi--linepos-resolve lp)
+    (car lp)))
+
+(defun mivi--linepos-pos (lp &optional noresolve)
+  "Return position of linepos LP after resolving it if necessary.
+If NORESOLVE is non-nil, it does not try resolving."
+  (if (or noresolve (cdr lp))
+      (cdr lp)
+    (mivi--linepos-resolve lp)
+    (cdr lp)))
+
+(defun mivi--linepos-resolve (lp)
+  "Resolve either line number or position of linepos LP if necessary."
+  (cond
+   ((null (car lp))
+    (let ((pos (cdr lp)))
+      (setcar lp (line-number-at-pos pos))))
+   ((null (cdr lp))
+    (let ((num (car lp)))
+      (setcdr lp (save-excursion
+                   (mivi--goto-line num)
+                   (point)))))))
+
 (provide 'mivi-common)
 ;;; mivi-common.el ends here

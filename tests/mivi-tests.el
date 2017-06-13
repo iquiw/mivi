@@ -1,58 +1,63 @@
 (require 'ert)
 (require 'mivi-ex)
 
+(defun mivi-ex--test-linespec (num arg str)
+  (let ((result (mivi-ex--parse-linespec str)))
+    (should (equal num (mivi--linepos-line (car result))))
+    (should (equal arg (cdr result)))))
+
 (ert-deftest mivi-ex--parse-linespec-for-number-only ()
-  (should (equal '(1 . "") (mivi-ex--parse-linespec "1"))))
+  (mivi-ex--test-linespec 1 "" "1"))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-and-rest ()
-  (should (equal '(12 . ",34") (mivi-ex--parse-linespec "12,34"))))
+  (mivi-ex--test-linespec 12 ",34" "12,34"))
 
 (ert-deftest mivi-ex--parse-linespec-for-current-line ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 4)
-    (should (equal '(4 . ",$") (mivi-ex--parse-linespec ".,$")))))
+    (mivi-ex--test-linespec 4 ",$" ".,$")))
 
 (ert-deftest mivi-ex--parse-linespec-for-last-line ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 1)
-    (should (equal '(6 . "") (mivi-ex--parse-linespec "$")))))
+    (mivi-ex--test-linespec 6 "" "$")))
 
 (ert-deftest mivi-ex--parse-linespec-for-plus-number ()
-  (should (equal '(114 . "") (mivi-ex--parse-linespec "99+15"))))
+  (mivi-ex--test-linespec 114 "" "99+15"))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-plus ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 3)
-    (should (equal '(4 . ",.+5") (mivi-ex--parse-linespec ".+,.+5")))))
+    (mivi-ex--test-linespec 4 ",.+5" ".+,.+5")))
 
 (ert-deftest mivi-ex--parse-linespec-for-plus-only ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 3)
-    (should (equal '(4 . ",+2") (mivi-ex--parse-linespec "+,+2")))))
+    (mivi-ex--test-linespec 4 ",+2" "+,+2")))
 
 (ert-deftest mivi-ex--parse-linespec-for-minus-number ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
-    (should (equal '(3 . ",.") (mivi-ex--parse-linespec ".-3,.")))))
+    (mivi-ex--test-linespec 3 ",." ".-3,.")))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-minus ()
-  (should (equal '(9 . ",10+") (mivi-ex--parse-linespec "10-,10+"))))
+  (mivi-ex--test-linespec 9 ",10+" "10-,10+"))
 
 (ert-deftest mivi-ex--parse-linespec-for-minus-only ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 3)
-    (should (equal '(2 . ",+") (mivi-ex--parse-linespec "-,+")))))
+    (mivi-ex--test-linespec 2 ",+" "-,+")))
 
 (ert-deftest mivi-ex--parse-linespec-for-no-line ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 4)
-    (should (equal '(4 . "s/foo/bar/") (mivi-ex--parse-linespec "s/foo/bar/")))))
+    (mivi-ex--test-linespec 4 "s/foo/bar/" "s/foo/bar/")))
 
 (ert-deftest mivi-ex--parse-linespec-for-unset-mark ()
   (with-temp-buffer

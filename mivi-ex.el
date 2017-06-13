@@ -74,13 +74,13 @@
 It returns plist of :command, :arg and :range."
   (let (beg end)
     (pcase (mivi-ex--parse-linespec str)
-      (`(,num . ,rest)
-       (setq beg num)
+      (`(,lp . ,rest)
+       (setq beg (mivi--linepos-line lp))
        (setq str rest)))
     (when (string-match-p "^," str)
       (pcase (mivi-ex--parse-linespec (substring str 1))
-        (`(,num . ,rest)
-         (setq end num)
+        (`(,lp . ,rest)
+         (setq end (mivi--linepos-line lp))
          (setq str rest))))
     (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
@@ -90,36 +90,43 @@ It returns plist of :command, :arg and :range."
 
 (defun mivi-ex--parse-linespec (str)
   "Parse ex line number spec provided as STR.
-It returns cons of line number and rest of string."
-  (let (num)
+It returns cons of line-position and rest of string."
+  (let (lp)
     (cond
      ((string-match "^[0-9]+" str)
-      (setq num (string-to-number (match-string 0 str)))
+      (setq lp (mivi--linepos-new (string-to-number (match-string 0 str)) nil))
       (setq str (substring str (match-end 0))))
      ((string-match-p "^\\." str)
-      (setq num (line-number-at-pos))
+      (setq lp (mivi--linepos-new (line-number-at-pos)
+                                  (save-excursion (forward-line 0) (point))))
       (setq str (substring str 1)))
      ((string-match "^'\\(.\\)" str)
       (let* ((c (string-to-char (match-string 1 str)))
              (p (mivi--get-mark c)))
         (setq str (substring str 2))
         (if p
-            (setq num (line-number-at-pos p))
+            (setq lp (mivi--linepos-new nil p))
           (user-error "`%s': Marker is not set." c))))
      ((string-match-p "^\\$" str)
-      (setq num (line-number-at-pos (point-max)))
+      (setq lp (mivi--linepos-new nil (save-excursion
+                                        (goto-char (point-max))
+                                        (forward-line 0)
+                                        (point))))
       (setq str (substring str 1)))
-     (t (setq num (line-number-at-pos))))
+     (t (setq lp (mivi--linepos-new (line-number-at-pos)
+                                    (save-excursion (forward-line 0) (point))))))
 
     (when (string-match "^\\([-+]\\)\\([0-9]+\\)?" str)
-      (setq num (funcall
+      (setq lp (mivi--linepos-new
+                (funcall
                  (if (equal (match-string 1 str) "-") #'- #'+)
-                 num
+                 (mivi--linepos-line lp)
                  (if (match-string 2 str)
                      (string-to-number (match-string 2 str))
-                   1)))
+                   1))
+                (mivi--linepos-pos lp t)))
       (setq str (substring str (match-end 0))))
-    (cons num str)))
+    (cons lp str)))
 
 (defun mivi-ex--parse-subst (str)
   "Parse argument of substitute command provided by STR.
