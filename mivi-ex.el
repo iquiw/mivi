@@ -39,7 +39,7 @@
                            nil 'mivi-ex--history default))
          (cmdspec (mivi-ex--parse-command str)))
     (pcase (plist-get cmdspec :command)
-      ('nil (mivi--goto-line (cdr (plist-get cmdspec :range))))
+      ('nil (goto-char (mivi--linepos-pos (cdr (plist-get cmdspec :range)))))
       ("d" (mivi-ex--delete (plist-get cmdspec :range)))
       ("s" (mivi-ex--subst (plist-get cmdspec :range)
                            (plist-get cmdspec :arg))))))
@@ -51,8 +51,8 @@
 
 (defun mivi-ex--subst (range arg)
   "Substitute lines within RANGE according to ARG."
-  (let* ((num (car range))
-         (end (cdr range))
+  (let* ((num (mivi--linepos-line (car range)))
+         (end (mivi--linepos-line (cdr range)))
          (subspec (mivi-ex--parse-subst arg))
          (regexp (plist-get subspec :regexp))
          (replace (plist-get subspec :replace))
@@ -75,12 +75,12 @@ It returns plist of :command, :arg and :range."
   (let (beg end)
     (pcase (mivi-ex--parse-linespec str)
       (`(,lp . ,rest)
-       (setq beg (mivi--linepos-line lp))
+       (setq beg lp)
        (setq str rest)))
     (when (string-match-p "^," str)
       (pcase (mivi-ex--parse-linespec (substring str 1))
         (`(,lp . ,rest)
-         (setq end (mivi--linepos-line lp))
+         (setq end lp)
          (setq str rest))))
     (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
@@ -124,7 +124,7 @@ It returns cons of line-position and rest of string."
                  (if (match-string 2 str)
                      (string-to-number (match-string 2 str))
                    1))
-                (mivi--linepos-pos lp t)))
+                nil))
       (setq str (substring str (match-end 0))))
     (cons lp str)))
 
@@ -150,10 +150,11 @@ It returns plist of :regexp, :replace and options."
 (defun mivi-ex--range-to-region (range)
   "Convert line RANGE to region, which is cons of points."
   (let ((beg (save-excursion
-               (mivi--goto-line (car range))
+               (goto-char (mivi--linepos-pos (car range)))
                (point)))
         (end (save-excursion
-               (mivi--goto-line (1+ (cdr range)))
+               (goto-char (mivi--linepos-pos (cdr range)))
+               (forward-line 1)
                (point))))
     (cons beg end)))
 

@@ -64,35 +64,38 @@
     (mivi-mode 1)
     (should-error (mivi-ex--parse-linespec "'a,.") :type 'user-error)))
 
+(defun mivi-ex--test-command (command arg line-range str)
+  (let* ((result (mivi-ex--parse-command str))
+         (range (plist-get result :range)))
+    (should (equal command (plist-get result :command)))
+    (should (equal arg (plist-get result :arg)))
+    (should (equal (car line-range) (mivi--linepos-line (car range))))
+    (should (equal (cdr line-range) (mivi--linepos-line (cdr range))))))
+
 (ert-deftest mivi-ex--parse-command-without-line-range ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
     (goto-line 2)
-    (should (equal '(:command "s" :arg "/a/b/" :range (2 . 2))
-                   (mivi-ex--parse-command "s/a/b/")))))
+    (mivi-ex--test-command "s" "/a/b/" '(2 . 2) "s/a/b/")))
 
 (ert-deftest mivi-ex--parse-command-with-one-line ()
-  (should (equal '(:command "d" :arg "" :range (3 . 3))
-                 (mivi-ex--parse-command "3d"))))
+  (mivi-ex--test-command "d" "" '(3 . 3) "3d"))
 
 (ert-deftest mivi-ex--parse-command-with-number-range ()
-  (should (equal '(:command "t" :arg "$" :range (10 . 123))
-                 (mivi-ex--parse-command "10,123t$"))))
+  (mivi-ex--test-command "t" "$" '(10 . 123) "10,123t$"))
 
 (ert-deftest mivi-ex--parse-command-of-multiple-chars ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
-    (should (equal '(:command "foo" :arg "$" :range (5 . 6))
-                   (mivi-ex--parse-command "-,.foo$")))))
+    (mivi-ex--test-command "foo" "$" '(5 . 6) "-,.foo$")))
 
 (ert-deftest mivi-ex--parse-command-with-spaces-skipped ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
-    (should (equal '(:command "d" :arg "3" :range (6 . 6))
-                   (mivi-ex--parse-command "d 3")))))
+    (mivi-ex--test-command "d" "3" '(6 . 6) "d 3")))
 
 (ert-deftest mivi-ex--parse-command-with-empty-command ()
-  (should (equal '(:range (12 . 24)) (mivi-ex--parse-command "12,24"))))
+  (mivi-ex--test-command nil nil '(12 . 24) "12,24"))
 
 (ert-deftest mivi-ex--parse-subst-with-1delim ()
   (should (equal '(:regexp "foo" :replace "")
