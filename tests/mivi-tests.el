@@ -94,6 +94,11 @@
     (insert "1\n2\n3\n4\n5\n")
     (mivi-ex--test-command "d" "3" '(6 . 6) "d 3")))
 
+(ert-deftest mivi-ex--parse-command-with-reverse-range ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (should-error (mivi-ex--parse-command "4,3d") :type 'user-error)))
+
 (ert-deftest mivi-ex--parse-command-with-empty-command ()
   (mivi-ex--test-command nil nil '(12 . 24) "12,24"))
 

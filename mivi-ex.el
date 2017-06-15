@@ -82,11 +82,15 @@ It returns plist of :command, :arg and :range."
         (`(,lp . ,rest)
          (setq end lp)
          (setq str rest))))
+    (cond
+     ((null end) (setq end beg))
+     ((> (mivi--linepos-line beg) (mivi--linepos-line end))
+      (user-error "The second address is smaller than the first.")))
     (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
               :arg (match-string 2 str)
-              :range (cons beg (or end beg)))
-      (list :range (cons beg (or end beg))))))
+              :range (cons beg end))
+      (list :range (cons beg end)))))
 
 (defun mivi-ex--parse-linespec (str)
   "Parse ex line number spec provided as STR.
