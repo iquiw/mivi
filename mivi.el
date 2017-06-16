@@ -602,6 +602,8 @@ With ARG, go to the specified line relative to the current line."
   (back-to-indentation))
 
 (defun mivi-next-paragraph (&optional arg)
+  "Move to next paragraph, i.e. beginning of next blank lines.
+With ARG, repeat the specified count."
   (interactive "p")
   (catch 'break
     (dotimes (_ arg)
@@ -636,6 +638,8 @@ With ARG, go to the specified line backward relative to the current line."
   (back-to-indentation))
 
 (defun mivi-previous-paragraph (&optional arg)
+  "Move to previous paragraph, i.e. end of previous blank lines.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (_ arg)
     (when (mivi--blankline-p 0)
