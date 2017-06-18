@@ -67,3 +67,35 @@ Feature: Ex command
     And I type ":s/foo/qux/"
     Then I should see "qux bar baz"
     And the current line should be "2"
+
+  Scenario: substitute the specified line
+    Given the buffer is empty
+    When I insert:
+    """
+    abc
+    foo bar baz
+       123def
+    def
+    """
+    And I type ":3s/[0-9]+/abc/"
+    Then I should see "   abcdef"
+    And the current line should be "3"
+
+  Scenario: substitute the specified line range
+    Given the buffer is empty
+    When I insert:
+    """
+    abc
+    foo bar baz
+       abcdef
+    def
+    """
+    And I type ":1,$s/abc/123"
+    Then I should see:
+    """
+    123
+    foo bar baz
+       123def
+    def
+    """
+    And the current line should be "3"
