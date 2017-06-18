@@ -121,14 +121,12 @@ It returns cons of line-position and rest of string."
                                     (save-excursion (forward-line 0) (point))))))
 
     (when (string-match "^\\([-+]\\)\\([0-9]+\\)?" str)
-      (setq lp (mivi--linepos-new
-                (funcall
-                 (if (equal (match-string 1 str) "-") #'- #'+)
-                 (mivi--linepos-line lp)
-                 (if (match-string 2 str)
-                     (string-to-number (match-string 2 str))
-                   1))
-                nil))
+      (let ((num (if (match-string 2 str)
+                    (string-to-number (match-string 2 str))
+                   1)))
+        (setq lp (mivi--linepos-add-line lp (if (equal (match-string 1 str) "-")
+                                                (- num)
+                                              num))))
       (setq str (substring str (match-end 0))))
     (cons lp str)))
 

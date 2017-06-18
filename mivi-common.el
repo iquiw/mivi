@@ -66,6 +66,11 @@ If NORESOLVE is non-nil, it does not try resolving."
     (mivi--linepos-resolve lp)
     (cdr lp)))
 
+(defsubst mivi--linepos-add-line (lp num)
+  "Return new linepos by adding line number of LP and NUM.
+Line position of the return value is unresolved (nil)."
+  (mivi--linepos-new (+ (mivi--linepos-line lp) num) nil))
+
 (defun mivi--linepos-resolve (lp)
   "Resolve either line number or position of linepos LP if necessary."
   (cond
