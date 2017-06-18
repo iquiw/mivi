@@ -614,6 +614,8 @@ With ARG, repeat the specified count."
         (throw 'break nil)))))
 
 (defun mivi-next-sentence (&optional arg)
+  "Move to next sentence.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (_ arg)
     (if (mivi--blankline-p 0)
@@ -648,6 +650,8 @@ With ARG, repeat the specified count."
       (goto-char (point-min)))))
 
 (defun mivi-previous-sentence (&optional arg)
+  "Move to previous sentence.
+With ARG, repeat the specified count."
   (interactive "p")
   (dotimes (_ arg)
     (skip-chars-backward mivi--blank-chars)
