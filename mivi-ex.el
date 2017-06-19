@@ -136,7 +136,7 @@ It returns plist of :regexp, :replace and options."
   (let* ((delim (substring str 0 1))
          (re-sep (concat "[^\\]" delim))
          (re-unesc (concat "\\\\" delim))
-         offset regexp (replace ""))
+         offset regexp (replace "") options)
     (if (string-match re-sep str)
         (progn
           (setq regexp (substring str 1 (1+ (match-beginning 0))))
@@ -144,10 +144,16 @@ It returns plist of :regexp, :replace and options."
       (setq regexp (substring str 1)))
     (when offset
       (if (string-match re-sep str offset)
-          (setq replace (substring str offset (1+ (match-beginning 0))))
+          (let ((flags (substring str (match-end 0))))
+            (setq replace (substring str offset (1+ (match-beginning 0))))
+            (cond
+             ((string= flags "") nil)
+             ((string= flags "g") (push 'global options))
+             (t (user-error (format "`%s': Unknown flags" flags)))))
         (setq replace (substring str offset))))
     (list :regexp (replace-regexp-in-string re-unesc delim regexp)
-          :replace (replace-regexp-in-string re-unesc delim replace))))
+          :replace (replace-regexp-in-string re-unesc delim replace)
+          :options options)))
 
 (defun mivi-ex--range-to-region (range)
   "Convert line RANGE to region, which is cons of points."

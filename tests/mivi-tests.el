@@ -103,21 +103,25 @@
   (mivi-ex--test-command nil nil '(12 . 24) "12,24"))
 
 (ert-deftest mivi-ex--parse-subst-with-1delim ()
-  (should (equal '(:regexp "foo" :replace "")
+  (should (equal '(:regexp "foo" :replace "" :options ())
                  (mivi-ex--parse-subst "/foo"))))
 
 (ert-deftest mivi-ex--parse-subst-with-2delim ()
-  (should (equal '(:regexp "foo" :replace "bar")
+  (should (equal '(:regexp "foo" :replace "bar" :options ())
                  (mivi-ex--parse-subst "/foo/bar"))))
 
 (ert-deftest mivi-ex--parse-subst-with-3delim ()
-  (should (equal '(:regexp "foo" :replace "bar")
+  (should (equal '(:regexp "foo" :replace "bar" :options ())
                  (mivi-ex--parse-subst "/foo/bar/"))))
 
 (ert-deftest mivi-ex--parse-subst-with-comma-delim ()
-  (should (equal '(:regexp "foo/bar" :replace "baz/")
+  (should (equal '(:regexp "foo/bar" :replace "baz/" :options ())
                  (mivi-ex--parse-subst ",foo/bar,baz/,"))))
 
 (ert-deftest mivi-ex--parse-subst-with-escape ()
-  (should (equal '(:regexp "foo/bar/baz" :replace "qux")
+  (should (equal '(:regexp "foo/bar/baz" :replace "qux" :options ())
                  (mivi-ex--parse-subst "/foo\\/bar\\/baz/qux/"))))
+
+(ert-deftest mivi-ex--parse-subst-with-global-flag ()
+  (should (equal '(:regexp "^function " :replace "fun " :options (global))
+                 (mivi-ex--parse-subst "/^function /fun /g"))))
