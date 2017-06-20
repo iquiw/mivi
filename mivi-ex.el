@@ -143,7 +143,7 @@ It returns plist of :regexp, :replace and options."
           (setq offset (match-end 0)))
       (setq regexp (substring str 1)))
     (when offset
-      (if (string-match re-sep str offset)
+      (if (string-match re-sep str (1- offset))
           (let ((flags (substring str (match-end 0))))
             (setq replace (substring str offset (1+ (match-beginning 0))))
             (cond

@@ -122,6 +122,15 @@
   (should (equal '(:regexp "foo/bar/baz" :replace "qux" :options ())
                  (mivi-ex--parse-subst "/foo\\/bar\\/baz/qux/"))))
 
+(ert-deftest mivi-ex--parse-subst-with-empty-replace ()
+  (should (equal '(:regexp "[a-z]+" :replace "" :options ())
+                 (mivi-ex--parse-subst "/[a-z]+//"))))
+
 (ert-deftest mivi-ex--parse-subst-with-global-flag ()
   (should (equal '(:regexp "^function " :replace "fun " :options (global))
                  (mivi-ex--parse-subst "/^function /fun /g"))))
+
+(ert-deftest mivi-ex--parse-subst-with-empty-replace-and-global-flag ()
+  (should (equal '(:regexp "[1-9][0-9]*" :replace "" :options (global))
+                 (mivi-ex--parse-subst "/[1-9][0-9]*//g"))))
+
