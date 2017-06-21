@@ -81,6 +81,12 @@ Feature: Ex command
     Then I should see "   abcdef"
     And the current line should be "3"
 
+  Scenario: substitute with empty replace
+    Given the buffer is empty
+    When I insert "abc123def"
+    And I type ":s/[0-9]+//"
+    Then I should see "abcdef"
+
   Scenario: substitute the specified line range
     Given the buffer is empty
     When I insert:
