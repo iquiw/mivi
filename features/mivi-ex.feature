@@ -91,7 +91,7 @@ Feature: Ex command
     Given the buffer is empty
     When I insert:
     """
-    abc
+    abcabc
     foo bar baz
        abcdef
     def
@@ -99,9 +99,28 @@ Feature: Ex command
     And I type ":1,$s/abc/123"
     Then I should see:
     """
-    123
+    123abc
     foo bar baz
        123def
+    def
+    """
+    And the current line should be "3"
+
+  Scenario: substitute with global flag
+    Given the buffer is empty
+    When I insert:
+    """
+    abcabc
+    foo bar baz
+       abcdef
+    def
+    """
+    And I type ":1,$s/a../aa/g"
+    Then I should see:
+    """
+    aaaa
+    foo baabaz
+       aadef
     def
     """
     And the current line should be "3"

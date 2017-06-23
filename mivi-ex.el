@@ -51,21 +51,30 @@
 
 (defun mivi-ex--subst (range arg)
   "Substitute lines within RANGE according to ARG."
-  (let* ((num (mivi--linepos-line (car range)))
-         (end (mivi--linepos-line (cdr range)))
+  (let* ((region (mivi-ex--range-to-region range))
+         (beg (car region))
+         (end (cdr region))
          (subspec (mivi-ex--parse-subst arg))
          (regexp (plist-get subspec :regexp))
          (replace (plist-get subspec :replace))
-         (last-replace-point (point)))
-    (mivi--goto-line num)
-    (while (<= num end)
-      (let ((bol (point)))
-        (when (re-search-forward regexp (line-end-position) t)
-          (delete-region (match-beginning 0) (match-end 0))
-          (insert replace)
-          (setq last-replace-point bol)))
-      (forward-line 1)
-      (setq num (1+ num)))
+         (options (plist-get subspec :options))
+         (global (memq 'global options))
+         (last-replace-point (point))
+         (found t))
+    (goto-char beg)
+    (while (and found (< (point) end))
+      (setq found (re-search-forward regexp
+                                     (if global end (line-end-position))
+                                     t))
+      (when found
+        (delete-region (match-beginning 0) (match-end 0))
+        (insert replace)
+        (setq last-replace-point (save-excursion
+                                   (forward-line 0)
+                                   (point))))
+      (unless global
+        (forward-line 1)
+        (setq found (not (eobp)))))
     (goto-char last-replace-point)))
 
 ;; Internal functions
