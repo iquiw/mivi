@@ -676,12 +676,16 @@ With ARG, repeat the specified count."
           (goto-char (point-min))))))))
 
 (defun mivi-repeat-find (&optional arg)
+  "Repeat the last find.
+With ARG, repeat the specified count."
   (interactive "p")
   (pcase mivi--last-find
     (`(,ch ,sign ,till?)
      (mivi--find-internal ch till? (* sign arg)))))
 
 (defun mivi-repeat-find-opposite (&optional arg)
+  "Repeat the last find in the opposite direction.
+With ARG, repeat the specified count."
   (interactive "p")
   (pcase mivi--last-find
     (`(,ch ,sign ,till?)
