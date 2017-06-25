@@ -59,6 +59,7 @@ Feature
 
 * All ex commands <kbd>:</kbd> except for the following commands.
     * <kbd>d</kbd>
+    * <kbd>s</kbd> with global flag only
 * Shift commands <kbd>&lt;</kbd>, <kbd>&gt;</kbd>.
 * Buffer (in Vi-context) related functions.
 * More...
