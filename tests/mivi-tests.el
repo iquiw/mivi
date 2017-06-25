@@ -84,6 +84,11 @@
 (ert-deftest mivi-ex--parse-command-with-number-range ()
   (mivi-ex--test-command "t" "$" '(10 . 123) "10,123t$"))
 
+(ert-deftest mivi-ex--parse-command-with-percent ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (mivi-ex--test-command "s" "/foo/bar/" '(1 . 6) "%s/foo/bar/")))
+
 (ert-deftest mivi-ex--parse-command-of-multiple-chars ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")

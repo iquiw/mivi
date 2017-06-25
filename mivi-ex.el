@@ -82,6 +82,8 @@
   "Parse ex command line provided as STR.
 It returns plist of :command, :arg and :range."
   (let (beg end)
+    (when (string-match-p "^%" str)
+      (setq str (concat "1,$" (substring str 1))))
     (pcase (mivi-ex--parse-linespec str)
       (`(,lp . ,rest)
        (setq beg lp)
