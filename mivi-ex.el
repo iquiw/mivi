@@ -60,7 +60,8 @@
          (options (plist-get subspec :options))
          (global (memq 'global options))
          (last-replace-point (point))
-         (found t))
+         (found t)
+         (case-fold-search nil))
     (goto-char beg)
     (while (and found (< (point) end))
       (setq found (re-search-forward regexp

@@ -113,7 +113,7 @@ Feature: Ex command
     abcabc
     foo bar baz
        abcdef
-    def
+    Adef
     """
     And I type ":1,$s/a../aa/g"
     Then I should see:
@@ -121,6 +121,6 @@ Feature: Ex command
     aaaa
     foo baabaz
        aadef
-    def
+    Adef
     """
     And the current line should be "3"
