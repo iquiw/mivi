@@ -7,10 +7,15 @@
     (should (equal arg (cdr result)))))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-only ()
-  (mivi-ex--test-linespec 1 "" "1"))
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (mivi-ex--test-linespec 1 "" "1")))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-and-rest ()
-  (mivi-ex--test-linespec 12 ",34" "12,34"))
+  (with-temp-buffer
+    (dotimes (i 11)
+      (insert (format "%s\n" i)))
+    (mivi-ex--test-linespec 12 ",34" "12,34")))
 
 (ert-deftest mivi-ex--parse-linespec-for-current-line ()
   (with-temp-buffer
@@ -25,7 +30,10 @@
     (mivi-ex--test-linespec 6 "" "$")))
 
 (ert-deftest mivi-ex--parse-linespec-for-plus-number ()
-  (mivi-ex--test-linespec 114 "" "99+15"))
+  (with-temp-buffer
+    (dotimes (i 113)
+      (insert (format "%s\n" i)))
+    (mivi-ex--test-linespec 114 "" "99+15")))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-plus ()
   (with-temp-buffer
@@ -45,7 +53,10 @@
     (mivi-ex--test-linespec 3 ",." ".-3,.")))
 
 (ert-deftest mivi-ex--parse-linespec-for-number-minus ()
-  (mivi-ex--test-linespec 9 ",10+" "10-,10+"))
+  (with-temp-buffer
+    (dotimes (i 8)
+      (insert (format "%s\n" i)))
+    (mivi-ex--test-linespec 9 ",10+" "10-,10+")))
 
 (ert-deftest mivi-ex--parse-linespec-for-minus-only ()
   (with-temp-buffer
@@ -64,6 +75,12 @@
     (mivi-mode 1)
     (should-error (mivi-ex--parse-linespec "'a,.") :type 'user-error)))
 
+(ert-deftest mivi-ex--parse-linespec-for-exceeded-line ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (should-error (mivi-ex--parse-command "7d") :type 'user-error)
+    (should-error (mivi-ex--parse-command "2+10d") :type 'user-error)))
+
 (defun mivi-ex--test-command (command arg line-range str)
   (let* ((result (mivi-ex--parse-command str))
          (range (plist-get result :range)))
@@ -79,10 +96,15 @@
     (mivi-ex--test-command "s" "/a/b/" '(2 . 2) "s/a/b/")))
 
 (ert-deftest mivi-ex--parse-command-with-one-line ()
-  (mivi-ex--test-command "d" "" '(3 . 3) "3d"))
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (mivi-ex--test-command "d" "" '(3 . 3) "3d")))
 
 (ert-deftest mivi-ex--parse-command-with-number-range ()
-  (mivi-ex--test-command "t" "$" '(10 . 123) "10,123t$"))
+  (with-temp-buffer
+    (dotimes (i 122)
+      (insert (format "%s\n" i)))
+    (mivi-ex--test-command "t" "$" '(10 . 123) "10,123t$")))
 
 (ert-deftest mivi-ex--parse-command-with-percent ()
   (with-temp-buffer
@@ -105,7 +127,10 @@
     (should-error (mivi-ex--parse-command "4,3d") :type 'user-error)))
 
 (ert-deftest mivi-ex--parse-command-with-empty-command ()
-  (mivi-ex--test-command nil nil '(12 . 24) "12,24"))
+  (with-temp-buffer
+    (dotimes (i 23)
+      (insert (format "%s\n" i)))
+    (mivi-ex--test-command nil nil '(12 . 24) "12,24")))
 
 (ert-deftest mivi-ex--parse-subst-with-1delim ()
   (should (equal '(:regexp "foo" :replace "" :options ())

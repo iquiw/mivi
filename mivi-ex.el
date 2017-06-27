@@ -139,6 +139,10 @@ It returns cons of line-position and rest of string."
                                                 (- num)
                                               num))))
       (setq str (substring str (match-end 0))))
+    (let* ((num (mivi--linepos-line lp t))
+           (last-num (and num (line-number-at-pos (point-max)))))
+      (when (and num (> num last-num))
+        (user-error "Illegal address: only %s lines in the file." last-num)))
     (cons lp str)))
 
 (defun mivi-ex--parse-subst (str)
