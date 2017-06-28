@@ -164,3 +164,5 @@
   (should (equal '(:regexp "[1-9][0-9]*" :replace "" :options (global))
                  (mivi-ex--parse-subst "/[1-9][0-9]*//g"))))
 
+(ert-deftest mivi-ex--parse-subst-with-unknown-flag ()
+  (should-error(mivi-ex--parse-subst "/foo/bar/z") :type 'user-error))
