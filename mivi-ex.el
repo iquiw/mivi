@@ -68,8 +68,7 @@
                                      (if global end (line-end-position))
                                      t))
       (when found
-        (delete-region (match-beginning 0) (match-end 0))
-        (insert replace)
+        (replace-match replace t)
         (setq last-replace-point (save-excursion
                                    (forward-line 0)
                                    (point))))

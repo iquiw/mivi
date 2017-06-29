@@ -54,12 +54,14 @@ Feature
   To repeat undo, press <kbd>.</kbd> after <kbd>u</kbd>.
 * <kbd>$</kbd> acts like <kbd>C-e</kbd> in Emacs.
 * Change <kbd>c</kbd> acts as delete and insert, not as overwrite like *nvi*.
+* <kbd>:s</kbd> is implemented by `replace-match`. As a result, matched text
+  replacement is `\&` instead of `&`.
 
 ### Not Implemented ###
 
 * All ex commands <kbd>:</kbd> except for the following commands.
-    * <kbd>d</kbd>
-    * <kbd>s</kbd> with global flag only
+    * <kbd>:d</kbd>
+    * <kbd>:s</kbd>, only global flag is supported.
 * Shift commands <kbd>&lt;</kbd>, <kbd>&gt;</kbd>.
 * Buffer (in Vi-context) related functions.
 * More...

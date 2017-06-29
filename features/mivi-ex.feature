@@ -124,3 +124,35 @@ Feature: Ex command
     Adef
     """
     And the current line should be "3"
+
+  Scenario: substitute with matched string
+    Given the buffer is empty
+    When I insert:
+    """
+
+    def foo()
+
+    """
+    And I type ":2s/foo()/\&:/"
+    Then I should see:
+    """
+
+    def foo():
+
+    """
+
+  Scenario: substitute with grouped matched string
+    Given the buffer is empty
+    When I insert:
+    """
+    def foo()
+
+    def bar()
+    """
+    And I type ":1,$s/def \(.*\)/fn \1/"
+    Then I should see:
+    """
+    fn foo()
+
+    fn bar()
+    """
