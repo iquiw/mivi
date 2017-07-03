@@ -128,6 +128,18 @@ It returns cons of line-position and rest of string."
                                         (forward-line 0)
                                         (point))))
       (setq str (substring str 1)))
+     ((string-match-p "^/" str)
+      (let ((pattern
+             (if (string-match "/" str 1)
+                 (prog1
+                     (substring str 1 (match-beginning 0))
+                   (setq str (substring str (match-end 0))))
+               (prog1
+                   str
+                 (setq str "")))))
+        (save-excursion
+          (mivi--search-internal pattern 1 1)
+          (setq lp (mivi--linepos-new nil (point))))))
      (t (setq lp (mivi--linepos-new (line-number-at-pos)
                                     (save-excursion (forward-line 0) (point))))))
 

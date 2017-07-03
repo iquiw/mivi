@@ -1155,42 +1155,6 @@ Derived from `viper-catch-tty-ESC'."
       (or default 0)
     (prefix-numeric-value arg)))
 
-(defun mivi--search-internal (re count sign)
-  (let ((case-fold-search nil)
-        (origin (point))
-        (wrapped nil))
-    (if (catch 'break
-          (when (and (> sign 0) (not (eobp)))
-            (forward-char))
-          (while (> count 0)
-            (if (re-search-forward re nil t sign)
-                (progn
-                  (setq count (1- count))
-                  (when (and (> sign 0) (not (eobp)))
-                    (forward-char)))
-              (if wrapped
-                  (throw 'break nil)
-                (setq wrapped t)
-                (goto-char (if (> sign 0)
-                               (point-min)
-                             (point-max))))))
-          t)
-        (progn
-          (when wrapped
-            (message "Search wrapped"))
-          (push-mark origin t)
-          (if mivi--search-overlay
-              (move-overlay mivi--search-overlay
-                            (match-beginning 0) (match-end 0)
-                            (current-buffer))
-            (setq mivi--search-overlay
-                  (make-overlay (match-beginning 0) (match-end 0)))
-            (overlay-put mivi--search-overlay 'face 'mivi-search-highlight))
-          (goto-char (match-beginning 0)))
-      (goto-char origin)
-      (when mivi--unmatch-throw-error
-        (user-error "Pattern not found")))))
-
 (defun mivi--store-command (&rest args)
   "Store the current command for `mivi-repeat'.
 The stored command is a plist with the following properties:
