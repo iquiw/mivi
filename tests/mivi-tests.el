@@ -93,6 +93,11 @@
     (should-error (mivi-ex--parse-command "7d") :type 'user-error)
     (should-error (mivi-ex--parse-command "2+10d") :type 'user-error)))
 
+(ert-deftest mivi-ex--parse-linespec-for-unmatched-line ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (should-error (mivi-ex--parse-command "/foo/d") :type 'user-error)))
+
 (defun mivi-ex--test-command (command arg line-range str)
   (let* ((result (mivi-ex--parse-command str))
          (range (plist-get result :range)))

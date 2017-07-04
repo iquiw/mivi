@@ -108,13 +108,18 @@ It returns plist of :command, :arg and :range."
 It returns cons of line-position and rest of string."
   (let (lp)
     (cond
+     ;; line number
      ((string-match "^[0-9]+" str)
       (setq lp (mivi--linepos-new (string-to-number (match-string 0 str)) nil))
       (setq str (substring str (match-end 0))))
+
+     ;; current line
      ((string-match-p "^\\." str)
       (setq lp (mivi--linepos-new (line-number-at-pos)
                                   (save-excursion (forward-line 0) (point))))
       (setq str (substring str 1)))
+
+     ;; marked line
      ((string-match "^'\\(.\\)" str)
       (let* ((c (string-to-char (match-string 1 str)))
              (p (mivi--get-mark c)))
@@ -122,12 +127,16 @@ It returns cons of line-position and rest of string."
         (if p
             (setq lp (mivi--linepos-new nil p))
           (user-error "`%s': Marker is not set." c))))
+
+     ;; last line
      ((string-match-p "^\\$" str)
       (setq lp (mivi--linepos-new nil (save-excursion
                                         (goto-char (point-max))
                                         (forward-line 0)
                                         (point))))
       (setq str (substring str 1)))
+
+     ;; search pattern
      ((string-match-p "^/" str)
       (let ((pattern
              (if (string-match "/" str 1)
@@ -138,8 +147,10 @@ It returns cons of line-position and rest of string."
                    (substring str 1)
                  (setq str "")))))
         (save-excursion
-          (mivi--search-internal pattern 1 1)
+          (let ((mivi--unmatch-throw-error t))
+            (mivi--search-internal pattern 1 1))
           (setq lp (mivi--linepos-new nil (point))))))
+
      (t (setq lp (mivi--linepos-new (line-number-at-pos)
                                     (save-excursion (forward-line 0) (point))))))
 
