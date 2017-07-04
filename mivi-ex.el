@@ -135,7 +135,7 @@ It returns cons of line-position and rest of string."
                      (substring str 1 (match-beginning 0))
                    (setq str (substring str (match-end 0))))
                (prog1
-                   str
+                   (substring str 1)
                  (setq str "")))))
         (save-excursion
           (mivi--search-internal pattern 1 1)
