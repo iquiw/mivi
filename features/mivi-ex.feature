@@ -55,6 +55,20 @@ Feature: Ex command
     And I type ":'a,'bd"
     Then I should not see pattern "[3-8]"
 
+  Scenario: delete the search pattern range
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+       baz
+    qux
+    quux
+    """
+    And I go to line "1"
+    And I type ":/ *bar/,/^qux/d"
+    Then I should not see pattern "\(bar\|baz\|qux\)"
+
   Scenario: substitute the current line
     Given the buffer is empty
     When I insert:

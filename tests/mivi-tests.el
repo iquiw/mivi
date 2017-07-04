@@ -149,6 +149,11 @@
     (insert "1\n2\n3\n4\n5\n")
     (should-error (mivi-ex--parse-command "4,3d") :type 'user-error)))
 
+(ert-deftest mivi-ex--parse-command-with-reverse-search-pattern-range ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (should-error (mivi-ex--parse-command "/3/,/2/d") :type 'user-error)))
+
 (ert-deftest mivi-ex--parse-subst-with-1delim ()
   (should (equal '(:regexp "foo" :replace "" :options ())
                  (mivi-ex--parse-subst "/foo"))))
