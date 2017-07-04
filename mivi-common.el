@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(defvar mivi--search-overlay nil)
+(defvar mivi--unmatch-throw-error nil)
 (defvar-local mivi--mark-slots nil)
 
 (defun mivi--init-marks ()
