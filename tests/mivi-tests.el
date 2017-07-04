@@ -90,13 +90,13 @@
 (ert-deftest mivi-ex--parse-linespec-for-exceeded-line ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
-    (should-error (mivi-ex--parse-command "7d") :type 'user-error)
-    (should-error (mivi-ex--parse-command "2+10d") :type 'user-error)))
+    (should-error (mivi-ex--parse-linespec "7d") :type 'user-error)
+    (should-error (mivi-ex--parse-linespec "2+10d") :type 'user-error)))
 
 (ert-deftest mivi-ex--parse-linespec-for-unmatched-line ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
-    (should-error (mivi-ex--parse-command "/foo/d") :type 'user-error)))
+    (should-error (mivi-ex--parse-linespec "/foo/d") :type 'user-error)))
 
 (defun mivi-ex--test-command (command arg line-range str)
   (let* ((result (mivi-ex--parse-command str))
@@ -138,16 +138,16 @@
     (insert "1\n2\n3\n4\n5\n")
     (mivi-ex--test-command "d" "3" '(6 . 6) "d 3")))
 
-(ert-deftest mivi-ex--parse-command-with-reverse-range ()
-  (with-temp-buffer
-    (insert "1\n2\n3\n4\n5\n")
-    (should-error (mivi-ex--parse-command "4,3d") :type 'user-error)))
-
 (ert-deftest mivi-ex--parse-command-with-empty-command ()
   (with-temp-buffer
     (dotimes (i 23)
       (insert (format "%s\n" i)))
     (mivi-ex--test-command nil nil '(12 . 24) "12,24")))
+
+(ert-deftest mivi-ex--parse-command-with-reverse-range ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (should-error (mivi-ex--parse-command "4,3d") :type 'user-error)))
 
 (ert-deftest mivi-ex--parse-subst-with-1delim ()
   (should (equal '(:regexp "foo" :replace "" :options ())
