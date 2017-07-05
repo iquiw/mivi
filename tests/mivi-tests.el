@@ -82,6 +82,12 @@
     (goto-line 5)
     (mivi-ex--test-linespec 2 "" "/bar")))
 
+(ert-deftest mivi-ex--parse-linespec-for-backward-matched-line ()
+  (with-temp-buffer
+    (insert "foo\nbar\nbaz\nfoo bar\nbaz qux\n")
+    (goto-line 3)
+    (mivi-ex--test-linespec 1 "d" "?foo?d")))
+
 (ert-deftest mivi-ex--parse-linespec-for-unset-mark ()
   (with-temp-buffer
     (mivi-mode 1)

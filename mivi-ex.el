@@ -137,18 +137,20 @@ It returns cons of line-position and rest of string."
       (setq str (substring str 1)))
 
      ;; search pattern
-     ((string-match-p "^/" str)
-      (let ((pattern
-             (if (string-match "/" str 1)
-                 (prog1
-                     (substring str 1 (match-beginning 0))
-                   (setq str (substring str (match-end 0))))
-               (prog1
-                   (substring str 1)
-                 (setq str "")))))
+     ((string-match "^[/?]" str)
+      (let* ((delim (match-string 0 str))
+             (pattern
+              (if (string-match delim str 1)
+                  (prog1
+                      (substring str 1 (match-beginning 0))
+                    (setq str (substring str (match-end 0))))
+                (prog1
+                    (substring str 1)
+                  (setq str "")))))
         (save-excursion
           (let ((mivi--unmatch-throw-error t))
-            (mivi--search-internal pattern 1 1))
+            (mivi--search-internal pattern 1 (if (string= delim "/") 1 -1)))
+          (forward-line 0)
           (setq lp (mivi--linepos-new nil (point))))))
 
      (t (setq lp (mivi--linepos-new (line-number-at-pos)

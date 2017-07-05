@@ -67,7 +67,48 @@ Feature: Ex command
     """
     And I go to line "1"
     And I type ":/ *bar/,/^qux/d"
-    Then I should not see pattern "\(bar\|baz\|qux\)"
+    Then I should see:
+    """
+    foo
+    quux
+    """
+
+  Scenario: delete the backward search pattern range
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar
+       baz
+    qux
+    quux
+    """
+    And I go to line "5"
+    And I type ":?ba.?,?qu*x?d"
+    Then I should see:
+    """
+    foo
+      bar
+    quux
+    """
+
+  Scenario: delete the backward and forward search pattern range
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 foo
+    5 bar
+    """
+    And I go to line "3"
+    And I type ":?bar?,/foo/d"
+    Then I should see:
+    """
+    1 foo
+    5 bar
+    """
 
   Scenario: substitute the current line
     Given the buffer is empty
