@@ -200,14 +200,14 @@ Feature: Ex command
     Given the buffer is empty
     When I insert:
     """
-    def foo()
+    def foo():
 
-    def bar()
+    def bar():
     """
-    And I type ":1,$s/def \(.*\)/fn \1/"
+    And I type ":1,$s/def \(.*\):/fn \1 {/"
     Then I should see:
     """
-    fn foo()
+    fn foo() {
 
-    fn bar()
+    fn bar() {
     """
