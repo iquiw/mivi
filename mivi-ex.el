@@ -29,6 +29,7 @@
 (require 'mivi-common)
 
 (defvar mivi-ex--history nil)
+(defvar mivi-ex--last-subst nil)
 
 ;; ex commands
 (defun mivi-ex ()
@@ -58,24 +59,9 @@
          (regexp (plist-get subspec :regexp))
          (replace (plist-get subspec :replace))
          (options (plist-get subspec :options))
-         (global (memq 'global options))
-         (last-replace-point (point))
-         (found t)
-         (case-fold-search nil))
-    (goto-char beg)
-    (while (and found (< (point) end))
-      (setq found (re-search-forward regexp
-                                     (if global end (line-end-position))
-                                     t))
-      (when found
-        (replace-match replace t)
-        (setq last-replace-point (save-excursion
-                                   (forward-line 0)
-                                   (point))))
-      (unless global
-        (forward-line 1)
-        (setq found (not (eobp)))))
-    (goto-char last-replace-point)))
+         (global (memq 'global options)))
+    (mivi--subst-internal regexp replace beg end global)
+    (setq mivi-ex--last-subst (cons regexp replace))))
 
 ;; Internal functions
 (defun mivi-ex--parse-command (str)

@@ -123,5 +123,26 @@ If SIGN should be 1 or -1, -1 means backward search."
       (when mivi--unmatch-throw-error
         (user-error "Pattern not found")))))
 
+(defun mivi--subst-internal (regexp replace beg end global)
+  "Substitute REGEXP with REPLACE in region between BEG and END.
+If GLOBAL is non-nil, it substitutes all occurrence in the region."
+  (let* ((last-replace-point (point))
+         (found t)
+         (case-fold-search nil))
+    (goto-char beg)
+    (while (and found (< (point) end))
+      (setq found (re-search-forward regexp
+                                     (if global end (line-end-position))
+                                     t))
+      (when found
+        (replace-match replace t)
+        (setq last-replace-point (save-excursion
+                                   (forward-line 0)
+                                   (point))))
+      (unless global
+        (forward-line 1)
+        (setq found (not (eobp)))))
+    (goto-char last-replace-point)))
+
 (provide 'mivi-common)
 ;;; mivi-common.el ends here
