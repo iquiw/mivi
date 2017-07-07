@@ -1257,7 +1257,9 @@ and updates MiVi mode line."
         (mivi--init-marks)
         (mivi--mode-line-insert)
         (unless (seq-some #'symbol-value mivi--states)
-          (mivi--switch-state 'mivi-command-state)))
+          (mivi--switch-state 'mivi-command-state))
+        (unless undo-tree-mode
+          (undo-tree-mode 1)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
     (remove-hook 'post-command-hook #'mivi--post-command-function t)
     (mivi--mode-line-remove)
