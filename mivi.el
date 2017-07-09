@@ -690,6 +690,8 @@ With ARG, repeat the specified count."
      (mivi--find-internal ch till? (* (- sign) arg)))))
 
 (defun mivi-search (&optional arg)
+  "Search regexp from input in the current buffer.
+With ARG, repeat the specified count."
   (interactive "p")
   (let ((re (or mivi--current-search-string
                 (read-regexp "/" (car mivi--last-search)))))
@@ -700,6 +702,8 @@ With ARG, repeat the specified count."
         (setq this-command 'mivi-search)))))
 
 (defun mivi-search-backward (&optional arg)
+  "Search regexp from input backward in the current buffer.
+With ARG, repeat the specified count."
   (interactive "p")
   (let ((re (or mivi--current-search-string
                 (read-regexp "?" (car mivi--last-search)))))
@@ -710,6 +714,7 @@ With ARG, repeat the specified count."
         (setq this-command 'mivi-search-backward)))))
 
 (defun mivi-search-current-word ()
+  "Search word at the point in the current buffer."
   (interactive)
   (let ((mivi--current-search-string
          (if (region-active-p)
@@ -727,12 +732,16 @@ With ARG, repeat the specified count."
       (call-interactively 'mivi-search))))
 
 (defun mivi-search-next (&optional arg)
+  "Search the last used regexp in the current buffer.
+With ARG, repeat the specified count."
   (interactive "p")
   (pcase mivi--last-search
     (`(,re . ,sign)
      (mivi--search-internal re arg sign))))
 
 (defun mivi-search-Next (&optional arg)
+  "Search the last used regexp in the opposite direction.
+With ARG, repeat the specified count."
   (interactive "p")
   (pcase mivi--last-search
     (`(,re . ,sign)
