@@ -22,7 +22,8 @@
 
 (Setup
  (setq debug-on-error nil)
- (load (expand-file-name "tests/mivi-tests.el" mivi-root-path) nil t)
+ (dolist (f (f-entries (expand-file-name "tests" mivi-root-path)))
+   (load f nil t))
  (mivi-setup))
 
 (Before
