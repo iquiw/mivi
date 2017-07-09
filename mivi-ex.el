@@ -29,7 +29,6 @@
 (require 'mivi-common)
 
 (defvar mivi-ex--history nil)
-(defvar mivi-ex--last-subst nil)
 
 ;; ex commands
 (defun mivi-ex ()
@@ -61,7 +60,7 @@
          (options (plist-get subspec :options))
          (global (memq 'global options)))
     (mivi--subst-internal regexp replace beg end global)
-    (setq mivi-ex--last-subst (cons regexp replace))))
+    (setq mivi--last-subst (cons regexp replace))))
 
 ;; Internal functions
 (defun mivi-ex--parse-command (str)

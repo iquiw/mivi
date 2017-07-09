@@ -172,6 +172,7 @@
 (defconst mivi-command-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map mivi-motion-map)
+    (define-key map "&" #'mivi-repeat-subst)
     (define-key map "." #'mivi-repeat)
     (define-key map ":" #'mivi-ex)
     (define-key map "A" #'mivi-Append)
@@ -1064,6 +1065,23 @@ With ARG, repeat the specified count."
               (mivi--current-replace-char mivi--last-replace-char)
               (mivi--current-search-string (car mivi--last-search)))
           (call-interactively command)))))))
+
+(defun mivi-repeat-subst ()
+  "Substitute the last used regexp and replace in the current line."
+  (interactive)
+  (if mivi--last-subst
+      (let ((region
+             (save-excursion
+               (cons
+                (progn (forward-line 0) (point))
+                (progn (forward-line 1) (point))))))
+        (mivi--subst-internal
+         (car mivi--last-subst)
+         (cdr mivi--last-subst)
+         (car region)
+         (cdr region)
+         nil))
+    (user-error "No previous regular expression")))
 
 (defun mivi-paste (&optional arg)
   (interactive "p")

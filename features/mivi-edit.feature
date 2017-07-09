@@ -72,3 +72,22 @@ Feature: Motion
     Then I should see "FOO bar BaZ"
     And I type "4~"
     Then I should see "FOO bar bAz"
+
+  Scenario: repeat the last substitute
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+      bar baz
+    qux quux
+    """
+    And I go to beginning of buffer
+    And I type ":s/[a-z]\{3\}/quux/"
+    And I go to line "2"
+    And I type "&"
+    Then I should see:
+    """
+    quux
+      quux baz
+    qux quux
+    """
