@@ -121,8 +121,7 @@ If SIGN should be 1 or -1, -1 means backward search."
             (overlay-put mivi--search-overlay 'face 'mivi-search-highlight))
           (goto-char (match-beginning 0)))
       (goto-char origin)
-      (when mivi--unmatch-throw-error
-        (user-error "Pattern not found")))))
+      (user-error "Pattern not found"))))
 
 (defun mivi--subst-internal (regexp replace beg end global)
   "Substitute REGEXP with REPLACE in region between BEG and END.
