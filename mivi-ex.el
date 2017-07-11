@@ -133,8 +133,7 @@ It returns cons of line-position and rest of string."
                     (substring str 1)
                   (setq str "")))))
         (save-excursion
-          (let ((mivi--unmatch-throw-error t))
-            (mivi--search-internal pattern 1 (if (string= delim "/") 1 -1)))
+          (mivi--search-internal pattern 1 (if (string= delim "/") 1 -1))
           (forward-line 0)
           (setq lp (mivi--linepos-new nil (point))))))
 
