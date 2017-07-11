@@ -81,7 +81,7 @@ It returns plist of :command, :arg and :range."
     (cond
      ((null end) (setq end beg))
      ((> (mivi--linepos-line beg) (mivi--linepos-line end))
-      (user-error "The second address is smaller than the first.")))
+      (user-error "The second address is smaller than the first")))
     (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
               :arg (match-string 2 str)
@@ -111,7 +111,7 @@ It returns cons of line-position and rest of string."
         (setq str (substring str 2))
         (if p
             (setq lp (mivi--linepos-new nil p))
-          (user-error "`%s': Marker is not set." c))))
+          (user-error "`%s': Marker is not set" c))))
 
      ;; last line
      ((string-match-p "^\\$" str)
@@ -152,7 +152,7 @@ It returns cons of line-position and rest of string."
     (let* ((num (mivi--linepos-line lp t))
            (last-num (and num (line-number-at-pos (point-max)))))
       (when (and num (> num last-num))
-        (user-error "Illegal address: only %s lines in the file." last-num)))
+        (user-error "Illegal address: only %s lines in the file" last-num)))
     (cons lp str)))
 
 (defun mivi-ex--parse-subst (str)
