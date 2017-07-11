@@ -696,7 +696,8 @@ With ARG, repeat the specified count."
   (interactive "p")
   (let ((re (or mivi--current-search-string
                 (read-regexp "/" (car mivi--last-search)))))
-    (unless (string= re "")
+    (if (string= re "")
+        (user-error "No previous search pattern")
       (unwind-protect
           (mivi--search-internal re arg 1)
         (setq mivi--last-search (cons re 1))
@@ -708,7 +709,8 @@ With ARG, repeat the specified count."
   (interactive "p")
   (let ((re (or mivi--current-search-string
                 (read-regexp "?" (car mivi--last-search)))))
-    (unless (string= re "")
+    (if (string= re "")
+        (user-error "No previous search pattern")
       (unwind-protect
           (mivi--search-internal re arg -1)
         (setq mivi--last-search (cons re -1))

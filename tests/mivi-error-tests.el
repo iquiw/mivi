@@ -15,3 +15,16 @@
   (with-temp-buffer
     (insert "foo\nbar\nbaz\n")
     (should-error (execute-kbd-macro "?FOO") :type 'user-error)))
+
+(ert-deftest mivi-search-throws-error-if-no-input ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (goto-char (point-min))
+    (let ((mivi--last-search nil))
+      (should-error (execute-kbd-macro "/") :type 'user-error))))
+
+(ert-deftest mivi-search-backward-throws-error-if-no-input ()
+  (with-temp-buffer
+    (insert "foo\nbar\nbaz\n")
+    (let ((mivi--last-search nil))
+      (should-error (execute-kbd-macro "?") :type 'user-error))))
