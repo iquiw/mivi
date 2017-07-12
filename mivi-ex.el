@@ -31,13 +31,15 @@
 (defvar mivi-ex--history nil)
 
 ;; ex commands
-(defun mivi-ex ()
-  "Read ex command from user input and dispatch it to other ex functions."
-  (interactive)
-  (let* ((default (car mivi-ex--history))
-         (str (read-string (if default (format ":(default %s) " default) ":")
-                           nil 'mivi-ex--history default))
-         (cmdspec (mivi-ex--parse-command str)))
+(defun mivi-ex (arg)
+  "Parse ARG as ex command and dispatch it to other ex functions.
+When called interactively, ex command is read from user input."
+  (interactive (let ((default (car mivi-ex--history)))
+                 (list (read-string (if default
+                                        (format ":(default %s) " default)
+                                      ":")
+                                    nil 'mivi-ex--history default))))
+  (let ((cmdspec (mivi-ex--parse-command arg)))
     (pcase (plist-get cmdspec :command)
       ('nil (goto-char (mivi--linepos-pos (cdr (plist-get cmdspec :range)))))
       ("d" (mivi-ex--delete (plist-get cmdspec :range)))
