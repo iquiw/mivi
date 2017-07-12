@@ -1,6 +1,12 @@
 (require 'ert)
 (require 'mivi)
 
+(ert-deftest mivi-ex-subst-throws-error-if-no-last-search ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (let ((mivi--last-search nil))
+      (should-error (execute-kbd-macro ":s//foo/") :type 'user-error))))
+
 (ert-deftest mivi-repeat-subst-throws-error-if-no-last-regexp ()
   (let ((mivi--last-subst nil))
     (should-error (execute-kbd-macro "&") :type 'user-error)))

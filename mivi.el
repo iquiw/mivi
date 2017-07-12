@@ -85,7 +85,6 @@
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
 (defvar mivi--last-replace-char nil)
-(defvar mivi--last-search nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
 (defvar mivi--undo-repeating nil)

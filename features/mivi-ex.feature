@@ -211,3 +211,23 @@ Feature: Ex command
 
     fn bar() {
     """
+
+  Scenario: substitute the search pattern range with pattern omitted
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    foo bar baz
+       bar
+    qux
+    """
+    And I go to line "1"
+    And I type ":/bar/s//abc/"
+    Then I should see:
+    """
+    foo
+    foo abc baz
+       bar
+    qux
+    """
+    And the current line should be "2"

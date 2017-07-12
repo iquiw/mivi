@@ -59,6 +59,10 @@
          (replace (plist-get subspec :replace))
          (options (plist-get subspec :options))
          (global (memq 'global options)))
+    (when (string= regexp "")
+      (if mivi--last-search
+          (setq regexp (car mivi--last-search))
+        (user-error "No previous regular expression")))
     (mivi--subst-internal regexp replace beg end global)
     (setq mivi--last-subst (cons regexp replace))))
 
@@ -124,7 +128,7 @@ It returns cons of line-position and rest of string."
      ;; search pattern
      ((string-match "^[/?]" str)
       (let* ((delim (match-string 0 str))
-             (pattern
+             (regexp
               (if (string-match delim str 1)
                   (prog1
                       (substring str 1 (match-beginning 0))
@@ -133,7 +137,9 @@ It returns cons of line-position and rest of string."
                     (substring str 1)
                   (setq str "")))))
         (save-excursion
-          (mivi--search-internal pattern 1 (if (string= delim "/") 1 -1))
+          (let ((sign (if (string= delim "/") 1 -1)))
+            (mivi--search-internal regexp 1 sign)
+            (setq mivi--last-search (cons regexp sign)))
           (forward-line 0)
           (setq lp (mivi--linepos-new nil (point))))))
 

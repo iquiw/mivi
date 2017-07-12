@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(defvar mivi--last-search nil)
 (defvar mivi--last-subst nil)
 (defvar mivi--search-overlay nil)
 (defvar mivi--unmatch-throw-error nil)
