@@ -44,7 +44,13 @@ When called interactively, ex command is read from user input."
       ('nil (goto-char (mivi--linepos-pos (cdr (plist-get cmdspec :range)))))
       ("d" (mivi-ex--delete (plist-get cmdspec :range)))
       ("s" (mivi-ex--subst (plist-get cmdspec :range)
-                           (plist-get cmdspec :arg))))))
+                           (plist-get cmdspec :arg)))
+      ("y" (mivi-ex--copy (plist-get cmdspec :range))))))
+
+(defun mivi-ex--copy (range)
+  "Copy lines within RANGE."
+  (let ((region (mivi-ex--range-to-region range)))
+    (mivi--copy-region (car region) (cdr region))))
 
 (defun mivi-ex--delete (range)
   "Delete lines within RANGE."

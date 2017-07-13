@@ -1157,9 +1157,6 @@ Derived from `viper-catch-tty-ESC'."
     (forward-line n)
     (looking-at-p mivi--blankline-regexp)))
 
-(defun mivi--copy-region (beg end)
-  (kill-new (buffer-substring beg end)))
-
 (defun mivi--find-internal (ch till? count)
   (let ((case-fold-search nil)
         (sign (if (> count 0) 1 -1))

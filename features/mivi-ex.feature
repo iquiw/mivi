@@ -231,3 +231,40 @@ Feature: Ex command
     qux
     """
     And the current line should be "2"
+
+  Scenario: copy the current line
+    Given the buffer is empty
+    When I insert numbers per line to "10"
+    And I go to line "2"
+    And I type ":y"
+    Then the current kill-ring should be:
+    """
+    2
+
+    """
+
+  Scenario: copy the specified line
+    Given the buffer is empty
+    When I insert numbers per line to "10"
+    And I type ":5y"
+    Then the current kill-ring should be:
+    """
+    5
+
+    """
+
+  Scenario: copy the specified line range
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I type ":1,$y"
+    Then the current kill-ring should be:
+    """
+    foo
+    bar
+    baz
+    """

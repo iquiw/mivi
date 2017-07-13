@@ -44,6 +44,10 @@
   "Put mark for a character CH at the current point."
   (puthash ch (point) mivi--mark-slots))
 
+(defun mivi--copy-region (beg end)
+  "Copy region between BEG and END to kill-ring."
+  (kill-new (buffer-substring beg end)))
+
 (defun mivi--goto-line (num)
   "Go to line NUM."
   (goto-char (point-min))
