@@ -750,12 +750,15 @@ With ARG, repeat the specified count."
      (mivi--search-internal re arg (- sign)))))
 
 (defun mivi-window-bottom (&optional arg)
+  "Move the cursor to beginning of text at bottom of window.
+With ARG, move to the specified lines above bottom."
   (interactive "p")
   (move-to-window-line -1)
   (forward-line (- 1 arg))
   (back-to-indentation))
 
 (defun mivi-window-middle ()
+  "Move the cursor to beginning of text at middle of window."
   (interactive)
   (move-to-window-line nil)
   (when (eobp)
@@ -766,6 +769,8 @@ With ARG, repeat the specified count."
   (back-to-indentation))
 
 (defun mivi-window-top (&optional arg)
+  "Move the cursor to beginning of text at top of window.
+With ARG, move to the specified lines below top."
   (interactive "p")
   (move-to-window-line (1- arg))
   (back-to-indentation))
