@@ -777,6 +777,8 @@ With ARG, move to the specified lines below top."
 
 ;; Insert commands
 (defun mivi-append (&optional move-only)
+  "Append input text after the current cursor.
+If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (unless (eolp)
     (forward-char))
@@ -785,6 +787,8 @@ With ARG, move to the specified lines below top."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Append (&optional move-only)
+  "Append input text at end of the current line.
+If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (end-of-line)
   (unless move-only
