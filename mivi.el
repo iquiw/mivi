@@ -796,12 +796,16 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-insert (&optional move-only)
+  "Insert input text at the current point.
+If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (unless move-only
     (mivi--store-command :category 'insert)
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Insert (&optional move-only)
+  "Insert input text at the beginning of text in the current line.
+If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (back-to-indentation)
   (unless move-only
