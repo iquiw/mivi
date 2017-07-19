@@ -813,6 +813,8 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-open (&optional move-only)
+  "Open line to input text below the current line.
+If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (end-of-line)
   (newline-and-indent)
@@ -821,6 +823,8 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Open (&optional move-only)
+  "Open line to input text above the current line.
+If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (forward-line 0)
   (newline 1 nil)
