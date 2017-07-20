@@ -101,6 +101,28 @@ Feature: Copy
     And the cursor should be at cell (2, 6)
     And the mivi state should be "command"
 
+  Scenario: copy find/Find/goto char (backward) unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "yf-"
+    Then the cursor should be at cell (1, 0)
+
+    When I go to cell (1, 3)
+    And I type "yt-"
+    Then the cursor should be at cell (1, 3)
+
+    When I go to end of buffer
+    And I type "yF-"
+    Then the cursor should be at cell (1, 11)
+
+    When I go to cell (1, 9)
+    And I type "yT-"
+    Then the cursor should be at cell (1, 9)
+
   Scenario: copy goto line
     Given the buffer is empty
     When I insert:

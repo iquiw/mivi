@@ -123,6 +123,28 @@ Feature: Delete
     When I type "dTr"
     Then I should see pattern " bar$"
 
+  Scenario: delete find/Find/goto char (backward) unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "df-"
+    Then the cursor should be at cell (1, 0)
+
+    When I go to cell (1, 3)
+    And I type "dt-"
+    Then the cursor should be at cell (1, 3)
+
+    When I go to end of buffer
+    And I type "dF-"
+    Then the cursor should be at cell (1, 11)
+
+    When I go to cell (1, 9)
+    And I type "dT-"
+    Then the cursor should be at cell (1, 9)
+
   Scenario: delete goto line
     Given the buffer is empty
     When I insert:

@@ -108,6 +108,28 @@ Feature: Change
     Then I should see pattern "^   123$"
     And the mivi state should be "insert"
 
+  Scenario: change find/Find/goto char (backward) unmatched
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I go to beginning of buffer
+    And I type "cf-"
+    Then the cursor should be at cell (1, 0)
+
+    When I go to cell (1, 3)
+    And I type "ct-"
+    Then the cursor should be at cell (1, 3)
+
+    When I go to end of buffer
+    And I type "cF-"
+    Then the cursor should be at cell (1, 11)
+
+    When I go to cell (1, 9)
+    And I type "cT-"
+    Then the cursor should be at cell (1, 9)
+
   Scenario: change goto char unmatched
     Given the buffer is empty
     When I insert:

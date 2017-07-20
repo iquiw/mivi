@@ -1186,6 +1186,8 @@ Derived from `viper-catch-tty-ESC'."
           (when till?
             (forward-char (- sign)))
         (when mivi--unmatch-throw-error
+          (when move?
+            (forward-char (- sign)))
           (user-error "`%s' not found" (char-to-string ch))))
       (when move?
         (forward-char (- sign))))))
