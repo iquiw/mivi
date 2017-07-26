@@ -719,7 +719,7 @@ With ARG, repeat the specified count."
   "Search word at the point in the current buffer."
   (interactive)
   (let ((mivi--current-search-string
-         (if (region-active-p)
+         (if (use-region-p)
              (let ((s (buffer-substring (region-beginning) (region-end))))
                (unless (string= s "")
                  (regexp-quote s)))

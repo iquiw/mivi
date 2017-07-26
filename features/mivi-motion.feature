@@ -471,6 +471,13 @@ Feature: Motion
     And I press "C-a"
     Then the cursor should be at cell (5, 15)
 
+  Scenario: search current word when region is empty
+    Given transient mark mode is active
+    When I go to beginning of buffer
+    And I set the mark
+    And I press "C-a"
+    Then the cursor should be at cell (4, 17)
+
   Scenario: search next
     Given the buffer is empty
     When I insert:
