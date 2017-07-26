@@ -84,10 +84,12 @@
 (defvar mivi--current-search-string nil)
 (defvar mivi--last-command nil)
 (defvar mivi--last-find nil)
+(defvar mivi--last-find-char-for-repeat nil)
 (defvar mivi--last-replace-char nil)
 (defvar mivi--stop-at-eol nil)
 (defvar mivi--stop-at-space nil)
 (defvar mivi--undo-repeating nil)
+(defvar mivi--unmatch-throw-error nil)
 
 (defvar-local mivi-change-state nil)
 (defvar-local mivi-command-state nil)
@@ -467,7 +469,9 @@ With ARG, repeat the specified count."
   (interactive "p")
   (let ((ch (or mivi--current-find-char (read-char "f-"))))
     (mivi--find-internal ch nil arg)
-    (setq mivi--last-find (list ch 1 nil))))
+    (setq mivi--last-find (list ch 1 nil))
+    (when mivi--unmatch-throw-error
+      (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-Find (&optional arg)
   "Find backward a charcter from input at the current line.
@@ -475,7 +479,9 @@ With ARG, repeat the specified count."
   (interactive "p")
   (let ((ch (or mivi--current-find-char (read-char "F-"))))
     (mivi--find-internal ch nil (- arg))
-    (setq mivi--last-find (list ch -1 nil))))
+    (setq mivi--last-find (list ch -1 nil))
+    (when mivi--unmatch-throw-error
+      (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-forward-word (&optional arg)
   "Move forward to the beginning of the next word.
@@ -519,7 +525,9 @@ With ARG, repeat the specified count."
   (interactive "p")
   (let ((ch (or mivi--current-find-char (read-char "t-"))))
     (mivi--find-internal ch t arg)
-    (setq mivi--last-find (list ch 1 t))))
+    (setq mivi--last-find (list ch 1 t))
+    (when mivi--unmatch-throw-error
+      (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-goto-char-backward (&optional arg)
   "Go backward until encountering a character from input at the current line.
@@ -527,7 +535,9 @@ With ARG, repeat the specified count."
   (interactive "p")
   (let ((ch (or mivi--current-find-char (read-char "T-"))))
     (mivi--find-internal ch t (- arg))
-    (setq mivi--last-find (list ch -1 t))))
+    (setq mivi--last-find (list ch -1 t))
+    (when mivi--unmatch-throw-error
+      (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-goto-line (&optional arg)
   "Go to the line specified by ARG, default to the last line."
@@ -1066,7 +1076,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
        ((eq category 'change)
         (let ((this-command command)
               (current-prefix-arg (or arg prefix))
-              (mivi--current-find-char (car mivi--last-find))
+              (mivi--current-find-char mivi--last-find-char-for-repeat)
               (mivi--current-search-string (car mivi--last-search)))
           (when content
             (call-interactively command)
@@ -1079,7 +1089,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
        (command
         (let ((this-command command)
               (current-prefix-arg (or arg prefix))
-              (mivi--current-find-char (car mivi--last-find))
+              (mivi--current-find-char mivi--last-find-char-for-repeat)
               (mivi--current-replace-char mivi--last-replace-char)
               (mivi--current-search-string (car mivi--last-search)))
           (call-interactively command)))))))

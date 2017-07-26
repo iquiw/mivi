@@ -418,6 +418,58 @@ Feature: Undo
     When I type "2."
     Then I should see pattern "^foo $"
 
+  Scenario: repeat delete find when another find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "dfyfA."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
+  Scenario: repeat delete Find when another Find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "dFAFL."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
+  Scenario: repeat delete goto char when another goto char before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "dtL2tr."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
+  Scenario: repeat delete goto char backward when another goto char backward before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "dT Ty."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
   Scenario: repeat delete search
     Given the buffer is empty
     When I insert:
@@ -543,6 +595,66 @@ Feature: Undo
     Then I should see pattern "^foo bar qux$"
     And I type "."
     Then I should see pattern "^foo quxx$"
+
+  Scenario: repeat change find when another find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "cfyLinked"
+    And I press "<escape>"
+    And I type "fA."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change Find when another Find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "cFALinked"
+    And I press "<escape>"
+    And I type "2FL."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change goto char when another goto char before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "ctLLinked"
+    And I press "<escape>"
+    And I type "2tr."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change goto char backward when another goto char backward before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "cT Linked"
+    And I press "<escape>"
+    And I type "Ty."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
 
   Scenario: repeat change search
     Given the buffer is empty
