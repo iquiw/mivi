@@ -122,7 +122,10 @@ It returns cons of line-position and rest of string."
              (p (mivi--get-mark c)))
         (setq str (substring str 2))
         (if p
-            (setq lp (mivi--linepos-new nil p))
+            (save-excursion
+              (goto-char p)
+              (forward-line 0)
+              (setq lp (mivi--linepos-new nil (point))))
           (user-error "`%s': Marker is not set" c))))
 
      ;; last line

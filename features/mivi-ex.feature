@@ -47,13 +47,24 @@ Feature: Ex command
 
   Scenario: delete the marked line range
     Given the buffer is empty
-    When I insert numbers per line to "10"
-    And I go to line "3"
+    When I insert:
+    """
+       foo
+       bar
+       baz
+       qux
+       quux
+    """
+    And I go to word "bar"
     And I type "ma"
-    And I go to line "8"
+    And I go to word "qux"
     And I type "mb"
     And I type ":'a,'bd"
-    Then I should not see pattern "[3-8]"
+    Then I should see:
+    """
+       foo
+       quux
+    """
 
   Scenario: delete the search pattern range
     Given the buffer is empty
