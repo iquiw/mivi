@@ -470,6 +470,58 @@ Feature: Undo
     List<String> l = new List<>();
     """
 
+  Scenario: repeat delete find when another copy find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "dfyyf<fA."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
+  Scenario: repeat delete Find when another copy Find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "dFAyF FL."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
+  Scenario: repeat delete goto char when another copy goto char before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "dtLyt<2tr."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
+  Scenario: repeat delete goto char backward when another copy goto char backward before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "dT yT>Ty."
+    Then I should see:
+    """
+    List<String> l = new List<>();
+    """
+
   Scenario: repeat delete search
     Given the buffer is empty
     When I insert:
@@ -651,6 +703,66 @@ Feature: Undo
     And I type "cT Linked"
     And I press "<escape>"
     And I type "Ty."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change find when another copy find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "cfyLinked"
+    And I press "<escape>"
+    And I type "yf<fA."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change Find when another copy Find before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "cFALinked"
+    And I press "<escape>"
+    And I type "yF FL."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change goto char when another copy goto char before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to beginning of buffer
+    And I type "ctLLinked"
+    And I press "<escape>"
+    And I type "yt<2tr."
+    Then I should see:
+    """
+    LinkedList<String> l = new LinkedList<>();
+    """
+
+  Scenario: repeat change goto char backward when another goto char backward before repeat
+    Given the buffer is empty
+    When I insert:
+    """
+    ArrayList<String> l = new ArrayList<>();
+    """
+    And I go to cell (1, 31)
+    And I type "cT Linked"
+    And I press "<escape>"
+    And I type "yT>Ty."
     Then I should see:
     """
     LinkedList<String> l = new LinkedList<>();

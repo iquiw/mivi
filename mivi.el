@@ -79,6 +79,7 @@
     (t :foreground "black" :background "yellow"))
   "Mode line face for MiVi.")
 
+(defvar mivi--change-or-delete nil)
 (defvar mivi--current-find-char nil)
 (defvar mivi--current-replace-char nil)
 (defvar mivi--current-search-string nil)
@@ -260,7 +261,9 @@ EDIT-BODY is body form to be called after the motion."
                                       ''kill-region)))))
              (unwind-protect
                  (condition-case nil
-                     (let* ((mivi--unmatch-throw-error t)
+                     (let* ((mivi--change-or-delete
+                             ,(and (memq state-type '(change delete)) t))
+                            (mivi--unmatch-throw-error t)
                             ,@pre-bindings)
                        (call-interactively orig-fn)
                        (let ((end (point)))
@@ -470,7 +473,7 @@ With ARG, repeat the specified count."
   (let ((ch (or mivi--current-find-char (read-char "f-"))))
     (mivi--find-internal ch nil arg)
     (setq mivi--last-find (list ch 1 nil))
-    (when mivi--unmatch-throw-error
+    (when mivi--change-or-delete
       (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-Find (&optional arg)
@@ -480,7 +483,7 @@ With ARG, repeat the specified count."
   (let ((ch (or mivi--current-find-char (read-char "F-"))))
     (mivi--find-internal ch nil (- arg))
     (setq mivi--last-find (list ch -1 nil))
-    (when mivi--unmatch-throw-error
+    (when mivi--change-or-delete
       (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-forward-word (&optional arg)
@@ -526,7 +529,7 @@ With ARG, repeat the specified count."
   (let ((ch (or mivi--current-find-char (read-char "t-"))))
     (mivi--find-internal ch t arg)
     (setq mivi--last-find (list ch 1 t))
-    (when mivi--unmatch-throw-error
+    (when mivi--change-or-delete
       (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-goto-char-backward (&optional arg)
@@ -536,7 +539,7 @@ With ARG, repeat the specified count."
   (let ((ch (or mivi--current-find-char (read-char "T-"))))
     (mivi--find-internal ch t (- arg))
     (setq mivi--last-find (list ch -1 t))
-    (when mivi--unmatch-throw-error
+    (when mivi--change-or-delete
       (setq mivi--last-find-char-for-repeat ch))))
 
 (defun mivi-goto-line (&optional arg)
