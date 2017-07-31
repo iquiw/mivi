@@ -171,19 +171,21 @@ It returns cons of line-position and rest of string."
         (user-error "Illegal address: only %s lines in the file" last-num)))
     (cons lp str)))
 
-(defun mivi-ex--parse-subst (str)
+(defun mivi-ex--parse-subst (str &optional no-replace)
   "Parse argument of substitute command provided by STR.
-It returns plist of :regexp, :replace and options."
+It returns plist of :regexp, :replace, :rest and :options.
+If NO-REPLACE is non-nil, it returns :rest instead of :replace and :options."
   (let* ((delim (substring str 0 1))
          (re-sep (concat "[^\\]" delim))
          (re-unesc (concat "\\\\" delim))
-         offset regexp (replace "") options)
+         offset regexp (replace "") (rest "") options)
     (if (string-match re-sep str)
         (progn
           (setq regexp (substring str 1 (1+ (match-beginning 0))))
-          (setq offset (match-end 0)))
+          (setq offset (match-end 0))
+          (setq rest (substring str offset)))
       (setq regexp (substring str 1)))
-    (when offset
+    (when (and (not no-replace) offset)
       (if (string-match re-sep str (1- offset))
           (let ((flags (substring str (match-end 0))))
             (setq replace (substring str offset (1+ (match-beginning 0))))
@@ -191,10 +193,14 @@ It returns plist of :regexp, :replace and options."
              ((string= flags "") nil)
              ((string= flags "g") (push 'global options))
              (t (user-error (format "`%s': Unknown flags" flags)))))
-        (setq replace (substring str offset))))
-    (list :regexp (replace-regexp-in-string re-unesc delim regexp)
-          :replace (replace-regexp-in-string re-unesc delim replace)
-          :options options)))
+        (setq replace (substring str offset)))
+      (setq rest ""))
+    (if no-replace
+        (list :regexp (replace-regexp-in-string re-unesc delim regexp)
+              :rest rest)
+      (list :regexp (replace-regexp-in-string re-unesc delim regexp)
+            :replace (replace-regexp-in-string re-unesc delim replace)
+            :options options))))
 
 (defun mivi-ex--range-to-region (range)
   "Convert line RANGE to region, which is cons of points."

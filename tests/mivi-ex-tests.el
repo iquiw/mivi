@@ -194,3 +194,15 @@
 
 (ert-deftest mivi-ex--parse-subst-with-unknown-flag ()
   (should-error (mivi-ex--parse-subst "/foo/bar/z") :type 'user-error))
+
+(ert-deftest mivi-ex--parse-subst-no-replace-with-1delim ()
+  (should (equal '(:regexp "foo" :rest "")
+                 (mivi-ex--parse-subst "/foo" t))))
+
+(ert-deftest mivi-ex--parse-subst-no-replace-with-2delim ()
+  (should (equal '(:regexp "foo" :rest "bar/")
+                 (mivi-ex--parse-subst "/foo/bar/" t))))
+
+(ert-deftest mivi-ex--parse-subst-with-comma-delim ()
+  (should (equal '(:regexp "foo/bar" :rest "s//baz/")
+                 (mivi-ex--parse-subst ",foo/bar,s//baz/" t))))
