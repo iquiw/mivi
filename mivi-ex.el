@@ -79,8 +79,6 @@ When called interactively, ex command is read from user input."
   "Parse ex command line provided as STR.
 It returns plist of :command, :arg and :range."
   (let (beg end)
-    (when (string-match-p "^%" str)
-      (setq str (concat "1,$" (substring str 1))))
     (pcase (mivi-ex--parse-linespec str)
       (`(,lp . ,rest)
        (setq beg lp)
@@ -91,9 +89,17 @@ It returns plist of :command, :arg and :range."
          (setq end lp)
          (setq str rest))))
     (cond
+     ;; whole lines
+     ((null beg)
+      (setq beg (mivi--linepos-new nil (point-min)))
+      (setq end (mivi--linepos-new nil (point-max))))
+
+     ;; current line
      ((null end) (setq end beg))
+
      ((> (mivi--linepos-line beg) (mivi--linepos-line end))
       (user-error "The second address is smaller than the first")))
+
     (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
         (list :command (match-string 1 str)
               :arg (match-string 2 str)
@@ -102,9 +108,14 @@ It returns plist of :command, :arg and :range."
 
 (defun mivi-ex--parse-linespec (str)
   "Parse ex line number spec provided as STR.
-It returns cons of line-position and rest of string."
+It returns cons of line position and rest of string.
+Line position nil means the whole lines."
   (let (lp)
     (cond
+     ;; whole lines
+     ((string-match "^%" str)
+      (setq str (substring str 1)))
+
      ;; line number
      ((string-match "^[0-9]+" str)
       (setq lp (mivi--linepos-new (string-to-number (match-string 0 str)) nil))
@@ -157,18 +168,19 @@ It returns cons of line-position and rest of string."
      (t (setq lp (mivi--linepos-new (line-number-at-pos)
                                     (save-excursion (forward-line 0) (point))))))
 
-    (when (string-match "^\\([-+]\\)\\([0-9]+\\)?" str)
-      (let ((num (if (match-string 2 str)
-                    (string-to-number (match-string 2 str))
-                   1)))
-        (setq lp (mivi--linepos-add-line lp (if (equal (match-string 1 str) "-")
-                                                (- num)
-                                              num))))
-      (setq str (substring str (match-end 0))))
-    (let* ((num (mivi--linepos-line lp t))
-           (last-num (and num (line-number-at-pos (point-max)))))
-      (when (and num (> num last-num))
-        (user-error "Illegal address: only %s lines in the file" last-num)))
+    (when lp
+      (when (string-match "^\\([-+]\\)\\([0-9]+\\)?" str)
+        (let ((num (if (match-string 2 str)
+                       (string-to-number (match-string 2 str))
+                     1)))
+          (setq lp (mivi--linepos-add-line lp (if (equal (match-string 1 str) "-")
+                                                  (- num)
+                                                num))))
+        (setq str (substring str (match-end 0))))
+      (let* ((num (mivi--linepos-line lp t))
+             (last-num (and num (line-number-at-pos (point-max)))))
+        (when (and num (> num last-num))
+          (user-error "Illegal address: only %s lines in the file" last-num))))
     (cons lp str)))
 
 (defun mivi-ex--parse-subst (str &optional no-replace)

@@ -6,6 +6,11 @@
     (should (equal num (mivi--linepos-line (car result))))
     (should (equal arg (cdr result)))))
 
+(ert-deftest mivi-ex--parse-linespec-for-percent ()
+  (with-temp-buffer
+    (should (equal '(nil . "s/foo/bar/")
+                   (mivi-ex--parse-linespec "%s/foo/bar/")))))
+
 (ert-deftest mivi-ex--parse-linespec-for-number-only ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
