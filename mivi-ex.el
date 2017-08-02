@@ -44,10 +44,14 @@ When called interactively, ex command is read from user input."
     (if (null command)
         (goto-char (mivi--linepos-pos (cdr (plist-get cmdspec :range))))
       (let ((region (mivi-ex--range-to-region (plist-get cmdspec :range))))
-        (pcase (plist-get cmdspec :command)
-          ("d" (mivi-ex--delete region))
-          ("s" (mivi-ex--subst region (plist-get cmdspec :arg)))
-          ("y" (mivi-ex--copy region)))))))
+        (mivi-ex--dispatch command region (plist-get cmdspec :arg))))))
+
+(defun mivi-ex--dispatch (command region &optional arg)
+  "Dispatch ex COMMAND to run in REGION with optional ARG."
+  (pcase command
+    ("d" (mivi-ex--delete region))
+    ("s" (mivi-ex--subst region arg))
+    ("y" (mivi-ex--copy region))))
 
 (defun mivi-ex--copy (region)
   "Copy lines within REGION."
