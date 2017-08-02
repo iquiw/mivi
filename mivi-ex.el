@@ -39,28 +39,27 @@ When called interactively, ex command is read from user input."
                                         (format ":(default %s) " default)
                                       ":")
                                     nil 'mivi-ex--history default))))
-  (let ((cmdspec (mivi-ex--parse-command arg)))
-    (pcase (plist-get cmdspec :command)
-      ('nil (goto-char (mivi--linepos-pos (cdr (plist-get cmdspec :range)))))
-      ("d" (mivi-ex--delete (plist-get cmdspec :range)))
-      ("s" (mivi-ex--subst (plist-get cmdspec :range)
-                           (plist-get cmdspec :arg)))
-      ("y" (mivi-ex--copy (plist-get cmdspec :range))))))
+  (let* ((cmdspec (mivi-ex--parse-command arg))
+         (command (plist-get cmdspec :command)))
+    (if (null command)
+        (goto-char (mivi--linepos-pos (cdr (plist-get cmdspec :range))))
+      (let ((region (mivi-ex--range-to-region (plist-get cmdspec :range))))
+        (pcase (plist-get cmdspec :command)
+          ("d" (mivi-ex--delete region))
+          ("s" (mivi-ex--subst region (plist-get cmdspec :arg)))
+          ("y" (mivi-ex--copy region)))))))
 
-(defun mivi-ex--copy (range)
-  "Copy lines within RANGE."
-  (let ((region (mivi-ex--range-to-region range)))
-    (mivi--copy-region (car region) (cdr region))))
+(defun mivi-ex--copy (region)
+  "Copy lines within REGION."
+  (mivi--copy-region (car region) (cdr region)))
 
-(defun mivi-ex--delete (range)
-  "Delete lines within RANGE."
-  (let ((region (mivi-ex--range-to-region range)))
-    (kill-region (car region) (cdr region))))
+(defun mivi-ex--delete (region)
+  "Delete lines within REGION."
+  (kill-region (car region) (cdr region)))
 
-(defun mivi-ex--subst (range arg)
-  "Substitute lines within RANGE according to ARG."
-  (let* ((region (mivi-ex--range-to-region range))
-         (beg (car region))
+(defun mivi-ex--subst (region arg)
+  "Substitute lines within REGION according to ARG."
+  (let* ((beg (car region))
          (end (cdr region))
          (subspec (mivi-ex--parse-subst arg))
          (regexp (plist-get subspec :regexp))
