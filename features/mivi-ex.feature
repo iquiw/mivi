@@ -279,3 +279,19 @@ Feature: Ex command
     bar
     baz
     """
+
+  Scenario: global delete
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    """
+    And I type ":g/[23]/d"
+    Then I should see:
+    """
+    1 foo
+    4 qux
+    """

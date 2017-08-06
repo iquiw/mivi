@@ -50,6 +50,7 @@ When called interactively, ex command is read from user input."
   "Dispatch ex COMMAND to run in REGION with optional ARG."
   (pcase command
     ("d" (mivi-ex--delete region))
+    ("g" (mivi-ex--global region arg))
     ("s" (mivi-ex--subst region arg))
     ("y" (mivi-ex--copy region))))
 
@@ -60,6 +61,25 @@ When called interactively, ex command is read from user input."
 (defun mivi-ex--delete (region)
   "Delete lines within REGION."
   (kill-region (car region) (cdr region)))
+
+(defun mivi-ex--global (region arg)
+  "Dispatch ex command for matched lines in REGION.
+Ex command is provided by ARG."
+  (let* ((beg (car region))
+         (end (cdr region))
+         (subspec (mivi-ex--parse-subst arg t))
+         (regexp (plist-get subspec :regexp))
+         (rest (plist-get subspec :rest)))
+    (unless (or (string= rest "")
+                (string-match-p "^g" rest))
+      (let ((command (substring rest 0 1))
+            (arg (substring rest 1)))
+        (goto-char beg)
+        (while (re-search-forward regexp end t)
+          (mivi-ex--dispatch command
+                             (cons (progn (forward-line 0) (point))
+                                   (progn (forward-line 1) (point)))
+                             arg))))))
 
 (defun mivi-ex--subst (region arg)
   "Substitute lines within REGION according to ARG."
@@ -168,8 +188,9 @@ Line position nil means the whole lines."
           (forward-line 0)
           (setq lp (mivi--linepos-new nil (point))))))
 
-     (t (setq lp (mivi--linepos-new (line-number-at-pos)
-                                    (save-excursion (forward-line 0) (point))))))
+     ((not (string-match-p "^g" str))
+      (setq lp (mivi--linepos-new (line-number-at-pos)
+                                  (save-excursion (forward-line 0) (point))))))
 
     (when lp
       (when (string-match "^\\([-+]\\)\\([0-9]+\\)?" str)
