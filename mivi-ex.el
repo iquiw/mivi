@@ -71,7 +71,7 @@ Ex command is provided by ARG."
          (regexp (plist-get subspec :regexp))
          (rest (plist-get subspec :rest)))
     (unless (or (string= rest "")
-                (string-match-p "^g" rest))
+                (string-match-p "\\`g" rest))
       (let ((command (substring rest 0 1))
             (arg (substring rest 1)))
         (goto-char beg)
@@ -106,7 +106,7 @@ It returns plist of :command, :arg and :range."
       (`(,lp . ,rest)
        (setq beg lp)
        (setq str rest)))
-    (when (string-match-p "^," str)
+    (when (string-match-p "\\`," str)
       (pcase (mivi-ex--parse-linespec (substring str 1))
         (`(,lp . ,rest)
          (setq end lp)
@@ -136,22 +136,22 @@ Line position nil means the whole lines."
   (let (lp)
     (cond
      ;; whole lines
-     ((string-match "^%" str)
+     ((string-match "\\`%" str)
       (setq str (substring str 1)))
 
      ;; line number
-     ((string-match "^[0-9]+" str)
+     ((string-match "\\`[0-9]+" str)
       (setq lp (mivi--linepos-new (string-to-number (match-string 0 str)) nil))
       (setq str (substring str (match-end 0))))
 
      ;; current line
-     ((string-match-p "^\\." str)
+     ((string-match-p "\\`\\." str)
       (setq lp (mivi--linepos-new (line-number-at-pos)
                                   (save-excursion (forward-line 0) (point))))
       (setq str (substring str 1)))
 
      ;; marked line
-     ((string-match "^'\\(.\\)" str)
+     ((string-match "\\`'\\(.\\)" str)
       (let* ((c (string-to-char (match-string 1 str)))
              (p (mivi--get-mark c)))
         (setq str (substring str 2))
@@ -163,7 +163,7 @@ Line position nil means the whole lines."
           (user-error "`%s': Marker is not set" c))))
 
      ;; last line
-     ((string-match-p "^\\$" str)
+     ((string-match-p "\\`\\$" str)
       (setq lp (mivi--linepos-new nil (save-excursion
                                         (goto-char (point-max))
                                         (forward-line 0)
@@ -171,7 +171,7 @@ Line position nil means the whole lines."
       (setq str (substring str 1)))
 
      ;; search pattern
-     ((string-match "^[/?]" str)
+     ((string-match "\\`[/?]" str)
       (let* ((delim (match-string 0 str))
              (regexp
               (if (string-match delim str 1)
@@ -188,12 +188,12 @@ Line position nil means the whole lines."
           (forward-line 0)
           (setq lp (mivi--linepos-new nil (point))))))
 
-     ((not (string-match-p "^g" str))
+     ((not (string-match-p "\\`g" str))
       (setq lp (mivi--linepos-new (line-number-at-pos)
                                   (save-excursion (forward-line 0) (point))))))
 
     (when lp
-      (when (string-match "^\\([-+]\\)\\([0-9]+\\)?" str)
+      (when (string-match "\\`\\([-+]\\)\\([0-9]+\\)?" str)
         (let ((num (if (match-string 2 str)
                        (string-to-number (match-string 2 str))
                      1)))

@@ -93,6 +93,11 @@
     (goto-line 3)
     (mivi-ex--test-linespec 1 "d" "?foo?d")))
 
+(ert-deftest mivi-ex--parse-linespec-for-newline-in-replace ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (mivi-ex--test-linespec 6 "s/,/\n/g" "s/,/\n/g")))
+
 (ert-deftest mivi-ex--parse-linespec-for-unset-mark ()
   (with-temp-buffer
     (mivi-mode 1)
