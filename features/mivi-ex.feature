@@ -243,6 +243,26 @@ Feature: Ex command
     """
     And the current line should be "2"
 
+  Scenario: substitute line into multiple lines
+    Given the buffer is empty
+    When I insert:
+    """
+    foo,bar,baz
+    """
+    And I start an action chain
+    And I type ":s/,/"
+    And I press "C-q"
+    And I press "C-j"
+    And I type "/g"
+    And I press "RET"
+    And I execute the action chain
+    Then I should see:
+    """
+    foo
+    bar
+    baz
+    """
+
   Scenario: copy the current line
     Given the buffer is empty
     When I insert numbers per line to "10"

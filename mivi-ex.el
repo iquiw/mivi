@@ -123,9 +123,9 @@ It returns plist of :command, :arg and :range."
      ((> (mivi--linepos-line beg) (mivi--linepos-line end))
       (user-error "The second address is smaller than the first")))
 
-    (if (string-match "\\([a-z]+\\) *\\(.*\\)" str)
+    (if (string-match "\\`\\([a-z]+\\)[[:blank:]]*" str)
         (list :command (match-string 1 str)
-              :arg (match-string 2 str)
+              :arg (substring str (match-end 0))
               :range (cons beg end))
       (list :range (cons beg end)))))
 
