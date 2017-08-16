@@ -315,3 +315,22 @@ Feature: Ex command
     1 foo
     4 qux
     """
+
+  Scenario: global delete with range
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    5 quux
+    """
+    And I type ":2,4g/qu/d"
+    Then I should see:
+    """
+    1 foo
+    2 bar
+    3 baz
+    5 quux
+    """

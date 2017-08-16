@@ -73,13 +73,15 @@ Ex command is provided by ARG."
     (unless (or (string= rest "")
                 (string-match-p "\\`g" rest))
       (let ((command (substring rest 0 1))
-            (arg (substring rest 1)))
+            (arg (substring rest 1))
+            (marker (set-marker (make-marker) end)))
         (goto-char beg)
-        (while (re-search-forward regexp end t)
+        (while (re-search-forward regexp marker t)
           (mivi-ex--dispatch command
                              (cons (progn (forward-line 0) (point))
                                    (progn (forward-line 1) (point)))
-                             arg))))))
+                             arg))
+        (set-marker marker nil)))))
 
 (defun mivi-ex--subst (region arg)
   "Substitute lines within REGION according to ARG."
