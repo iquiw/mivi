@@ -132,11 +132,12 @@ If SIGN should be 1 or -1, -1 means backward search."
 If GLOBAL is non-nil, it substitutes all occurrence in the region."
   (let* ((last-replace-point (point))
          (found t)
-         (case-fold-search nil))
+         (case-fold-search nil)
+         (marker (set-marker (make-marker) end)))
     (goto-char beg)
-    (while (and found (< (point) end))
+    (while (and found (< (point) marker))
       (setq found (re-search-forward regexp
-                                     (if global end (line-end-position))
+                                     (if global marker (line-end-position))
                                      t))
       (when found
         (replace-match replace t)
@@ -146,6 +147,7 @@ If GLOBAL is non-nil, it substitutes all occurrence in the region."
       (unless global
         (forward-line 1)
         (setq found (not (eobp)))))
+    (set-marker marker nil)
     (goto-char last-replace-point)))
 
 (provide 'mivi-common)

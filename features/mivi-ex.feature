@@ -172,6 +172,25 @@ Feature: Ex command
     """
     And the current line should be "3"
 
+  Scenario: substitute the specified line range when buffer is growing
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    foo
+    foo
+    foo
+    """
+    And I type ":2,3s/foo/barbazqux/"
+    Then I should see:
+    """
+    foo
+    barbazqux
+    barbazqux
+    foo
+    """
+    And the current line should be "3"
+
   Scenario: substitute with global flag
     Given the buffer is empty
     When I insert:
