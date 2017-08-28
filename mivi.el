@@ -1116,23 +1116,29 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
 
 (defun mivi-paste (&optional arg)
   (interactive "p")
-  (cond
-   ((string-match-p "\n$" (current-kill 0))
-    (forward-line 1)
-    (unless (bolp)
-      (newline)))
-   ((not (eolp))
-    (forward-char)))
-  (dotimes (_ arg)
-    (save-excursion (yank))))
+  (let ((line-paste (string-match-p "\n$" (current-kill 0))))
+    (cond
+     (line-paste
+      (forward-line 1)
+      (unless (bolp)
+        (newline)))
+     ((not (eolp))
+      (forward-char)))
+    (dotimes (_ arg)
+      (save-excursion (yank)))
+    (when line-paste
+      (back-to-indentation))))
 
 (defun mivi-Paste (&optional arg)
   (interactive "p")
-  (when (string-match-p "\n$" (current-kill 0))
-    (forward-line 0))
-  (save-excursion
-    (dotimes (_ arg)
-      (yank))))
+  (let ((line-paste (string-match-p "\n$" (current-kill 0))))
+    (when line-paste
+      (forward-line 0))
+    (save-excursion
+      (dotimes (_ arg)
+        (yank)))
+    (when line-paste
+      (back-to-indentation))))
 
 (defun mivi-replace-char (&optional arg)
   (interactive "p")

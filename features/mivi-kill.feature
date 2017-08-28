@@ -90,7 +90,7 @@ Feature Kill and Yank
     """
     foo bar
     baz
-    qux
+       qux
     """
     When I go to beginning of buffer
     And I type "dd"
@@ -108,37 +108,38 @@ Feature Kill and Yank
     Then I should see:
     """
     baz
-    qux
-    qux
+       qux
+       qux
     """
+    And the cursor should be at cell (2, 3)
 
   Scenario: Paste lines
     Given the buffer is empty
     When I insert:
     """
-    foo bar
+      foo bar
     baz
     qux
 
     """
     When I go to beginning of buffer
     And I type "dd"
-    Then I should not see pattern "^foo bar$"
+    Then I should not see pattern "^  foo bar$"
     When I type "P"
-    Then I should see pattern "^foo bar$"
-    And the current line should be "1"
+    Then I should see pattern "^  foo bar$"
+    And the cursor should be at cell (1, 2)
     When I type "dd"
     And I place the cursor after "qux"
     And I type "P"
-    Then I should see pattern "^foo bar$"
+    Then I should see pattern "^  foo bar$"
     And the current line should be "2"
     When I type "2dd"
     And I type "2P"
     Then I should see:
     """
-    foo bar
+      foo bar
     qux
-    foo bar
+      foo bar
     qux
     baz
     """
