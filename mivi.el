@@ -1006,6 +1006,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
 
 (defun mivi-join (&optional arg)
   (interactive "p")
+  (mivi--store-command)
   (dotimes (_ (if (< arg 3) 1 (1- arg)))
     (if (looking-at-p "^$")
         (delete-char 1)
