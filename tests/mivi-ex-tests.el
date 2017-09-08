@@ -190,6 +190,10 @@
   (should (equal '(:regexp "foo/bar/baz" :replace "qux" :options ())
                  (mivi-ex--parse-subst "/foo\\/bar\\/baz/qux/"))))
 
+(ert-deftest mivi-ex--parse-subst-with-backslash-to-slash ()
+  (should (equal '(:regexp "\\\\" :replace "/" :options ())
+                 (mivi-ex--parse-subst "/\\\\/\\//"))))
+
 (ert-deftest mivi-ex--parse-subst-with-empty-replace ()
   (should (equal '(:regexp "[a-z]+" :replace "" :options ())
                  (mivi-ex--parse-subst "/[a-z]+//"))))

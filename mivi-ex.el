@@ -214,24 +214,22 @@ Line position nil means the whole lines."
 It returns plist of :regexp, :replace, :rest and :options.
 If NO-REPLACE is non-nil, it returns :rest instead of :replace and :options."
   (let* ((delim (substring str 0 1))
-         (re-sep (concat "[^\\]" delim))
          (re-unesc (concat "\\\\" delim))
-         offset regexp (replace "") (rest "") options)
-    (if (string-match re-sep str)
+         offset1 offset2 regexp (replace "") (rest "") options)
+    (if (setq offset1 (mivi-ex--find-subst-delimiter str delim 1))
         (progn
-          (setq regexp (substring str 1 (1+ (match-beginning 0))))
-          (setq offset (match-end 0))
-          (setq rest (substring str offset)))
+          (setq regexp (substring str 1 (1- offset1)))
+          (setq rest (substring str offset1)))
       (setq regexp (substring str 1)))
-    (when (and (not no-replace) offset)
-      (if (string-match re-sep str (1- offset))
-          (let ((flags (substring str (match-end 0))))
-            (setq replace (substring str offset (1+ (match-beginning 0))))
+    (when (and (not no-replace) offset1)
+      (if (setq offset2 (mivi-ex--find-subst-delimiter str delim offset1))
+          (let ((flags (substring str offset2)))
+            (setq replace (substring str offset1 (1- offset2)))
             (cond
              ((string= flags "") nil)
              ((string= flags "g") (push 'global options))
              (t (user-error (format "`%s': Unknown flags" flags)))))
-        (setq replace (substring str offset)))
+        (setq replace rest))
       (setq rest ""))
     (if no-replace
         (list :regexp (replace-regexp-in-string re-unesc delim regexp)
@@ -239,6 +237,20 @@ If NO-REPLACE is non-nil, it returns :rest instead of :replace and :options."
       (list :regexp (replace-regexp-in-string re-unesc delim regexp)
             :replace (replace-regexp-in-string re-unesc delim replace)
             :options options))))
+
+(defun mivi-ex--find-subst-delimiter (str delim offset)
+  "Find next delimiter in STR and returns the position.
+Delimiter is specified by DELIM string, which should be one character.
+Delimiter position is searched from OFFSET in STR.
+It returns nil if not found."
+  (let ((re-sep (concat "\\(\\\\*\\)" delim)))
+    (catch 'index
+      (while (string-match re-sep str offset)
+        (let ((esc-len (length (match-string 1 str))))
+          (if (= (% esc-len 2) 0)
+              (throw 'index (match-end 0))
+              ;(throw 'index (+ (match-beginning 0) esc-len))
+            (setq offset (match-end 0))))))))
 
 (defun mivi-ex--range-to-region (range)
   "Convert line RANGE to region, which is cons of points."

@@ -282,6 +282,18 @@ Feature: Ex command
     baz
     """
 
+  Scenario: substitute backslash
+    Given the buffer is empty
+    When I insert:
+    """
+    \foo\bar\baz
+    """
+    And I type ":s,\\,/,g"
+    Then I should see:
+    """
+    /foo/bar/baz
+    """
+
   Scenario: copy the current line
     Given the buffer is empty
     When I insert numbers per line to "10"
