@@ -52,19 +52,24 @@
   :prefix "mivi-")
 
 (defcustom mivi-enabled-derived-modes '(conf-mode prog-mode text-mode)
-  "Enable mivi in major modes that derive the specified modes.")
+  "Enable mivi in major modes that derive the specified modes."
+  :type '(repeat symbol))
 
 (defcustom mivi-enabled-major-modes '(fundamental-mode)
-  "Enable mivi in the specified major modes.")
+  "Enable mivi in the specified major modes."
+  :type '(repeat symbol))
 
 (defcustom mivi-override-universal-argument-map t
-  "Whether to disable Ctrl+u binding in `universal-argument-map'.")
+  "Whether to disable Ctrl+u binding in `universal-argument-map'."
+  :type 'boolean)
 
 (defcustom mivi-shift-width 2
-  "Shiftwidth by which backward indent moves the current indentation.")
+  "Shiftwidth by which backward indent moves the current indentation."
+  :type 'integer)
 
 (defcustom mivi-tty-escape-timeout 0.2
-  "Timeout to wait for subsequent input after ESC key on TTY.")
+  "Timeout to wait for subsequent input after ESC key on TTY."
+  :type 'float)
 
 (defface mivi-search-highlight
   '((((class color) (min-colors 89) (background light))
