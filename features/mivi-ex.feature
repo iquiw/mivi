@@ -365,3 +365,21 @@ Feature: Ex command
     3 baz
     5 quux
     """
+
+  Scenario: global substitute
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    """
+    And I type ":g/[14]/s/foo/foofoo/"
+    Then I should see:
+    """
+    1 foofoo
+    2 bar
+    3 baz
+    4 qux
+    """
