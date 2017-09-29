@@ -60,7 +60,9 @@ When called interactively, ex command is read from user input."
 
 (defun mivi-ex--delete (region)
   "Delete lines within REGION."
-  (kill-region (car region) (cdr region)))
+  (kill-region (car region) (cdr region))
+  (when (eobp)
+    (forward-line -1)))
 
 (defun mivi-ex--global (region arg)
   "Dispatch ex command for matched lines in REGION.

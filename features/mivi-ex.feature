@@ -121,6 +121,22 @@ Feature: Ex command
     5 bar
     """
 
+  Scenario: delete at end of buffer
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+
+    """
+    And I go to cell (2, 0)
+    And I type ":d"
+    Then I should see:
+    """
+    1
+
+    """
+    And the cursor should be at cell (1, 0)
+
   Scenario: substitute the current line
     Given the buffer is empty
     When I insert:
