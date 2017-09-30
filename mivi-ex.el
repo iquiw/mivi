@@ -79,14 +79,15 @@ Ex command is provided by ARG."
             (end-marker (set-marker (make-marker) end))
             (next-marker (make-marker)))
         (goto-char beg)
-        (while (re-search-forward regexp end-marker t)
-          (mivi-ex--dispatch command
-                             (cons (progn (forward-line 0) (point))
-                                   (progn (forward-line 1)
-                                          (set-marker next-marker (point))
-                                          (marker-position next-marker)))
-                             arg)
-          (goto-char next-marker))
+        (catch 'break
+          (while (re-search-forward regexp end-marker t)
+            (let* ((line-beg (progn (forward-line 0) (point)))
+                   (line-end (progn (forward-line 1) (point))))
+              (if (= line-beg line-end)
+                  (throw 'break nil)
+                (set-marker next-marker line-end)
+                (mivi-ex--dispatch command (cons line-beg line-end) arg)
+                (goto-char next-marker)))))
         (set-marker next-marker nil)
         (set-marker end-marker nil)))))
 

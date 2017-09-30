@@ -382,6 +382,26 @@ Feature: Ex command
     5 quux
     """
 
+  Scenario: global delete empty lines
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+
+    2
+
+    3
+
+    """
+    And I type ":g/^$/d"
+    Then I should see:
+    """
+    1
+    2
+    3
+
+    """
+
   Scenario: global substitute
     Given the buffer is empty
     When I insert:
