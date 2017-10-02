@@ -78,6 +78,7 @@ Ex command is provided by ARG."
             (arg (substring rest 1))
             (end-marker (set-marker (make-marker) end))
             (next-marker (make-marker)))
+        (setq mivi--last-search (cons regexp 1))
         (goto-char beg)
         (catch 'break
           (while (re-search-forward regexp end-marker t)

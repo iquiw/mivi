@@ -419,3 +419,21 @@ Feature: Ex command
     3 baz
     4 qux
     """
+
+  Scenario: global substitute with substitute pattern omitted
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    """
+    And I type ":g/\(foo\|baz\)/s//quux/"
+    Then I should see:
+    """
+    1 quux
+    2 bar
+    3 quux
+    4 qux
+    """
