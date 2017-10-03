@@ -61,6 +61,7 @@ Feature
 
 * All ex commands <kbd>:</kbd> except for the following commands.
   * <kbd>:d</kbd>
+  * <kbd>:g</kbd>, combination with `d` and `s` commands.
   * <kbd>:s</kbd>, only global flag is supported.
   * <kbd>:y</kbd>
 * Shift commands <kbd>&lt;</kbd>, <kbd>&gt;</kbd>.
