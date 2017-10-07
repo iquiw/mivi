@@ -52,6 +52,7 @@ When called interactively, ex command is read from user input."
     ("d" (mivi-ex--delete region))
     ("g" (mivi-ex--global region arg))
     ("s" (mivi-ex--subst region arg))
+    ("v" (mivi-ex--global region arg t))
     ("y" (mivi-ex--copy region))))
 
 (defun mivi-ex--copy (region)
@@ -64,31 +65,45 @@ When called interactively, ex command is read from user input."
   (when (eobp)
     (forward-line -1)))
 
-(defun mivi-ex--global (region arg)
+(defun mivi-ex--global (region arg &optional inverse)
   "Dispatch ex command for matched lines in REGION.
-Ex command is provided by ARG."
+Ex command is provided by ARG.
+If INVERSE is non-nil, it processes unmatched lines instead."
   (let* ((beg (car region))
          (end (cdr region))
          (subspec (mivi-ex--parse-subst arg t))
          (regexp (plist-get subspec :regexp))
          (rest (plist-get subspec :rest)))
     (unless (or (string= rest "")
-                (string-match-p "\\`g" rest))
+                (string-match-p "\\`[gv]" rest))
       (let ((command (substring rest 0 1))
             (arg (substring rest 1))
             (end-marker (set-marker (make-marker) end))
             (next-marker (make-marker)))
         (setq mivi--last-search (cons regexp 1))
         (goto-char beg)
-        (catch 'break
-          (while (re-search-forward regexp end-marker t)
-            (let* ((line-beg (progn (forward-line 0) (point)))
-                   (line-end (progn (forward-line 1) (point))))
-              (if (= line-beg line-end)
-                  (throw 'break nil)
+        (let ((line-beg (point))
+              (line-end (save-excursion (forward-line 1) (point)))
+              done)
+          (while (and (not done) (not (eobp)))
+            (let* ((bound (if inverse line-end end-marker))
+                   (matched (re-search-forward regexp bound t)))
+              (cond
+               ((and (not inverse) (not matched))
+                (setq done t))
+
+               ((or (and (not inverse) matched)
+                    (and inverse (not matched)))
+                (setq line-beg (progn (forward-line 0) (point)))
+                (setq line-end (progn (forward-line 1) (point)))
                 (set-marker next-marker line-end)
                 (mivi-ex--dispatch command (cons line-beg line-end) arg)
-                (goto-char next-marker)))))
+                (goto-char next-marker))
+
+               (t
+                (forward-line 1)
+                (setq line-beg (progn (forward-line 0) (point)))
+                (setq line-end (progn (forward-line 1) (point))))))))
         (set-marker next-marker nil)
         (set-marker end-marker nil)))))
 
@@ -199,7 +214,7 @@ Line position nil means the whole lines."
           (forward-line 0)
           (setq lp (mivi--linepos-new nil (point))))))
 
-     ((not (string-match-p "\\`g" str))
+     ((not (string-match-p "\\`[gv]" str))
       (setq lp (mivi--linepos-new (line-number-at-pos)
                                   (save-excursion (forward-line 0) (point))))))
 

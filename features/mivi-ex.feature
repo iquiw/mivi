@@ -437,3 +437,20 @@ Feature: Ex command
     3 quux
     4 qux
     """
+
+  Scenario: inverse global delete
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    """
+    And I type ":v/[23]/d"
+    Then I should see:
+    """
+    2 bar
+    3 baz
+    """
+    And I should not see pattern "\(foo\|qux\)"
