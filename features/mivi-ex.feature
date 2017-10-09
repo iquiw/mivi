@@ -454,3 +454,22 @@ Feature: Ex command
     3 baz
     """
     And I should not see pattern "\(foo\|qux\)"
+
+  Scenario: inverse global delete with range
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+     2 bar
+      3 baz
+       4 qux
+        5 quux
+    """
+    And I type ":2,4v/ba/d"
+    Then I should see:
+    """
+    1 foo
+     2 bar
+      3 baz
+        5 quux
+    """

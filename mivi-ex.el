@@ -85,7 +85,7 @@ If INVERSE is non-nil, it processes unmatched lines instead."
         (let ((line-beg (point))
               (line-end (save-excursion (forward-line 1) (point)))
               done)
-          (while (and (not done) (not (eobp)))
+          (while (and (not done) (< (point) end-marker))
             (let* ((bound (if inverse line-end end-marker))
                    (matched (re-search-forward regexp bound t)))
               (cond
