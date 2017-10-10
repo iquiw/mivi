@@ -82,11 +82,10 @@ If INVERSE is non-nil, it processes unmatched lines instead."
             (next-marker (make-marker)))
         (setq mivi--last-search (cons regexp 1))
         (goto-char beg)
-        (let ((line-beg (point))
-              (line-end (save-excursion (forward-line 1) (point)))
-              done)
+        (let ((beg (point))
+              end done)
           (while (and (not done) (< (point) end-marker))
-            (let* ((bound (if inverse line-end end-marker))
+            (let* ((bound (if inverse (line-end-position) end-marker))
                    (matched (re-search-forward regexp bound t)))
               (cond
                ((and (not inverse) (not matched))
@@ -94,16 +93,16 @@ If INVERSE is non-nil, it processes unmatched lines instead."
 
                ((or (and (not inverse) matched)
                     (and inverse (not matched)))
-                (setq line-beg (progn (forward-line 0) (point)))
-                (setq line-end (progn (forward-line 1) (point)))
-                (set-marker next-marker line-end)
-                (mivi-ex--dispatch command (cons line-beg line-end) arg)
+                (setq beg (progn (forward-line 0) (point)))
+                (setq end (progn (forward-line 1) (point)))
+                (set-marker next-marker end)
+                (mivi-ex--dispatch command (cons beg end) arg)
                 (goto-char next-marker))
 
                (t
                 (forward-line 1)
-                (setq line-beg (progn (forward-line 0) (point)))
-                (setq line-end (progn (forward-line 1) (point))))))))
+                (setq beg (progn (forward-line 0) (point)))
+                (setq end (save-excursion (forward-line 1) (point))))))))
         (set-marker next-marker nil)
         (set-marker end-marker nil)))))
 

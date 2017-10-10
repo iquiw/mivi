@@ -473,3 +473,18 @@ Feature: Ex command
       3 baz
         5 quux
     """
+
+  Scenario: inverse global delete non empty lines
+    Given the buffer is empty
+    When I insert:
+    """
+    1
+
+    2
+
+    3
+
+    """
+    And I type ":v/^$/d"
+    Then I should not see pattern "[123]"
+    And the cursor should be at cell (3, 0)
