@@ -488,3 +488,21 @@ Feature: Ex command
     And I type ":v/^$/d"
     Then I should not see pattern "[123]"
     And the cursor should be at cell (3, 0)
+
+  Scenario: inverse global substitute
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    """
+    And I type ":v/[14]/s/ba/baba/"
+    Then I should see:
+    """
+    1 foo
+    2 babar
+    3 babaz
+    4 qux
+    """

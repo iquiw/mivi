@@ -101,7 +101,7 @@ If INVERSE is non-nil, it processes unmatched lines instead."
 
                (t
                 (forward-line 1)
-                (setq beg (progn (forward-line 0) (point)))
+                (setq beg (point))
                 (setq end (save-excursion (forward-line 1) (point))))))))
         (set-marker next-marker nil)
         (set-marker end-marker nil)))))
