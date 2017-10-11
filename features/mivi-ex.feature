@@ -506,3 +506,23 @@ Feature: Ex command
     3 babaz
     4 qux
     """
+
+  Scenario: inverse global substitute with range
+    Given the buffer is empty
+    When I insert:
+    """
+    1 foo
+    2 bar
+    3 baz
+    4 qux
+    5 quux
+    """
+    And I type ":2,4v/z/s/[0-9]/\&\&/"
+    Then I should see:
+    """
+    1 foo
+    22 bar
+    3 baz
+    44 qux
+    5 quux
+    """
