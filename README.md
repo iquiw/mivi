@@ -64,6 +64,7 @@ Feature
   * <kbd>:g</kbd>, combination with `d` and `s` commands.
   * <kbd>:s</kbd>, only global flag is supported.
   * <kbd>:y</kbd>
+  * <kbd>:v</kbd>, combination with `d` and `s` commands.
 * Shift commands <kbd>&lt;</kbd>, <kbd>&gt;</kbd>.
 * Buffer (in Vi-context) related functions.
 * More...
