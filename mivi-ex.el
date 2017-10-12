@@ -48,30 +48,30 @@ When called interactively, ex command is read from user input."
 
 (defun mivi-ex--dispatch (command region &optional arg)
   "Dispatch ex COMMAND to run in REGION with optional ARG."
-  (pcase command
-    ("d" (mivi-ex--delete region))
-    ("g" (mivi-ex--global region arg))
-    ("s" (mivi-ex--subst region arg))
-    ("v" (mivi-ex--global region arg t))
-    ("y" (mivi-ex--copy region))))
+  (let ((beg (car region))
+        (end (cdr region)))
+    (pcase command
+      ("d" (mivi-ex--delete beg end))
+      ("g" (mivi-ex--global beg end arg))
+      ("s" (mivi-ex--subst beg end arg))
+      ("v" (mivi-ex--global beg end arg t))
+      ("y" (mivi-ex--copy beg end)))))
 
-(defun mivi-ex--copy (region)
-  "Copy lines within REGION."
-  (mivi--copy-region (car region) (cdr region)))
+(defun mivi-ex--copy (beg end)
+  "Copy lines within region between BEG and END."
+  (mivi--copy-region beg end))
 
-(defun mivi-ex--delete (region)
-  "Delete lines within REGION."
-  (kill-region (car region) (cdr region))
+(defun mivi-ex--delete (beg end)
+  "Delete lines within region beween BEG and END."
+  (kill-region beg end)
   (when (eobp)
     (forward-line -1)))
 
-(defun mivi-ex--global (region arg &optional inverse)
-  "Dispatch ex command for matched lines in REGION.
+(defun mivi-ex--global (beg end arg &optional inverse)
+  "Dispatch ex command for matched lines in region beween BEG and END.
 Ex command is provided by ARG.
 If INVERSE is non-nil, it processes unmatched lines instead."
-  (let* ((beg (car region))
-         (end (cdr region))
-         (subspec (mivi-ex--parse-subst arg t))
+  (let* ((subspec (mivi-ex--parse-subst arg t))
          (regexp (plist-get subspec :regexp))
          (rest (plist-get subspec :rest)))
     (unless (or (string= rest "")
@@ -106,11 +106,9 @@ If INVERSE is non-nil, it processes unmatched lines instead."
         (set-marker next-marker nil)
         (set-marker end-marker nil)))))
 
-(defun mivi-ex--subst (region arg)
-  "Substitute lines within REGION according to ARG."
-  (let* ((beg (car region))
-         (end (cdr region))
-         (subspec (mivi-ex--parse-subst arg))
+(defun mivi-ex--subst (beg end arg)
+  "Substitute lines within region between BEG and END according to ARG."
+  (let* ((subspec (mivi-ex--parse-subst arg))
          (regexp (plist-get subspec :regexp))
          (replace (plist-get subspec :replace))
          (options (plist-get subspec :options))
