@@ -5,7 +5,7 @@
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
 ;; Version:   0.0.0
-;; Package-Requires: ((seq "2.19") (undo-tree "0.6.5") (emacs "25"))
+;; Package-Requires: ((cl-lib "1.0") (undo-tree "0.6.5") (emacs "25"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,7 +42,8 @@
 
 ;;; Code:
 
-(require 'seq)
+(require 'cl-lib)
+
 (require 'undo-tree)
 (require 'mivi-common)
 (require 'mivi-ex)
@@ -1325,7 +1326,7 @@ and updates MiVi mode line."
         (add-hook 'post-command-hook #'mivi--post-command-function nil t)
         (mivi--init-marks)
         (mivi--mode-line-insert)
-        (unless (seq-some #'symbol-value mivi--states)
+        (unless (cl-some #'symbol-value mivi--states)
           (mivi--switch-state 'mivi-command-state))
         (unless undo-tree-mode
           (undo-tree-mode 1)))
