@@ -51,6 +51,7 @@ When called interactively, ex command is read from user input."
   (let ((beg (car region))
         (end (cdr region)))
     (pcase command
+      ("&" (mivi-ex--repeat-subst beg end arg))
       ("d" (mivi-ex--delete beg end))
       ("g" (mivi-ex--global beg end arg))
       ("s" (mivi-ex--subst beg end arg))
@@ -106,6 +107,12 @@ If INVERSE is non-nil, it processes unmatched lines instead."
         (set-marker next-marker nil)
         (set-marker end-marker nil)))))
 
+(defun mivi-ex--repeat-subst (beg end arg)
+  "Repeat the last substitute within REGION and optional ARG."
+  (when mivi--last-subst
+    (mivi--subst-internal (car mivi--last-subst)
+                          (cdr mivi--last-subst) beg end nil)))
+
 (defun mivi-ex--subst (beg end arg)
   "Substitute lines within region between BEG and END according to ARG."
   (let* ((subspec (mivi-ex--parse-subst arg))
@@ -146,7 +153,7 @@ It returns plist of :command, :arg and :range."
      ((> (mivi--linepos-line beg) (mivi--linepos-line end))
       (user-error "The second address is smaller than the first")))
 
-    (if (string-match "\\`\\([a-z]+\\)[[:blank:]]*" str)
+    (if (string-match "\\`\\([a-z&]+\\)[[:blank:]]*" str)
         (list :command (match-string 1 str)
               :arg (substring str (match-end 0))
               :range (cons beg end))

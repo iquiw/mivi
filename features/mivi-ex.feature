@@ -310,6 +310,23 @@ Feature: Ex command
     /foo/bar/baz
     """
 
+  Scenario: repeat substitute
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    foo
+    """
+    And I go to line "1"
+    And I type ":s/foo/bar/"
+    And I go to line "2"
+    And I type ":&"
+    Then I should see:
+    """
+    bar
+    bar
+    """
+
   Scenario: copy the current line
     Given the buffer is empty
     When I insert numbers per line to "10"
