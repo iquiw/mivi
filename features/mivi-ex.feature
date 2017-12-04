@@ -327,6 +327,23 @@ Feature: Ex command
     bar
     """
 
+  Scenario: repeat substitute with global flag
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    foo foo foo
+    """
+    And I go to line "1"
+    And I type ":s/foo/bar/"
+    And I go to line "2"
+    And I type ":&g"
+    Then I should see:
+    """
+    bar
+    bar bar bar
+    """
+
   Scenario: copy the current line
     Given the buffer is empty
     When I insert numbers per line to "10"

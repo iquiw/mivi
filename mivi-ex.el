@@ -110,8 +110,13 @@ If INVERSE is non-nil, it processes unmatched lines instead."
 (defun mivi-ex--repeat-subst (beg end arg)
   "Repeat the last substitute within REGION and optional ARG."
   (when mivi--last-subst
-    (mivi--subst-internal (car mivi--last-subst)
-                          (cdr mivi--last-subst) beg end nil)))
+    (let ((global (cond
+                   ((string= arg "g") t)
+                   ((string= arg "") nil)
+                   (t
+                    (user-error (format "`%s': Unknown flags" arg))))))
+      (mivi--subst-internal (car mivi--last-subst)
+                            (cdr mivi--last-subst) beg end global))))
 
 (defun mivi-ex--subst (beg end arg)
   "Substitute lines within region between BEG and END according to ARG."
@@ -153,7 +158,7 @@ It returns plist of :command, :arg and :range."
      ((> (mivi--linepos-line beg) (mivi--linepos-line end))
       (user-error "The second address is smaller than the first")))
 
-    (if (string-match "\\`\\([a-z&]+\\)[[:blank:]]*" str)
+    (if (string-match "\\`\\([a-z]+\\|&\\)[[:blank:]]*" str)
         (list :command (match-string 1 str)
               :arg (substring str (match-end 0))
               :range (cons beg end))

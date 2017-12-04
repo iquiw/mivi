@@ -149,6 +149,16 @@
     (insert "1\n2\n3\n4\n5\n")
     (mivi-ex--test-command "foo" "$" '(5 . 6) "-,.foo$")))
 
+(ert-deftest mivi-ex--parse-command-of-ampersand ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (mivi-ex--test-command "&" "" '(6 . 6) "&")))
+
+(ert-deftest mivi-ex--parse-command-of-ampersand-with-global-flag ()
+  (with-temp-buffer
+    (insert "1\n2\n3\n4\n5\n")
+    (mivi-ex--test-command "&" "g" '(6 . 6) "&g")))
+
 (ert-deftest mivi-ex--parse-command-with-spaces-skipped ()
   (with-temp-buffer
     (insert "1\n2\n3\n4\n5\n")
