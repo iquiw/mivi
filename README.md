@@ -60,6 +60,7 @@ Feature
 ### Not Implemented ###
 
 * All ex commands <kbd>:</kbd> except for the following commands.
+  * <kbd>:&</kbd>, only global flag is supported.
   * <kbd>:d</kbd>
   * <kbd>:g</kbd>, combination with `d` and `s` commands.
   * <kbd>:s</kbd>, only global flag is supported.
