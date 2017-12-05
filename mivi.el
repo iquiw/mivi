@@ -854,6 +854,8 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Replace (&optional move-only)
+  "Overwrite text with inputted ones.
+If MOVE-ONLY is non-nil, not to switch to replace state."
   (interactive)
   (overwrite-mode 1)
   (unless move-only
@@ -861,6 +863,8 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-replace-state)))
 
 (defun mivi-substitute (&optional arg)
+  "Substitute character at the current point with inputted text.
+With ARG, substitute the specified number of characters."
   (interactive "p")
   (delete-char arg)
   (mivi--store-command :category 'change)
