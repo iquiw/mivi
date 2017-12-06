@@ -17,8 +17,8 @@ Setup
 ### Depends ###
 
 * Emacs 25
+* cl-lib
 * undo-tree
-* seq
 
 ### Configuration ###
 
