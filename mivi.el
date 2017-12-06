@@ -1153,7 +1153,7 @@ With ARG, substitute the specified number of characters."
 
 (defun mivi-replace-char (&optional arg)
   (interactive "p")
-  (let ((c (or mivi--current-replace-char (read-key "r-"))))
+  (let ((c (or mivi--current-replace-char (read-char "r-"))))
     (when (characterp c)
       (delete-char arg)
       (save-excursion
