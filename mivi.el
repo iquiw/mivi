@@ -796,7 +796,7 @@ With ARG, move to the specified lines below top."
 
 ;; Insert commands
 (defun mivi-append (&optional move-only)
-  "Append input text after the current cursor.
+  "Append inputted text after the current cursor.
 If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (unless (eolp)
@@ -806,7 +806,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Append (&optional move-only)
-  "Append input text at end of the current line.
+  "Append inputted text at end of the current line.
 If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (end-of-line)
@@ -815,7 +815,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-insert (&optional move-only)
-  "Insert input text at the current point.
+  "Insert inputted text at the current point.
 If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (unless move-only
@@ -823,7 +823,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Insert (&optional move-only)
-  "Insert input text at the beginning of text in the current line.
+  "Insert inputted text at the beginning of text in the current line.
 If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (back-to-indentation)
@@ -832,7 +832,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-open (&optional move-only)
-  "Open line to input text below the current line.
+  "Open line to inputted text below the current line.
 If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (end-of-line)
@@ -842,7 +842,7 @@ If MOVE-ONLY is non-nil, not to switch to insert state."
     (mivi--switch-state 'mivi-insert-state)))
 
 (defun mivi-Open (&optional move-only)
-  "Open line to input text above the current line.
+  "Open line to inputted text above the current line.
 If MOVE-ONLY is non-nil, not to switch to insert state."
   (interactive)
   (forward-line 0)
