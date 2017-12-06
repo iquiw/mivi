@@ -872,11 +872,17 @@ With ARG, substitute the specified number of characters."
 
 ;; Change commands
 (defun mivi-change (&optional arg)
+  "Change text covered by subsequent motion with inputted text.
+ARG is passed to the motion command."
   (interactive "P")
   (mivi--switch-state 'mivi-change-state)
   (setq prefix-arg arg))
 
 (defun mivi-change-line (&optional arg)
+  "Change text from the current point till end of line.
+With ARG, change till end of the specified count below the current line.
+If ARG is negative, change text from end of the specified count above
+the current line till the current point."
   (interactive "p")
   (let ((beg (save-excursion
                (forward-line (if (< arg 0) arg 0))
