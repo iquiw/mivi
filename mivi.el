@@ -899,11 +899,15 @@ the current line till the current point."
 
 ;; Copy commands
 (defun mivi-copy (&optional arg)
+  "Copy text covered by subsequent motion.
+ARG is passed to the motion command."
   (interactive "P")
   (mivi--switch-state 'mivi-copy-state)
   (setq prefix-arg arg))
 
 (defun mivi-copy-line (&optional arg)
+  "Copy the current line.
+With ARG, copy the specified number of lines relative to the current line."
   (interactive "p")
   (let ((beg (save-excursion
                (forward-line (if (< arg 0) arg 0))
