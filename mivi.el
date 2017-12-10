@@ -921,11 +921,15 @@ With ARG, copy the specified number of lines relative to the current line."
 
 ;; Delete commands
 (defun mivi-delete (&optional arg)
+  "Delete text covered by subsequent motion.
+ARG is passed to the motion command."
   (interactive "P")
   (mivi--switch-state 'mivi-delete-state)
   (setq prefix-arg arg))
 
 (defun mivi-delete-line (&optional arg)
+  "Delete the current line.
+With ARG, delete the specified number of lines relative to the current line."
   (interactive "p")
   (let ((beg (save-excursion
                (forward-line (if (< arg 0) arg 0))
