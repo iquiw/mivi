@@ -947,24 +947,32 @@ With ARG, delete the specified number of lines relative to the current line."
 
 ;; Scroll commands
 (defun mivi-scroll-down (&optional arg)
+  "Scroll down text by half of window height.
+With ARG, scroll down by the specified lines."
   (interactive "P")
   (condition-case nil
       (scroll-down (mivi--numeric-or-default arg (/ (window-body-height) 2)))
     (error (goto-char (point-min)))))
 
 (defun mivi-scroll-screen-down (&optional arg)
+  "Scroll down text by window height.
+With ARG, scroll down by the specified times."
   (interactive "p")
   (condition-case nil
       (scroll-down (* (window-body-height) (prefix-numeric-value arg)))
     (error (goto-char (point-min)))))
 
 (defun mivi-scroll-screen-up (&optional arg)
+  "Scroll up text by window height.
+With ARG, scroll up by the specified times."
   (interactive "p")
   (condition-case nil
       (scroll-up (* (window-body-height) (prefix-numeric-value arg)))
     (error (goto-char (point-max)))))
 
 (defun mivi-scroll-up (&optional arg)
+  "Scroll up text by half of window height.
+With ARG, scroll up by the specified lines."
   (interactive "P")
   (condition-case nil
       (scroll-up (mivi--numeric-or-default arg (/ (window-body-height) 2)))
