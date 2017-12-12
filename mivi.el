@@ -980,6 +980,10 @@ With ARG, scroll up by the specified lines."
 
 ;; Other commands
 (defun mivi-backward-indent ()
+  "Delete one indent shift before the current point.
+Width of indent shift is configured by `mivi-shift-width'.
+If the previous character is '0', delete all shifts till beginning of line.
+If the previous character is '^', delete all shifts till the indent point."
   (interactive)
   (cond
    ((looking-back "^[[:blank:]]+\\([0^]\\)?" nil)
