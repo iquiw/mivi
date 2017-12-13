@@ -1003,6 +1003,7 @@ If the previous character is '^', delete all shifts till the indent point."
     (delete-char 1))))
 
 (defun mivi-backward-kill-word ()
+  "Kill word backward, using `mivi-backward-word'."
   (interactive)
   (let* ((beg (point))
          (end (progn
