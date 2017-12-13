@@ -1013,6 +1013,8 @@ If the previous character is '^', delete all shifts till the indent point."
       (kill-region beg end))))
 
 (defun mivi-command ()
+  "Enter command state and set cursor position.
+It stores the inserted contents for repeat command."
   (interactive)
   (when (and (marker-position mivi--insert-beginning)
              (<= mivi--insert-beginning (point)))
