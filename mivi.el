@@ -1070,11 +1070,15 @@ With ARG, join the specified number of lines including the current line."
           (backward-char))))))
 
 (defun mivi-kill-char (&optional arg)
+  "Kill character at the current point.
+With ARG, kill the specified number of characters."
   (interactive "p")
   (mivi--store-command)
   (kill-forward-chars arg))
 
 (defun mivi-kill-backward-char (&optional arg)
+  "Kill character before the current point.
+With ARG, kill the specified number of backward characters."
   (interactive "p")
   (mivi--store-command)
   (kill-backward-chars arg))
