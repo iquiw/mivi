@@ -1044,6 +1044,10 @@ It stores the inserted contents for repeat command."
   (mivi--switch-state 'mivi-command-state))
 
 (defun mivi-join (&optional arg)
+  "Join the next line after the current line.
+Beginning spaces of the next line are deleted and one space is added between
+lines.
+With ARG, join the specified number of lines including the current line."
   (interactive "p")
   (mivi--store-command)
   (dotimes (_ (if (< arg 3) 1 (1- arg)))
