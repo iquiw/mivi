@@ -1084,6 +1084,7 @@ With ARG, kill the specified number of backward characters."
   (kill-backward-chars arg))
 
 (defun mivi-mark (ch)
+  "Mark the current point with character CH."
   (interactive "c")
   (mivi--put-mark ch))
 
