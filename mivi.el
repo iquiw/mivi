@@ -1089,6 +1089,8 @@ With ARG, kill the specified number of backward characters."
   (mivi--put-mark ch))
 
 (defun mivi-repeat (&optional arg)
+  "Repeat the last executed mivi command.
+ARG is passed to the repeated command."
   (interactive "P")
   (if (or (eq last-command 'mivi-undo)
           (and mivi--undo-repeating (eq last-command 'mivi-repeat)))
