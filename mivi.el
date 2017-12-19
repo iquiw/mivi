@@ -1166,6 +1166,9 @@ ARG is passed to the repeated command."
     (user-error "No previous regular expression")))
 
 (defun mivi-paste (&optional arg)
+  "Paste the most recent killed text after the current point.
+If the killed text is \"line\", it is pasted below the current line.
+With ARG, paste the same text by the specified times."
   (interactive "p")
   (let ((line-paste (string-match-p "\n$" (current-kill 0))))
     (cond
@@ -1181,6 +1184,9 @@ ARG is passed to the repeated command."
       (back-to-indentation))))
 
 (defun mivi-Paste (&optional arg)
+  "Paste the most recent killed text before the current point.
+If the killed text is \"line\", it is pasted above the current line.
+With ARG, paste the same text by the specified times."
   (interactive "p")
   (let ((line-paste (string-match-p "\n$" (current-kill 0))))
     (when line-paste
