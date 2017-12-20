@@ -1228,6 +1228,9 @@ Derived from `viper-catch-tty-ESC'."
       [?\e] `(menu-item "" ,esc-binding :filter ,#'mivi--tty-escape-filter))))
 
 (defun mivi-undo ()
+  "Undo or redo the last operatoin alternately.
+If the last operation is undo, it redos the undone operation.
+To perform multiple undo's, run `mivi-repeat' just after undo."
   (interactive)
   (if (eq mivi--undo-direction 'undo)
       (progn
