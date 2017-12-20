@@ -1200,6 +1200,8 @@ With ARG, paste the same text by the specified times."
   (mivi--store-command))
 
 (defun mivi-replace-char (&optional arg)
+  "Replace character at the current point with inputted one.
+With ARG, replace the specified number of characters."
   (interactive "p")
   (let ((c (or mivi--current-replace-char (read-char "r-"))))
     (when (characterp c)
