@@ -267,6 +267,81 @@ Feature: Undo
     """
     And the cursor should be at cell (4, 8)
 
+  Scenario: repeat paste
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    """
+    And I go to beginning of buffer
+    And I type "ddp"
+    And I type "."
+    Then I should see:
+    """
+    bar
+    foo
+    foo
+    """
+
+  Scenario: repeat paste with current prefix
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    """
+    And I go to beginning of buffer
+    And I type "ddp"
+    And I type "2."
+    Then I should see:
+    """
+    bar
+    foo
+    foo
+    foo
+    """
+
+  Scenario: repeat Paste
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "ddP"
+    And I type "."
+    Then I should see:
+    """
+    foo
+    bar
+    bar
+    baz
+    """
+
+  Scenario: repeat Paste with previous prefix
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "2"
+    And I type "dd2P"
+    And I type "."
+    Then I should see:
+    """
+    foo
+    bar
+    bar
+    bar
+    bar
+    baz
+    """
+
   Scenario: repeat substitute
     Given the buffer is empty
     When I insert:

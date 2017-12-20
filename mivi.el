@@ -1179,9 +1179,10 @@ With ARG, paste the same text by the specified times."
      ((not (eolp))
       (forward-char)))
     (dotimes (_ arg)
-      (save-excursion (yank)))
+      (save-excursion (insert (current-kill 0))))
     (when line-paste
-      (back-to-indentation))))
+      (back-to-indentation)))
+  (mivi--store-command))
 
 (defun mivi-Paste (&optional arg)
   "Paste the most recent killed text before the current point.
@@ -1193,9 +1194,10 @@ With ARG, paste the same text by the specified times."
       (forward-line 0))
     (save-excursion
       (dotimes (_ arg)
-        (yank)))
+        (insert (current-kill 0))))
     (when line-paste
-      (back-to-indentation))))
+      (back-to-indentation)))
+  (mivi--store-command))
 
 (defun mivi-replace-char (&optional arg)
   (interactive "p")
