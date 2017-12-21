@@ -1240,6 +1240,8 @@ To perform multiple undo's, run `mivi-repeat' just after undo."
     (setq mivi--undo-direction 'undo)))
 
 (defun mivi-updown-case (&optional arg)
+  "Upcase or downcase character at the current point according to its case.
+With ARG, upcase or downcase the specified number of characters."
   (interactive "p")
   (dotimes (_ arg)
     (let ((p (point))
