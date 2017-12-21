@@ -1255,6 +1255,8 @@ With ARG, upcase or downcase the specified number of characters."
 
 ;; Internal functions
 (defun mivi--blankline-p (n)
+  "Return non-nil if the line consists of blank characters only.
+If N is not 0, it forwards the specified number of lines first."
   (save-excursion
     (forward-line n)
     (looking-at-p mivi--blankline-regexp)))
