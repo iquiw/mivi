@@ -1285,6 +1285,9 @@ If COUNT is negative, it finds CH backward."
         (forward-char (- sign))))))
 
 (defun mivi--numeric-or-default (arg &optional default)
+  "Return numeric value of prefix ARG or DEFAULT.
+If arg is nil, then return DEFAULT.
+If DEFAULT is also nil, return 0."
   (if (not arg)
       (or default 0)
     (prefix-numeric-value arg)))
