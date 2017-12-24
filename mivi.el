@@ -1265,7 +1265,7 @@ If N is not 0, it forwards the specified number of lines first."
   "Find character CH in the current line and move to the position.
 If TILL? is non-nil, move one character before or after the position
 according to sign of COUNT, positive or negative.
-If COUNT is greater than 1, it finds COUNT-th occurrence of CH.
+If COUNT is greater than 1, it finds COUNT'th occurrence of CH.
 If COUNT is negative, it finds CH backward."
   (let ((case-fold-search nil)
         (sign (if (> count 0) 1 -1))

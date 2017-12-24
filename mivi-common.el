@@ -44,7 +44,7 @@
   (puthash ch (point) mivi--mark-slots))
 
 (defun mivi--copy-region (beg end)
-  "Copy region between BEG and END to kill-ring."
+  "Copy region between BEG and END to `kill-ring'."
   (kill-new (buffer-substring beg end)))
 
 (defun mivi--goto-line (num)
@@ -91,7 +91,7 @@ Line position of the return value is unresolved (nil)."
                    (point)))))))
 
 (defun mivi--search-internal (re count sign)
-  "Search regexp RE in COUNT-th occurrence.
+  "Search regexp RE in COUNT'th occurrence.
 If SIGN should be 1 or -1, -1 means backward search."
   (let ((case-fold-search nil)
         (origin (point))

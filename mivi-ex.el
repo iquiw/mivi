@@ -108,7 +108,8 @@ If INVERSE is non-nil, it processes unmatched lines instead."
         (set-marker end-marker nil)))))
 
 (defun mivi-ex--repeat-subst (beg end arg)
-  "Repeat the last substitute within REGION and optional ARG."
+  "Repeat the last substitute within region between BEG and END.
+ARG is treated as flag of substitute ex command."
   (when mivi--last-subst
     (let ((global (cond
                    ((string= arg "g") t)
@@ -272,7 +273,7 @@ If NO-REPLACE is non-nil, it returns :rest instead of :replace and :options."
             :options options))))
 
 (defun mivi-ex--find-subst-delimiter (str delim offset)
-  "Find next delimiter in STR and returns the position.
+  "Find next delimiter in STR and return the position.
 Delimiter is specified by DELIM string, which should be one character.
 Delimiter position is searched from OFFSET in STR.
 It returns nil if not found."
