@@ -1262,6 +1262,11 @@ If N is not 0, it forwards the specified number of lines first."
     (looking-at-p mivi--blankline-regexp)))
 
 (defun mivi--find-internal (ch till? count)
+  "Find character CH in the current line and move to the position.
+If TILL? is non-nil, move one character before or after the position
+according to sign of COUNT, positive or negative.
+If COUNT is greater than 1, it finds COUNT-th occurrence of CH.
+If COUNT is negative, it finds CH backward."
   (let ((case-fold-search nil)
         (sign (if (> count 0) 1 -1))
         (move? (and (> count 0) (not (eobp))))
