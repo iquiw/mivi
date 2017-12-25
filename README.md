@@ -66,6 +66,16 @@ To enable `mivi-mode` in any mode derived a major-mode:
 * Buffer (in Vi-context) related functions.
 * More...
 
+## Note
+
+### Key binding
+
+The following keys are overridden against Emacs Key Binding Convention.
+
+* <kbd>C-h</kbd>: In insert state, it is bound to `backward-char`.
+* <kbd>\e</kbd>: On tty (`emacs -nw`), it is used to catch escape character
+  in `input-decode-map`.
+
 ## License
 
 Licensed under the GPL 3+ license.
