@@ -1,26 +1,23 @@
-Minimal Vi minor mode
-=====================
+# Minimal Vi minor mode
 
 [![Build Status](https://travis-ci.org/iquiw/mivi.svg?branch=master)](https://travis-ci.org/iquiw/mivi)
 [![Coverage Status](https://coveralls.io/repos/github/iquiw/mivi/badge.svg?branch=master)](https://coveralls.io/github/iquiw/mivi?branch=master)
 
-About
------
+## About
 
 MiVi is Minimal Vi minor mode, which provides basic Vi-like editing layer on
 Emacs. Its behavior is based on *nvi*, while there are some intentional
 differences for convenience of editing or simplicity of implementation.
 
-Setup
------
+## Setup
 
-### Depends ###
+### Depends
 
 * Emacs 25
 * cl-lib
 * undo-tree
 
-### Configuration ###
+### Configuration
 
 With [use-package](https://github.com/jwiegley/use-package),
 
@@ -44,10 +41,9 @@ To enable `mivi-mode` in any mode derived a major-mode:
 (add-to-list 'mivi-enabled-derived-modes 'some-mode)
 ```
 
-Feature
--------
+## Feature
 
-### Design Choice ###
+### Design Choice
 
 * <kbd>h</kbd>, <kbd>l</kbd> across lines.
 * <kbd>u</kbd> acts like *nvi*, that is, it undo and redo alternately.
@@ -57,7 +53,7 @@ Feature
 * <kbd>:s</kbd> is implemented by `replace-match`. As a result, matched text
   replacement is `\&` instead of `&`.
 
-### Not Implemented ###
+### Not Implemented
 
 * All ex commands <kbd>:</kbd> except for the following commands.
   * <kbd>:&</kbd>, only global flag is supported.
@@ -70,7 +66,6 @@ Feature
 * Buffer (in Vi-context) related functions.
 * More...
 
-License
--------
+## License
 
 Licensed under the GPL 3+ license.
