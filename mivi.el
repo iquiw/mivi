@@ -213,6 +213,7 @@
     (define-key map (kbd "C-u") #'mivi-scroll-down)
     (define-key map (kbd "C-f") #'mivi-scroll-screen-up)
     (define-key map (kbd "C-b") #'mivi-scroll-screen-down)
+    (define-key map (kbd "C-w") #'mivi-kill-region)
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     map))
@@ -1082,6 +1083,17 @@ With ARG, kill the specified number of backward characters."
   (interactive "p")
   (mivi--store-command)
   (kill-backward-chars arg))
+
+(defun mivi-kill-region ()
+  "Kill region or searched text.
+If search overlay is active, it kills the overlay region.
+Otherwise, call `kill-region' interactively."
+  (interactive)
+  (let ((beg (overlay-start mivi--search-overlay))
+        (end (overlay-end mivi--search-overlay)))
+    (if (and beg end)
+        (kill-region beg end)
+      (call-interactively #'kill-region))))
 
 (defun mivi-mark (ch)
   "Mark the current point with character CH."

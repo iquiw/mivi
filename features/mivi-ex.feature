@@ -4,6 +4,7 @@ Feature: Ex command
   I want to run ex command
 
   Scenario: ert tests
+    Given the buffer is empty
     When I run ert tests
     Then All ert tests should pass
 

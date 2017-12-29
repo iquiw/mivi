@@ -91,3 +91,23 @@ Feature: Motion
       quux baz
     qux quux
     """
+
+  Scenario: kill searched text
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    foo
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I press "C-a"
+    And I press "C-w"
+    And I execute the action chain
+    Then I should see:
+    """
+    foo
+    bar
+
+    """
