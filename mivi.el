@@ -1089,8 +1089,8 @@ With ARG, kill the specified number of backward characters."
 If search overlay is active, it kills the overlay region.
 Otherwise, call `kill-region' interactively."
   (interactive)
-  (let ((beg (overlay-start mivi--search-overlay))
-        (end (overlay-end mivi--search-overlay)))
+  (let ((beg (and mivi--search-overlay (overlay-start mivi--search-overlay)))
+        (end (and mivi--search-overlay (overlay-end mivi--search-overlay))))
     (if (and beg end)
         (kill-region beg end)
       (call-interactively #'kill-region))))
