@@ -53,6 +53,11 @@ To enable `mivi-mode` in any mode derived a major-mode:
 * <kbd>:s</kbd> is implemented by `replace-match`. As a result, matched text
   replacement is `\&` instead of `&`.
 
+### Enhancement
+
+* In command state, searched text by <kbd>/</kbd>, etc. is highlight'ed with overlay.
+  <kbd>C-w</kbd>/<kbd>M-w</kbd> kills/copies the searched text if the overlay is active.
+
 ### Not Implemented
 
 * All ex commands <kbd>:</kbd> except for the following commands.
