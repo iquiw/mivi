@@ -111,3 +111,24 @@ Feature: Motion
     bar
 
     """
+
+  Scenario: copy searched text
+    Given the buffer is empty
+    When I insert:
+    """
+    bar
+    baz
+    foo bar
+    """
+    And I go to beginning of buffer
+    And I start an action chain
+    And I press "C-a"
+    And I press "M-w"
+    And I execute the action chain
+    Then I should see:
+    """
+    bar
+    baz
+    foo bar
+    """
+    And the current kill-ring should be "bar"

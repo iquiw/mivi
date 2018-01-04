@@ -214,6 +214,7 @@
     (define-key map (kbd "C-f") #'mivi-scroll-screen-up)
     (define-key map (kbd "C-b") #'mivi-scroll-screen-down)
     (define-key map (kbd "C-w") #'mivi-kill-region)
+    (define-key map (kbd "M-w") #'mivi-kill-ring-save)
     (dotimes (v 9)
       (define-key map (number-to-string (1+ v)) #'digit-argument))
     map))
@@ -1089,11 +1090,14 @@ With ARG, kill the specified number of backward characters."
 If search overlay is active, it kills the overlay region.
 Otherwise, call `kill-region' interactively."
   (interactive)
-  (let ((beg (and mivi--search-overlay (overlay-start mivi--search-overlay)))
-        (end (and mivi--search-overlay (overlay-end mivi--search-overlay))))
-    (if (and beg end)
-        (kill-region beg end)
-      (call-interactively #'kill-region))))
+  (mivi--kill-with-function #'kill-region))
+
+(defun mivi-kill-ring-save ()
+  "Copy region or searched text to `kill-ring'.
+If search overlay is active, it kills the overlay region.
+Otherwise, call `kill-ring-save' interactively."
+  (interactive)
+  (mivi--kill-with-function #'kill-ring-save))
 
 (defun mivi-mark (ch)
   "Mark the current point with character CH."
@@ -1295,6 +1299,18 @@ If COUNT is negative, it finds CH backward."
           (user-error "`%s' not found" (char-to-string ch))))
       (when move?
         (forward-char (- sign))))))
+
+(defun mivi--kill-with-function (func)
+  "Kill region or searched text with function FUNC.
+If search overlay is active, it calls FUNC with the overlay region.
+Otherwise, call FUNC interactively."
+  (if mivi--search-overlay
+      (let ((beg (overlay-start mivi--search-overlay))
+            (end (overlay-end mivi--search-overlay)))
+        (if (and beg end)
+            (funcall func beg end)
+          (call-interactively fun)))
+    (call-interactively func)))
 
 (defun mivi--numeric-or-default (arg &optional default)
   "Return numeric value of prefix ARG or DEFAULT.
