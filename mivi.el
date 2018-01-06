@@ -1309,7 +1309,7 @@ Otherwise, call FUNC interactively."
             (end (overlay-end mivi--search-overlay)))
         (if (and beg end)
             (funcall func beg end)
-          (call-interactively fun)))
+          (call-interactively func)))
     (call-interactively func)))
 
 (defun mivi--numeric-or-default (arg &optional default)
