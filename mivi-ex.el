@@ -1,6 +1,6 @@
 ;;; mivi-ex.el --- MiVi ex commands -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017 by Iku Iwasa
+;; Copyright (C) 2017-2018 by Iku Iwasa
 
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
