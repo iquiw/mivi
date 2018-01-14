@@ -1478,7 +1478,8 @@ Derived from `viper--tty-ESC-filter'."
   "Turn off mivi-mode in the current buffer."
   (mivi-mode -1))
 
-(define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on)
+(define-globalized-minor-mode mivi-global-mode mivi-mode mivi-mode-on
+  :require 'mivi)
 
 ;;;###autoload
 (defun mivi-setup ()
