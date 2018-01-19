@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'outline)
+
 (defvar mivi--last-search nil)
 (defvar mivi--last-subst nil)
 (defvar mivi--search-overlay nil)
@@ -123,9 +125,17 @@ If SIGN should be 1 or -1, -1 means backward search."
             (setq mivi--search-overlay
                   (make-overlay (match-beginning 0) (match-end 0)))
             (overlay-put mivi--search-overlay 'face 'mivi-search-highlight))
-          (goto-char (match-beginning 0)))
+          (goto-char (match-beginning 0))
+          (mivi--show-hidden-text))
       (goto-char origin)
       (user-error "Pattern not found"))))
+
+(defun mivi--show-hidden-text ()
+  "Show hidden text in outline mode."
+  (when (outline-invisible-p)
+    (save-excursion
+      (outline-previous-heading)
+      (outline-show-entry))))
 
 (defun mivi--subst-internal (regexp replace beg end global)
   "Substitute REGEXP with REPLACE in region between BEG and END.

@@ -597,6 +597,21 @@ Feature: Motion
     When I call "pop-to-mark-command"
     Then the cursor should be at cell (4, 7)
 
+  Scenario: search hidden text
+    Given the buffer is empty
+    When I insert:
+    """
+    * Heading1
+      foo
+    ** Heading2
+       bar
+    """
+    And I turn on outline-mode
+    And I go to beginning of buffer
+    And I call "outline-hide-subtree"
+    And I type "/bar"
+    Then the cursor should be at cell (4, 3)
+
   Scenario: next line at bot
     Given the buffer is empty
     When I insert:
