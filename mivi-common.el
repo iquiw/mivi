@@ -134,8 +134,8 @@ If SIGN should be 1 or -1, -1 means backward search."
   "Show hidden text in outline mode."
   (when (outline-invisible-p)
     (save-excursion
-      (outline-previous-heading)
-      (outline-show-entry))))
+      (when (outline-previous-heading)
+        (outline-show-entry)))))
 
 (defun mivi--subst-internal (regexp replace beg end global)
   "Substitute REGEXP with REPLACE in region between BEG and END.
