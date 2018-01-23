@@ -478,6 +478,23 @@ Feature: Motion
     And I press "C-a"
     Then the cursor should be at cell (4, 17)
 
+  Scenario: search isearch string
+    When I go to beginning of buffer
+    And I start an action chain
+    And I press "C-s"
+    And I type "bar"
+    And I press "C-a"
+    And I execute the action chain
+    Then the cursor should be at cell (3, 3)
+
+  Scenario: search isearch string without input
+    When I go to beginning of buffer
+    And I start an action chain
+    And I press "C-s"
+    And I press "C-a"
+    And I execute the action chain
+    Then the cursor should be at cell (4, 17)
+
   Scenario: search next
     Given the buffer is empty
     When I insert:

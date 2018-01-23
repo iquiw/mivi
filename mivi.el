@@ -61,7 +61,11 @@
   :type '(repeat symbol))
 
 (defcustom mivi-override-universal-argument-map t
-  "Whether to disable Ctrl+u binding in `universal-argument-map'."
+  "Whether to disable Ctrl-u binding in `universal-argument-map'."
+  :type 'boolean)
+
+(defcustom mivi-search-isearch-string t
+  "Whether to bind Ctrl-a to search isearch string in `isearch-mode-map'."
   :type 'boolean)
 
 (defcustom mivi-shift-width 2
@@ -753,6 +757,19 @@ With ARG, repeat the specified count."
     (when mivi--current-search-string
       (deactivate-mark)
       (call-interactively 'mivi-search))))
+
+(defun mivi-search-isearch-string ()
+  "Search isearch string by `mivi-search'.
+If isearch string is empty, it calls `mivi-search-current-word'."
+  (interactive)
+  (let ((search-nonincremental-instead nil))
+    (isearch-exit))
+  (if (= (length isearch-string) 0)
+      (call-interactively #'mivi-search-current-word)
+    (let ((mivi--current-search-string (if isearch-regexp
+                                           isearch-string
+                                         (regexp-quote isearch-string))))
+      (call-interactively #'mivi-search))))
 
 (defun mivi-search-next (&optional arg)
   "Search the last used regexp in the current buffer.
@@ -1490,6 +1507,9 @@ Derived from `viper--tty-ESC-filter'."
 
   (when mivi-override-universal-argument-map
     (define-key universal-argument-map (kbd "C-u") nil))
+
+  (when mivi-search-isearch-string
+    (define-key isearch-mode-map (kbd "C-a") #'mivi-search-isearch-string))
 
   (if (memq (terminal-live-p (frame-terminal)) '(t pc))
       (add-hook 'tty-setup-hook #'mivi--tty-escape-setup)
