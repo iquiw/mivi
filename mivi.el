@@ -5,7 +5,7 @@
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
 ;; Version:   0.0.0
-;; Package-Requires: ((cl-lib "1.0") (undo-tree "0.6.5") (emacs "25"))
+;; Package-Requires: ((undo-tree "0.6.5") (emacs "25"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
