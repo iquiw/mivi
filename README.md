@@ -57,6 +57,9 @@ To enable `mivi-mode` in any mode derived a major-mode:
 
 * In command state, searched text by <kbd>/</kbd>, etc. is highlight'ed with overlay.
   <kbd>C-w</kbd>/<kbd>M-w</kbd> kills/copies the searched text if the overlay is active.
+* <kbd>C-a</kbd> searches the current word as *nvi*. Additionally,
+  * It searches string in region if region is active.
+  * It searches `isearch-string` if isearch is running.
 
 ### Not Implemented
 
