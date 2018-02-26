@@ -476,9 +476,23 @@ Feature: Copy
     1
     2
     end
+
     """
     And the cursor should be at cell (5, 4)
     And the mivi state should be "command"
+
+  Scenario: copy line at end of buffer
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I type "yyP"
+    Then I should see:
+    """
+    foo bar baz
+    foo bar baz
+    """
 
   Scenario: copy find repeat
     Given the buffer is empty

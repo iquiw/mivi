@@ -60,7 +60,7 @@ When called interactively, ex command is read from user input."
 
 (defun mivi-ex--copy (beg end)
   "Copy lines within region between BEG and END."
-  (mivi--copy-region beg end))
+  (mivi--copy-region beg end t))
 
 (defun mivi-ex--delete (beg end)
   "Delete lines within region beween BEG and END."

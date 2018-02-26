@@ -380,6 +380,7 @@ Feature: Ex command
     foo
     bar
     baz
+
     """
 
   Scenario: global delete

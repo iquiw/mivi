@@ -935,7 +935,7 @@ With ARG, copy the specified number of lines relative to the current line."
                (forward-line (if (< arg 0) 1 arg))
                (point))))
     (unless (= beg end)
-      (mivi--copy-region beg end)))
+      (mivi--copy-region beg end t)))
   (mivi--switch-state 'mivi-command-state))
 
 ;; Delete commands
