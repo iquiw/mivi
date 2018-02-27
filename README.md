@@ -52,6 +52,9 @@ To enable `mivi-mode` in any mode derived a major-mode:
 * Change <kbd>c</kbd> acts as delete and insert, not as overwrite like *nvi*.
 * <kbd>:s</kbd> is implemented by `replace-match`. As a result, matched text
   replacement is `\&` instead of `&`.
+* `viper-mode` inserts `\n` at the end of buffer always even if `require-final-newline` is nil.
+  `mivi-mode` does not do it. Instead, it appends `\n` to copied text
+  when the last line is copied and it does not contain `\n`.
 
 ### Enhancement
 
