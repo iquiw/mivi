@@ -48,10 +48,12 @@
 (defun mivi--copy-region (beg end &optional append-final-newline)
   "Copy region between BEG and END to `kill-ring'.
 If APPEND-FINAL-NEWLINE is non-nil and END is end of buffer, append \"\\n\"."
-  (kill-new (buffer-substring beg end))
-  (when (and append-final-newline
-             (eq end (point-max)))
-    (kill-append "\n" nil)))
+  (let ((s (buffer-substring beg end)))
+    (kill-new s)
+    (when (and append-final-newline
+               (not (string-match-p "\n\\'" s))
+               (eq end (point-max)))
+      (kill-append "\n" nil))))
 
 (defun mivi--goto-line (num)
   "Go to line NUM."
