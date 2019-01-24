@@ -145,11 +145,13 @@ If SIGN should be 1 or -1, -1 means backward search."
 
 (defun mivi--subst-internal (regexp replace beg end global)
   "Substitute REGEXP with REPLACE in region between BEG and END.
-If GLOBAL is non-nil, it substitutes all occurrence in the region."
+If GLOBAL is non-nil, it substitutes all occurrence in the region.
+Return the number of occurrences."
   (let* ((last-replace-point (point))
          (found t)
          (case-fold-search nil)
-         (marker (set-marker (make-marker) end)))
+         (marker (set-marker (make-marker) end))
+         (subst-count 0))
     (goto-char beg)
     (while (and found (< (point) marker))
       (setq found (re-search-forward regexp
@@ -159,12 +161,14 @@ If GLOBAL is non-nil, it substitutes all occurrence in the region."
         (replace-match replace t)
         (setq last-replace-point (save-excursion
                                    (forward-line 0)
-                                   (point))))
+                                   (point)))
+        (setq subst-count (1+ subst-count)))
       (unless global
         (forward-line 1)
         (setq found (not (eobp)))))
     (set-marker marker nil)
-    (goto-char last-replace-point)))
+    (goto-char last-replace-point)
+    subst-count))
 
 (provide 'mivi-common)
 ;;; mivi-common.el ends here

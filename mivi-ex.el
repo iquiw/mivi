@@ -111,13 +111,15 @@ If INVERSE is non-nil, it processes unmatched lines instead."
   "Repeat the last substitute within region between BEG and END.
 ARG is treated as flag of substitute ex command."
   (when mivi--last-subst
-    (let ((global (cond
-                   ((string= arg "g") t)
-                   ((string= arg "") nil)
-                   (t
-                    (user-error (format "`%s': Unknown flags" arg))))))
-      (mivi--subst-internal (car mivi--last-subst)
-                            (cdr mivi--last-subst) beg end global))))
+    (let* ((global (cond
+                    ((string= arg "g") t)
+                    ((string= arg "") nil)
+                    (t
+                     (user-error (format "`%s': Unknown flags" arg)))))
+           (subst-count
+            (mivi--subst-internal (car mivi--last-subst)
+                                  (cdr mivi--last-subst) beg end global)))
+      (mivi-ex--message-occurrences subst-count))))
 
 (defun mivi-ex--subst (beg end arg)
   "Substitute lines within region between BEG and END according to ARG."
@@ -130,7 +132,8 @@ ARG is treated as flag of substitute ex command."
       (if mivi--last-search
           (setq regexp (car mivi--last-search))
         (user-error "No previous regular expression")))
-    (mivi--subst-internal regexp replace beg end global)
+    (let ((subst-count (mivi--subst-internal regexp replace beg end global)))
+      (mivi-ex--message-occurrences subst-count))
     (setq mivi--last-subst (cons regexp replace))))
 
 ;; Internal functions
@@ -296,6 +299,13 @@ It returns nil if not found."
                (forward-line 1)
                (point))))
     (cons beg end)))
+
+(defun mivi-ex--message-occurrences (count)
+  "Display a message about number of occurrences COUNT by subst commands.
+If COUNT is not positive number, nothing is displayed."
+  (cond
+   ((= count 1) (message "Replaced 1 occurrence"))
+   ((> count 1) (message "Replaced %s occurrences" count))))
 
 (provide 'mivi-ex)
 ;;; mivi-ex.el ends here

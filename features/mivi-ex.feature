@@ -163,6 +163,7 @@ Feature: Ex command
     And I type ":3s/[0-9]+/abc/"
     Then I should see "   abcdef"
     And the current line should be "3"
+    And I should see message "Replaced 1 occurrence"
 
   Scenario: substitute with empty replace
     Given the buffer is empty
@@ -188,6 +189,7 @@ Feature: Ex command
     def
     """
     And the current line should be "3"
+    And I should see message "Replaced 2 occurrences"
 
   Scenario: substitute the specified line range when buffer is growing
     Given the buffer is empty
@@ -327,6 +329,7 @@ Feature: Ex command
     bar
     bar
     """
+    And I should see message "Replaced 1 occurrence"
 
   Scenario: repeat substitute with global flag
     Given the buffer is empty
@@ -344,6 +347,7 @@ Feature: Ex command
     bar
     bar bar bar
     """
+    And I should see message "Replaced 3 occurrences"
 
   Scenario: copy the current line
     Given the buffer is empty
