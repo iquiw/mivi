@@ -47,6 +47,15 @@
     (should (equal (cons (string-to-number line) (string-to-number column))
                    (cons (line-number-at-pos) (current-column))))))
 
+(Then "^the mark should be at cell (\\([0-9]+\\), *\\([0-9]+\\))$"
+  "Checks that the mark is at a specific (LINE, COLUMN)."
+  (lambda (line column)
+    (let ((pos (mark t)))
+      (should (equal (cons (string-to-number line) (string-to-number column))
+                     (cons (line-number-at-pos pos) (save-excursion
+                                                      (goto-char pos)
+                                                      (current-column))))))))
+
 (Then "^the current top line should be half page down from beginning$"
   "Checks that the current line is half page scrolled down from beginning of buffer."
   (lambda ()

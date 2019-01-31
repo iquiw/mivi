@@ -52,10 +52,12 @@ Feature Kill and Yank
     And I type "p"
     Then I should see pattern "^foo b$"
     And the cursor should be at cell (2, 0)
+    And the mark should be at cell (2, 5)
     When I go to beginning of buffer
     And I type "2p"
     Then I should see pattern "^afoo bfoo br"
     And the cursor should be at cell (1, 1)
+    And the mark should be at cell (1, 11)
     When I type "3x"
     And I go to end of buffer
     And I type "p"
@@ -75,6 +77,7 @@ Feature Kill and Yank
     And I type "P"
     Then I should see pattern "^bazfoo"
     And the cursor should be at cell (1, 0)
+    And the mark should be at cell (1, 3)
     And I go to end of buffer
     And I type "4P"
     Then I should see pattern "^quxbazbazbazbaz"
@@ -112,6 +115,7 @@ Feature Kill and Yank
        qux
     """
     And the cursor should be at cell (2, 3)
+    And the mark should be at cell (4, 0)
 
   Scenario: Paste lines
     Given the buffer is empty
@@ -128,6 +132,7 @@ Feature Kill and Yank
     When I type "P"
     Then I should see pattern "^  foo bar$"
     And the cursor should be at cell (1, 2)
+    And the mark should be at cell (2, 0)
     When I type "dd"
     And I place the cursor after "qux"
     And I type "P"

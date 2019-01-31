@@ -1211,8 +1211,10 @@ With ARG, paste the same text by the specified times."
         (newline)))
      ((not (eolp))
       (forward-char)))
-    (dotimes (_ arg)
-      (save-excursion (insert-for-yank (current-kill 0))))
+    (save-excursion
+      (dotimes (_ arg)
+        (insert-for-yank (current-kill 0)))
+      (push-mark))
     (when line-paste
       (back-to-indentation)))
   (mivi--store-command))
@@ -1227,7 +1229,8 @@ With ARG, paste the same text by the specified times."
       (forward-line 0))
     (save-excursion
       (dotimes (_ arg)
-        (insert-for-yank (current-kill 0))))
+        (insert-for-yank (current-kill 0)))
+      (push-mark))
     (when line-paste
       (back-to-indentation)))
   (mivi--store-command))
