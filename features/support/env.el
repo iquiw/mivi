@@ -14,7 +14,9 @@
 (add-to-list 'load-path mivi-root-path)
 
 (require 'undercover)
-(undercover "mivi*.el")
+(undercover "mivi*.el"
+            (:report-file "coverage-final.json")
+            (:send-report nil))
 
 (require 'mivi)
 (require 'espuds)

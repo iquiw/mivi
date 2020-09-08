@@ -13,8 +13,7 @@ differences for convenience of editing or simplicity of implementation.
 
 ### Depends
 
-* Emacs 25
-* cl-lib
+* Emacs 26
 * undo-tree
 
 ### Configuration
