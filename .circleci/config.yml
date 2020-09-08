@@ -11,10 +11,6 @@ default: &defaults
         command: TERM=vt100 cask exec ecukes -r magnars --no-win
 
 jobs:
-  "emacs-25":
-    docker:
-      - image: silex/emacs:25-dev
-    <<: *defaults
   "emacs-26":
     docker:
       - image: silex/emacs:26-dev
@@ -28,6 +24,5 @@ workflows:
   version: 2
   build:
     jobs:
-      - "emacs-25"
       - "emacs-26"
       - "emacs-27"
