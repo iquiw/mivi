@@ -9,6 +9,9 @@ default: &defaults
     - run:
         name: test
         command: TERM=vt100 cask exec ecukes -r magnars --no-win
+    - run:
+        name: coverage
+        command: bash <(curl -s https://codecov.io/bash)
 
 jobs:
   "emacs-26":
