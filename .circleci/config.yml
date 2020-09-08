@@ -8,7 +8,7 @@ default: &defaults
     - run: cask install
     - run:
         name: test
-        command: cask exec ecukes -r magnars --no-win
+        command: TERM=vt100 cask exec ecukes -r magnars --no-win
 
 jobs:
   "emacs-25":
