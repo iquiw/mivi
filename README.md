@@ -1,7 +1,7 @@
 # Minimal Vi minor mode
 
 [![Build Status](https://travis-ci.org/iquiw/mivi.svg?branch=master)](https://travis-ci.org/iquiw/mivi)
-[![Coverage Status](https://coveralls.io/repos/github/iquiw/mivi/badge.svg?branch=master)](https://coveralls.io/github/iquiw/mivi?branch=master)
+[![codecov](https://codecov.io/gh/iquiw/mivi/branch/master/graph/badge.svg)](https://codecov.io/gh/iquiw/mivi)
 
 ## About
 
