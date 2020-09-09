@@ -1,6 +1,6 @@
 # Minimal Vi minor mode
 
-[![Build Status](https://travis-ci.org/iquiw/mivi.svg?branch=master)](https://travis-ci.org/iquiw/mivi)
+[![circleci](https://circleci.com/gh/iquiw/mivi.svg?style=svg)](https://circleci.com/gh/iquiw/mivi)
 [![codecov](https://codecov.io/gh/iquiw/mivi/branch/master/graph/badge.svg)](https://codecov.io/gh/iquiw/mivi)
 
 ## About
