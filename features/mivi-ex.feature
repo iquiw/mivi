@@ -171,6 +171,34 @@ Feature: Ex command
     And I type ":s/[0-9]+//"
     Then I should see "abcdef"
 
+  Scenario: substitute with empty match
+    Given the buffer is empty
+    When I insert:
+    """
+    f o  oo
+
+    """
+    And I go to line "1"
+    And I type ":s/ */a/g"
+    Then I should see pattern "^afaoaoao$"
+
+  Scenario: substitute the specified line range with empty match
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    """
+    And I go to line "1"
+    And I type ":1,$s/o*/z/g"
+    Then I should see:
+    """
+    zfz
+    zbzazr
+    zbzazz
+    """
+
   Scenario: substitute the specified line range
     Given the buffer is empty
     When I insert:

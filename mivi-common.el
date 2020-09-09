@@ -150,6 +150,7 @@ Return the number of occurrences."
   (let* ((last-replace-point (point))
          (found t)
          (case-fold-search nil)
+         (empty-match (string-match-p regexp "")) ; possibly matches with empty string
          (marker (set-marker (make-marker) end))
          (subst-count 0))
     (goto-char beg)
@@ -159,11 +160,13 @@ Return the number of occurrences."
                                      t))
       (when found
         (replace-match replace t)
+        (when (and empty-match (not (eobp)))
+          (forward-char 1))
         (setq last-replace-point (save-excursion
                                    (forward-line 0)
                                    (point)))
         (setq subst-count (1+ subst-count)))
-      (unless global
+      (when (or (not global) (eolp))
         (forward-line 1)
         (setq found (not (eobp)))))
     (set-marker marker nil)
