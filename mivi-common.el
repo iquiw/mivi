@@ -160,7 +160,7 @@ Return the number of occurrences."
                                      t))
       (when found
         (replace-match replace t)
-        (when (and empty-match (not (eobp)))
+        (when (and empty-match (not (eolp)))
           (forward-char 1))
         (setq last-replace-point (save-excursion
                                    (forward-line 0)
