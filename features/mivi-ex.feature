@@ -199,6 +199,25 @@ Feature: Ex command
     zbzazz
     """
 
+  @bug
+  Scenario: substitute the whole lines with possibly empty match
+    Given the buffer is empty
+    When I insert:
+    """
+    foo
+    bar
+    baz
+    qux
+    """
+    And I type ":%s/.*/'\&'/"
+    Then I should see:
+    """
+    'foo'
+    'bar'
+    'baz'
+    'qux'
+    """
+
   Scenario: substitute the specified line range
     Given the buffer is empty
     When I insert:
