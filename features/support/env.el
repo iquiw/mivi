@@ -16,6 +16,7 @@
 (require 'undercover)
 (undercover "mivi*.el"
             (:report-file "coverage-final.json")
+            (:report-format 'codecov)
             (:send-report nil))
 
 (require 'mivi)
