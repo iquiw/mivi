@@ -260,7 +260,7 @@ EDIT-BODY is body form to be called after the motion."
        (defalias new-fn
          (lambda ()
            (interactive)
-           (let (new-state
+           (let ((new-state nil)
                  (beg ,(if (and (not (eq state-type 'copy))
                                 (eq motion-type 'motion-line))
                            `(save-excursion
