@@ -14,7 +14,6 @@ differences for convenience of editing or simplicity of implementation.
 ### Depends
 
 * Emacs 26
-* undo-tree
 
 ### Configuration
 

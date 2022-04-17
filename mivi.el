@@ -5,7 +5,7 @@
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
 ;; Version:   0.0.0
-;; Package-Requires: ((undo-tree "0.7.5") (emacs "26"))
+;; Package-Requires: ((emacs "26"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@
 
 (require 'cl-lib)
 
-(require 'undo-tree)
 (require 'mivi-common)
 (require 'mivi-ex)
 
@@ -1125,13 +1124,15 @@ Otherwise, call `kill-ring-save' interactively."
   "Repeat the last executed mivi command.
 ARG is passed to the repeated command."
   (interactive "P")
-  (if (or (eq last-command 'mivi-undo)
+  (if (or (eq last-command 'undo)
           (and mivi--undo-repeating (eq last-command 'mivi-repeat)))
       (progn
-        (if (eq mivi--undo-direction 'undo)
-            (undo-tree-undo)
-          (undo-tree-redo))
-        (setq mivi--undo-repeating t))
+        (let ((last-command 'undo))
+          (if (eq mivi--undo-direction 'undo)
+              (call-interactively #'undo)
+            (call-interactively #'undo-redo)))
+        (setq mivi--undo-repeating t)
+        (setq this-command 'mivi-repeat))
 
     (setq mivi--undo-repeating nil)
     (let ((category (plist-get mivi--last-command :category))
@@ -1270,9 +1271,9 @@ To perform multiple undo's, run `mivi-repeat' just after undo."
   (interactive)
   (if (eq mivi--undo-direction 'undo)
       (progn
-        (undo-tree-redo)
+        (call-interactively #'undo-redo)
         (setq mivi--undo-direction 'redo))
-    (undo-tree-undo)
+    (call-interactively #'undo)
     (setq mivi--undo-direction 'undo)))
 
 (defun mivi-updown-case (&optional arg)
@@ -1444,9 +1445,7 @@ and updates MiVi mode line."
         (mivi--init-marks)
         (mivi--mode-line-insert)
         (unless (cl-some #'symbol-value mivi--states)
-          (mivi--switch-state 'mivi-command-state))
-        (unless undo-tree-mode
-          (undo-tree-mode 1)))
+          (mivi--switch-state 'mivi-command-state)))
     (remove-hook 'after-change-functions #'mivi--after-change-function t)
     (remove-hook 'post-command-hook #'mivi--post-command-function t)
     (mivi--mode-line-remove)

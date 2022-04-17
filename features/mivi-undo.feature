@@ -8,12 +8,12 @@ Feature: Undo
     When I type "ifoo"
     And I press "<escape>"
     And I go to beginning of buffer
-    And I call "kill-line"
+    And I press "C-k"
     And I type "u"
     Then I should see pattern "^foo$"
 
     When I go to beginning of buffer
-    And I call "kill-line"
+    And I press "C-k"
     And I type "u"
     Then I should see pattern "^foo$"
 
