@@ -5,7 +5,7 @@
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
 ;; Version:   0.0.0
-;; Package-Requires: ((emacs "26"))
+;; Package-Requires: ((emacs "28"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
