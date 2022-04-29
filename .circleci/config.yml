@@ -17,18 +17,13 @@ default: &defaults
           ./codecov -t ${CODECOV_TOKEN}
 
 jobs:
-  "emacs-26":
+  "emacs-28":
     docker:
-      - image: silex/emacs:26-ci-cask
-    <<: *defaults
-  "emacs-27":
-    docker:
-      - image: silex/emacs:27-ci-cask
+      - image: silex/emacs:28-ci-cask
     <<: *defaults
 
 workflows:
   version: 2
   build:
     jobs:
-      - "emacs-26"
-      - "emacs-27"
+      - "emacs-28"
