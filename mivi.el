@@ -1347,7 +1347,7 @@ The stored command is a plist with the following properties:
 
   :command	command symbol, default to `this-command'.
   :prefix	prefix argument, default to `current-prefix-arg'.
-  :category	command category, 'insert, 'change, 'delete, default to nil.
+  :category	command category, \\='insert, \\='change, \\='delete, default to nil.
   :content	inserted content, default to nil.
 
 With ARGS, the above default values can be overwritten."
@@ -1426,7 +1426,9 @@ and updates MiVi mode line."
             (dolist (e mode-line-format (nreverse l))
               (unless (eq e 'mivi-mode-line)
                 (push e l))
-              (when (eq e 'mode-line-mule-info)
+              (when (or (and (listp e)
+                             (memq 'mode-line-mule-info (flatten-list e)))
+                        (eq e 'mode-line-mule-info))
                 (push 'mivi-mode-line l)))))))
 
 (defun mivi--mode-line-remove ()
