@@ -1347,7 +1347,7 @@ The stored command is a plist with the following properties:
 
   :command	command symbol, default to `this-command'.
   :prefix	prefix argument, default to `current-prefix-arg'.
-  :category	command category, 'insert, 'change, 'delete, default to nil.
+  :category	command category, \\='insert, \\='change, \\='delete, default to nil.
   :content	inserted content, default to nil.
 
 With ARGS, the above default values can be overwritten."
