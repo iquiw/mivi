@@ -227,6 +227,6 @@
   (should (equal '(:regexp "foo" :rest "bar/")
                  (mivi-ex--parse-subst "/foo/bar/" t))))
 
-(ert-deftest mivi-ex--parse-subst-with-comma-delim ()
+(ert-deftest mivi-ex--parse-subst-no-replace-with-comma-delim ()
   (should (equal '(:regexp "foo/bar" :rest "s//baz/")
                  (mivi-ex--parse-subst ",foo/bar,s//baz/" t))))
