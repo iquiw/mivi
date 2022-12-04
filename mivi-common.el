@@ -48,7 +48,7 @@
 (defun mivi--copy-region (beg end &optional append-final-newline)
   "Copy region between BEG and END to `kill-ring'.
 If APPEND-FINAL-NEWLINE is non-nil and END is end of buffer, append \"\\n\"."
-  (let ((s (buffer-substring beg end)))
+  (let ((s (filter-buffer-substring beg end)))
     (kill-new s)
     (when (and append-final-newline
                (not (string-match-p "\n\\'" s))
