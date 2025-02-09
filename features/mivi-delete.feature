@@ -786,3 +786,17 @@ Feature: Delete
     Then I should not see pattern "\(baz\|123\)"
     And I should see pattern "^        456$"
     And the cursor should be at cell (1, 8)
+
+  Scenario: delete with mivi-use-region
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I set mivi-use-region to t
+    And I set the mark
+    And I go to cell (1, 5)
+    And I type "d"
+    And I should see pattern "^foo b$"
+    And the cursor should be at cell (1, 5)
+    And the mivi state should be "command"

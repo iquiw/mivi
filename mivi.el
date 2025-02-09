@@ -75,6 +75,10 @@
   "Timeout to wait for subsequent input after ESC key on TTY."
   :type 'float)
 
+(defcustom mivi-use-region nil
+  "Whether to use region by change and delete keys."
+  :type 'boolean)
+
 (defface mivi-search-highlight
   '((((class color) (min-colors 89) (background light))
      (:background "#d6e9ca"))
@@ -893,8 +897,13 @@ With ARG, substitute the specified number of characters."
   "Change text covered by subsequent motion with inputted text.
 ARG is passed to the motion command."
   (interactive "P")
-  (mivi--switch-state 'mivi-change-state)
-  (setq prefix-arg arg))
+  (if (and mivi-use-region
+           (use-region-p))
+      (progn
+       (kill-region nil nil t)
+       (mivi--switch-state 'mivi-insert-state))
+    (mivi--switch-state 'mivi-change-state)
+    (setq prefix-arg arg)))
 
 (defun mivi-change-line (&optional arg)
   "Change text from the current point till end of line.
@@ -942,8 +951,11 @@ With ARG, copy the specified number of lines relative to the current line."
   "Delete text covered by subsequent motion.
 ARG is passed to the motion command."
   (interactive "P")
-  (mivi--switch-state 'mivi-delete-state)
-  (setq prefix-arg arg))
+  (if (and mivi-use-region
+           (use-region-p))
+      (kill-region nil nil t)
+    (mivi--switch-state 'mivi-delete-state)
+    (setq prefix-arg arg)))
 
 (defun mivi-delete-line (&optional arg)
   "Delete the current line.

@@ -799,3 +799,18 @@ Feature: Change
     And I should see pattern "^    baz$"
     And the cursor should be at cell (3, 0)
     And the mivi state should be "insert"
+
+  Scenario: change with mivi-use-region
+    Given the buffer is empty
+    When I insert:
+    """
+    foo bar baz
+    """
+    And I set mivi-use-region to t
+    And I go to beginning of buffer
+    And I set the mark
+    And I go to cell (1, 5)
+    And I type "c"
+    And I should see pattern "^ar baz$"
+    And the cursor should be at cell (1, 0)
+    And the mivi state should be "insert"
