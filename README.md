@@ -13,7 +13,7 @@ differences for convenience of editing or simplicity of implementation.
 
 ### Depends
 
-* Emacs 28
+* Emacs 28 or higher.
 
 ### Configuration
 
@@ -37,6 +37,13 @@ To enable `mivi-mode` in any mode derived a major-mode:
 
 ``` emacs-lisp
 (add-to-list 'mivi-enabled-derived-modes 'some-mode)
+```
+
+If `mivi-use-region` is non-nil and region is usable, change (<kbd>c</kbd>)
+and delete (<kbd>d</kbd>) act for the region.
+
+```emacs-lisp
+(setopt mivi-use-region t)
 ```
 
 ## Feature
