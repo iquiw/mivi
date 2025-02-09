@@ -22,8 +22,14 @@ jobs:
       - image: silex/emacs:28-ci-cask
     <<: *defaults
 
+  "emacs-29":
+    docker:
+      - image: silex/emacs:29-ci-cask
+    <<: *defaults
+
 workflows:
   version: 2
   build:
     jobs:
       - "emacs-28"
+      - "emacs-29"
