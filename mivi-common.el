@@ -1,6 +1,6 @@
 ;;; mivi-common.el --- MiVi common -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017-2022 by Iku Iwasa
+;; Copyright (C) 2017-2025 by Iku Iwasa
 
 ;; Author:    Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL:       https://github.com/iquiw/mivi
